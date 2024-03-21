@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/21 18:22:07 by craimond         ###   ########.fr        #
+#    Updated: 2024/03/21 18:39:20 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,12 +16,9 @@ MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 LIBFT_DIR = libft
 LIBFT_REPO = https://github.com/Raimo33/Libft.git
 
-GET_NEXT_LINE_DIR = srcs/get_next_line
-GET_NEXT_LINE_REPO = https://github.com/Muddrayss/get_next_line.git
-
 SRCS_DIR = srcs/
-GET_NEXT_LINE_SRCS = $(addprefix get_next_line/, get_next_line.c get_next_line_utils.c)
 UTILS = $(addprefix utils/, general_utils.c ft_strtok.c ft_atof.c ft_atoui.c)
+GET_NEXT_LINE_SRCS = $(addprefix get_next_line/, get_next_line.c get_next_line_utils.c)
 SRCS = $(addprefix $(SRCS_DIR), minirt.c $(UTILS) $(GET_NEXT_LINE_SRCS))
 
 OBJS = $(SRCS:.c=.o)
@@ -34,12 +31,12 @@ GREEN = \033[0;32m
 NC = \033[0m
 
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror -DBUFFER_SIZE=42
+CFLAGS = -g -Wall -Wextra -Werror
 RM = rm -rf
 
 NAME = minirt
 
-all: $(MLX_DIR) $(LIBFT_DIR) $(GET_NEXT_LINE_DIR) $(NAME)
+all: $(MLX_DIR) $(LIBFT_DIR) $(NAME)
 
 $(MLX_DIR):
 		@echo "cloning minilibx-linux"
@@ -55,10 +52,6 @@ $(LIBFT_DIR):
 		@make bonus -C $(LIBFT_DIR) > /dev/null
 		@make clean -C $(LIBFT_DIR) > /dev/null
 		@echo "$(GREEN)successfully configured libft$(NC)"
-
-$(GET_NEXT_LINE_DIR):
-		@echo "cloning get_next_line"
-		@git clone $(GET_NEXT_LINE_REPO) $(GET_NEXT_LINE_DIR) 2> /dev/null
 
 $(NAME): $(OBJS)
 		@$(CC) $(CFLAGS) $(OBJS) -L$(MLX_DIR) -L$(LIBFT_DIR) -lft -lmlx_Linux -I$(MLX_DIR) -I$(LIBFT_DIR) -lXext -lX11 -lm -lz -O3 -o $(NAME)
@@ -82,8 +75,6 @@ fclean: clean
 		@$(RM) $(MLX_DIR)
 		@echo "removing libft"
 		@$(RM) $(LIBFT_DIR)
-		@echo "removing get_next_line"
-		@$(RM) $(GET_NEXT_LINE_DIR)
 		@echo "$(RED)removed everything$(NC)"
 
 re: fclean all

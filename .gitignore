@@ -1,9 +1,6 @@
 Makefile.gen
-libft/CONTRIBUTING.md
-libft/CODE_OF_CONDUCT.md
-libft/.git/
-libft/.gitignore
-libft/*.a
+libft/
+minilibx-linux/
 *.o
 */*.o
 */*/*.o
