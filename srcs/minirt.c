@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/21 18:01:12 by egualand         ###   ########.fr       */
+/*   Updated: 2024/03/21 18:25:00 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static void		parse_plane(char *line, t_scene *scene);
 static void		parse_cylinder(char *line, t_scene *scene);
 static t_coord	parse_coord(char *str);
 static t_color	parse_color(char *str);
+static bool 	is_comment(char *line);
 
 int	main(int argc, char **argv)
 {
@@ -97,10 +98,8 @@ static void parse(int fd, t_scene *scene)
     while (line)
 	{
 		if (!is_empty_line(line) && !is_comment(line))
-		{
 			parse_line(line, scene);
-			free(line);
-		}
+		free(line);
 		line = get_next_line(fd);
 	}
 	close(fd);
@@ -253,6 +252,7 @@ static int close_win(t_hook_data *hook_data)
 	mlx_destroy_window(hook_data->win_data->mlx, hook_data->win_data->win);
 	mlx_destroy_image(hook_data->win_data->mlx, hook_data->win_data->img);
 	mlx_destroy_display(hook_data->win_data->mlx);
+	free(hook_data->win_data->mlx);
 	free(hook_data);
 	exit(0);
 	return (0);

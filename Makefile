@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+         #
+#    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/21 17:37:56 by egualand         ###   ########.fr        #
+#    Updated: 2024/03/21 18:22:07 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ MLX_DIR = minilibx-linux
 MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 
 LIBFT_DIR = libft
-LIBFT_REPO = https://github.com/Muddrayss/libft.git
+LIBFT_REPO = https://github.com/Raimo33/Libft.git
 
 GET_NEXT_LINE_DIR = srcs/get_next_line
 GET_NEXT_LINE_REPO = https://github.com/Muddrayss/get_next_line.git
@@ -34,7 +34,7 @@ GREEN = \033[0;32m
 NC = \033[0m
 
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror -DBUFFER_SIZE=42
 RM = rm -rf
 
 NAME = minirt
