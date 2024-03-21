@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/21 14:29:18 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/21 18:01:12 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ static void		check_args(uint16_t argc, char **argv);
 static void		init_scene(t_scene *scene, int fd);
 static void		init_window(t_mlx_data *data);
 static void		init_hooks(t_mlx_data *win_data, t_scene scene);
-static int		key_hook(int keycode, void *hook_data);
+static int		key_hook(int keycode, t_hook_data *hook_data);
 static void		destroy_scene(t_scene scene);
 static void		parse(int fd, t_scene *scene);
 static void		parse_line(char *line, t_scene *scene);
-static int		close_win(t_mlx_data *win_data, t_scene scene);
+static int		close_win(t_hook_data *hook_data);
 static void		parse_amblight(char *line, t_scene *scene);
 static void		parse_light(char *line, t_scene *scene);
 static void		parse_camera(char *line, t_scene *scene);
@@ -65,6 +65,7 @@ static void	init_scene(t_scene *scene, int fd)
 	scene->planes = NULL;
 	scene->cylinders = NULL;
 	parse(fd, scene);
+	get_next_line(-1);
 }
 
 static bool is_comment(char *line)
@@ -228,28 +229,31 @@ static void	init_window(t_mlx_data *win_data)
 
 static void init_hooks(t_mlx_data *win_data, t_scene scene)
 {
-	t_hook_data	hook_data = {win_data, scene};
-
-	mlx_hook(win_data->win, 2, 1L << 0, key_hook, &hook_data);
-	mlx_hook(win_data->win, 17, 1L << 17, close_win, &hook_data);
+	t_hook_data *hook_data;
+	
+	hook_data = malloc(sizeof(t_hook_data));
+	if (!hook_data)
+		ft_quit(3, "hook data initialization failed");
+	hook_data->win_data = win_data;
+	hook_data->scene = scene;
+	mlx_hook(win_data->win, 2, 1L << 0, key_hook, hook_data);
+	mlx_hook(win_data->win, 17, 1L << 17, close_win, hook_data);
 }
 
-static int key_hook(int keycode, void *hook_data)
+static int key_hook(int keycode, t_hook_data *hook_data)
 {
-	t_hook_data	*data;
-
-	data = (t_hook_data *)hook_data;
 	if (keycode == KEY_ESC)
-		close_win(data->win_data, data->scene);
+		close_win(hook_data);
 	return (0);
 }
 
-static int close_win(t_mlx_data *win_data, t_scene scene)
+static int close_win(t_hook_data *hook_data)
 {
-	destroy_scene(scene);
-	mlx_destroy_window(win_data->mlx, win_data->win);
-	mlx_destroy_image(win_data->mlx, win_data->img);
-	mlx_destroy_display(win_data->mlx);
+	destroy_scene(hook_data->scene);
+	mlx_destroy_window(hook_data->win_data->mlx, hook_data->win_data->win);
+	mlx_destroy_image(hook_data->win_data->mlx, hook_data->win_data->img);
+	mlx_destroy_display(hook_data->win_data->mlx);
+	free(hook_data);
 	exit(0);
 	return (0);
 }
