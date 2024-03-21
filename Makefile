@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+         #
+#    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/19 17:53:35 by egualand         ###   ########.fr        #
+#    Updated: 2024/03/21 14:13:57 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,6 +64,9 @@ $(NAME): $(OBJS)
 		@$(CC) $(CFLAGS) $(OBJS) -L$(MLX_DIR) -L$(LIBFT_DIR) -lft -lmlx_Linux -I$(MLX_DIR) -I$(LIBFT_DIR) -lXext -lX11 -lm -lz -O3 -o $(NAME)
 		@echo "$(GREEN)compiled $(NAME)$(NC)"
 
+leaks: $(NAME)
+		@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) scenes/scene.rt 2> leaks.log
+
 %.o: %.c $(HEADERS)
 		@echo -n "compiling " && echo $< | rev | cut -d'/' -f1 | rev
 		@$(CC) $(CFLAGS) -I $(INCLUDES) -c $< -o $@
@@ -79,6 +82,8 @@ fclean: clean
 		@$(RM) $(MLX_DIR)
 		@echo "removing libft"
 		@$(RM) $(LIBFT_DIR)
+		@echo "removing get_next_line"
+		@$(RM) $(GET_NEXT_LINE_DIR)
 		@echo "$(RED)removed everything$(NC)"
 
 re: fclean all
