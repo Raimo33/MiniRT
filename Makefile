@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/23 21:55:49 by craimond         ###   ########.fr        #
+#    Updated: 2024/03/23 22:15:15 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,14 +16,13 @@ MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 LIBFT_DIR = libft
 LIBFT_REPO = https://github.com/Raimo33/Libft.git
 
-UTILS = $(addprefix utils/, conditionals.c ft_strtok.c ft_atof.c ft_atoui.c)
-GET_NEXT_LINE = $(addprefix get_next_line/, get_next_line.c get_next_line_utils.c)
-SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c $(UTILS) $(GET_NEXT_LINE))
+UTILS = $(addprefix utils/, conditionals.c ft_strtok.c ft_atof.c ft_atoui.c get_next_line.c)
+SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c $(UTILS))
 
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = .
-HEADERS = srcs/minirt.h srcs/get_next_line/get_next_line.h
+HEADERS = $(addprefix headers/, minirt.h, utils.h get_next_line.h)
 
 RED = \033[0;31m
 GREEN = \033[0;32m
@@ -60,7 +59,7 @@ leaks: all
 		@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) scenes/scene.rt 2> leaks.log
 
 %.o: %.c $(HEADERS)
-		@echo -n "compiling " && echo $< | rev | cut -d'/' -f1 | rev
+		@echo -n "compiling " && echo $< | rev | cut -d'/' -f1 | rev 
 		@$(CC) $(CFLAGS) -I $(INCLUDES) -c $< -o $@
 
 clean:

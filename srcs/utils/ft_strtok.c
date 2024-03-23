@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtok.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 16:50:25 by egualand          #+#    #+#             */
-/*   Updated: 2024/03/19 17:27:01 by egualand         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:05:00 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minirt.h"
+#include "../headers/minirt.h"
 
 static uint16_t	ft_strspn(const char *str, const char *sep);
 static char		*ft_strpbrk(char *str, const char *sep);

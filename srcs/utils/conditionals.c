@@ -6,23 +6,23 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:32:50 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:33:03 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:04:38 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "../headers/minirt.h"
 
-static bool is_comment(char *line)
+bool is_comment(const char *line)
 {
 	return (*line == '#');
 }
 
-static bool	ft_isspace(char c)
+bool	ft_isspace(const char c)
 {
 	return (ft_strchr(spaces, c) != NULL);
 }
 
-static bool is_empty_line(char *line)
+bool is_empty_line(const char *line)
 {
 	while (*line)
 	{

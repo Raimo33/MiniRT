@@ -6,11 +6,11 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:29:48 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:10:17 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "headers/minirt.h"
 
 static int key_hook(int keycode, t_hook_data *hook_data);
 
@@ -40,7 +40,7 @@ void	init_scene(t_scene *scene, int fd)
 	scene->planes = NULL;
 	scene->cylinders = NULL;
 	parse(fd, scene);
-	get_next_line(-1);
+	//TODO free del buffer di gnl
 }
 
 void	init_window(t_mlx_data *win_data)

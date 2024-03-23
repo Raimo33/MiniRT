@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoui.c                                         :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/19 17:21:29 by egualand          #+#    #+#             */
-/*   Updated: 2024/03/23 22:05:05 by craimond         ###   ########.fr       */
+/*   Created: 2023/10/31 14:53:23 by egualand          #+#    #+#             */
+/*   Updated: 2024/03/23 22:07:13 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minirt.h"
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-uint8_t	ft_atoui(const char *str)
-{
-	uint8_t		result;
-	uint16_t	i;
+# include <stdlib.h>
+# include <unistd.h>
+# include <stddef.h>
+# include "../../libft/libft.h"
 
-	i = 0;
-	result = 0;
-	while (ft_isdigit(str[i]))
-		result = result * 10 + (str[i++] - '0');
-	return (result);
-}
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1000
+# endif
+
+# define MAX_FD 4096
+
+char	*get_next_line(int fd);
+
+#endif

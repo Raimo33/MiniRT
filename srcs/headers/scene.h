@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:52:37 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:59:38 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define SCENE_H
 
 # include "shapes.h"
-# include "libft.h"
+# include "../../libft/libft.h"
 
 typedef struct s_camera
 {

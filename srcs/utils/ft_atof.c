@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atof.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:09:28 by egualand          #+#    #+#             */
-/*   Updated: 2024/03/19 17:29:38 by egualand         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:05:10 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minirt.h"
+#include "../headers/minirt.h"
 
 float	ft_atof(const char *str)
 {

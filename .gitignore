@@ -1,6 +1,6 @@
 Makefile.gen
-libft/
-minilibx-linux/
+# libft/
+# minilibx-linux/
 *.o
 */*.o
 */*/*.o

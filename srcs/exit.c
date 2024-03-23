@@ -6,11 +6,11 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:32:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:02:12 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "headers/minirt.h"
 
 static void destroy_scene(t_scene scene);
 

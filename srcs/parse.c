@@ -6,11 +6,21 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:36:51 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:02:18 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "headers/minirt.h"
+
+static void		parse_line(char *line, t_scene *scene);
+static void		parse_amblight(char *line, t_scene *scene);
+static void		parse_light(char *line, t_scene *scene);
+static void		parse_camera(char *line, t_scene *scene);
+static void		parse_sphere(char *line, t_scene *scene);
+static void		parse_plane(char *line, t_scene *scene);
+static void		parse_cylinder(char *line, t_scene *scene);
+static t_coord	parse_coord(char *str);
+static t_color	parse_color(char *str);
 
 void parse(int fd, t_scene *scene)
 {
