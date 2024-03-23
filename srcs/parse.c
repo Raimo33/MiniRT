@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 22:02:18 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:26:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	parse_light(char *line, t_scene *scene)
 {
 	t_light		light;
 
-	light.point = parse_coord(ft_strtok(line, spaces));
+	light.center = parse_coord(ft_strtok(line, spaces));
 	light.brightness = ft_atof(ft_strtok(NULL, spaces));
 	light.color = parse_color(ft_strtok(NULL, spaces));
 	ft_lstadd_front(&scene->lights, ft_lstnew(&light));
@@ -80,7 +80,7 @@ static void	parse_camera(char *line, t_scene *scene)
 {
 	t_camera	camera;
 
-	camera.point = parse_coord(ft_strtok(line, spaces));
+	camera.center = parse_coord(ft_strtok(line, spaces));
 	camera.normal = parse_coord(ft_strtok(NULL, spaces));
 	camera.fov = ft_atoui(ft_strtok(NULL, spaces));
 	scene->camera = camera;
@@ -100,7 +100,7 @@ static void	parse_plane(char *line, t_scene *scene)
 {
 	t_plane		plane;
 
-	plane.point = parse_coord(ft_strtok(line, spaces));
+	plane.center = parse_coord(ft_strtok(line, spaces));
 	plane.normal = parse_coord(ft_strtok(NULL, spaces));
 	plane.color = parse_color(ft_strtok(NULL, spaces));
 	ft_lstadd_front(&scene->planes, ft_lstnew(&plane));
@@ -110,7 +110,7 @@ static void	parse_cylinder(char *line, t_scene *scene)
 {
 	t_cylinder	cylinder;
 
-	cylinder.point = parse_coord(ft_strtok(line, spaces));
+	cylinder.center = parse_coord(ft_strtok(line, spaces));
 	cylinder.normal = parse_coord(ft_strtok(NULL, spaces));
 	cylinder.diameter = ft_atof(ft_strtok(NULL, spaces));
 	cylinder.height = ft_atof(ft_strtok(NULL, spaces));

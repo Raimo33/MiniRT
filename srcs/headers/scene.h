@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:59:38 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:23:11 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@
 
 typedef struct s_camera
 {
-	t_coord		point;
-	t_coord		normal;
+	t_point		center;
+	t_vector	normal;
 	uint8_t		fov;
 }	t_camera;
 
 typedef struct s_light
 {
-	t_coord		point;
+	t_point		center;
 	float		brightness;
 	t_color		color;
 }	t_light;
