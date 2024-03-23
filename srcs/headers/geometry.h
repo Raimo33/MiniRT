@@ -1,22 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   general_utils.c                                    :+:      :+:    :+:   */
+/*   gemoetry.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/19 15:07:39 by egualand          #+#    #+#             */
-/*   Updated: 2024/03/19 15:09:40 by egualand         ###   ########.fr       */
+/*   Created: 2024/03/23 21:49:38 by craimond          #+#    #+#             */
+/*   Updated: 2024/03/23 21:49:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minirt.h"
+#ifndef GEOMETRY_H
+# define GEOMETRY_H
 
-void ft_quit(uint8_t id, char *msg)
+# include <stdint.h>
+
+typedef struct s_color
 {
-	if (errno != 0)
-		perror("miniRT");
-	else
-		printf("miniRT: %s\n", msg);
-	exit(id);
-}
+	uint8_t		r;
+	uint8_t		g;
+	uint8_t		b;
+}	t_color;
+
+typedef struct s_coord
+{
+	float		x;
+	float		y;
+	float		z;
+}	t_coord;
+
+#endif

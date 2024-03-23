@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/19 17:47:11 by egualand         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:54:23 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
 # include "get_next_line/get_next_line.h"
+# include "scene.h"
 
 #define WIN_HEIGHT 480
 #define WIN_WIDTH 640
@@ -43,73 +44,6 @@ typedef struct s_mlx_data
 	int				line_length;
 	char			*addr;
 }	t_mlx_data;
-
-typedef struct s_color
-{
-	uint8_t		r;
-	uint8_t		g;
-	uint8_t		b;
-}	t_color;
-
-typedef struct s_coord
-{
-	float		x;
-	float		y;
-	float		z;
-}	t_coord;
-
-typedef struct s_camera
-{
-	t_coord		point;
-	t_coord		normal;
-	uint8_t		fov;
-}	t_camera;
-
-typedef struct s_light
-{
-	t_coord		point;
-	float		brightness;
-	t_color		color;
-}	t_light;
-
-typedef struct s_amblight
-{
-	float		brightness;
-	t_color		color;
-}	t_amblight;
-
-typedef struct s_sphere
-{
-	t_coord		center;
-	float		radius;
-	t_color		color;
-}	t_sphere;
-
-typedef struct s_plane
-{
-	t_coord		point;
-	t_coord		normal;
-	t_color		color;
-}	t_plane;
-
-typedef struct s_cylinder
-{
-	t_coord		point;
-	t_coord		normal;
-	float		diameter;
-	float		height;
-	t_color		color;
-}	t_cylinder;
-
-typedef struct	s_scene
-{
-	t_list		*spheres;
-	t_list		*planes;
-	t_list		*cylinders;
-	t_list		*lights;
-	t_camera	camera;
-	t_amblight	amblight;
-}	t_scene;
 
 typedef struct s_hook_data
 {

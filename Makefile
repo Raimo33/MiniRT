@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/21 18:39:20 by craimond         ###   ########.fr        #
+#    Updated: 2024/03/23 21:55:49 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,10 +16,9 @@ MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 LIBFT_DIR = libft
 LIBFT_REPO = https://github.com/Raimo33/Libft.git
 
-SRCS_DIR = srcs/
-UTILS = $(addprefix utils/, general_utils.c ft_strtok.c ft_atof.c ft_atoui.c)
-GET_NEXT_LINE_SRCS = $(addprefix get_next_line/, get_next_line.c get_next_line_utils.c)
-SRCS = $(addprefix $(SRCS_DIR), minirt.c $(UTILS) $(GET_NEXT_LINE_SRCS))
+UTILS = $(addprefix utils/, conditionals.c ft_strtok.c ft_atof.c ft_atoui.c)
+GET_NEXT_LINE = $(addprefix get_next_line/, get_next_line.c get_next_line_utils.c)
+SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c $(UTILS) $(GET_NEXT_LINE))
 
 OBJS = $(SRCS:.c=.o)
 

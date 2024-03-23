@@ -1,31 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.c                                           :+:      :+:    :+:   */
+/*   shapes.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:54:09 by craimond         ###   ########.fr       */
+/*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
+/*   Updated: 2024/03/23 21:50:41 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "headers/minirt.h"
+#ifndef SHAPES_H
+# define SHAPES_H
 
-int	main(int argc, char **argv)
+# include "geometry.h"
+
+typedef struct s_sphere
 {
-	t_mlx_data	mlx_data;
-	t_scene		scene;
-	int			fd;
+	t_coord		center;
+	float		radius;
+	t_color		color;
+}	t_sphere;
 
-	check_args(argc, argv);
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0)
-		ft_quit(4, NULL);
-	init_scene(&scene, fd);
-	init_window(&mlx_data);
-	init_hooks(&mlx_data, scene);
-	mlx_loop(mlx_data.mlx);
-	return (0);
-}
+typedef struct s_plane
+{
+	t_coord		point;
+	t_coord		normal;
+	t_color		color;
+}	t_plane;
 
+typedef struct s_cylinder
+{
+	t_coord		point;
+	t_coord		normal;
+	float		diameter;
+	float		height;
+	t_color		color;
+}	t_cylinder;
+
+#endif
