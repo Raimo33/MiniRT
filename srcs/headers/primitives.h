@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gemoetry.h                                         :+:      :+:    :+:   */
+/*   primitives.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:49:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:49:59 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:17:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GEOMETRY_H
-# define GEOMETRY_H
+#ifndef primitives_H
+# define primitives_H
 
 # include <stdint.h>
 
@@ -28,5 +28,7 @@ typedef struct s_coord
 	float		y;
 	float		z;
 }	t_coord;
+
+typedef
 
 #endif

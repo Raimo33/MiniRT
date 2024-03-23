@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/23 22:15:15 by craimond         ###   ########.fr        #
+#    Updated: 2024/03/23 22:18:08 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c $(UTILS))
 OBJS = $(SRCS:.c=.o)
 
 INCLUDES = .
-HEADERS = $(addprefix headers/, minirt.h, utils.h get_next_line.h)
+HEADERS = $(addprefix headers/, minirt.h, utils.h get_next_line.h scene.h shapes.h primitives.h)
 
 RED = \033[0;31m
 GREEN = \033[0;32m

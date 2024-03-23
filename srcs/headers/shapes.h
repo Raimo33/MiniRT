@@ -6,14 +6,14 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 21:50:41 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:17:37 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SHAPES_H
 # define SHAPES_H
 
-# include "geometry.h"
+# include "primitives.h"
 
 typedef struct s_sphere
 {
