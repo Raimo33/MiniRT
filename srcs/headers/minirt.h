@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 16:43:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 19:52:11 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,11 @@
 
 #define WIN_HEIGHT 480
 #define WIN_WIDTH 640
-#define CELL_SIZE 10
+
+//dimensione delle celle della griglia ottimali (numero minore di celle per oggetto possibile)
+#define CELL_SIZE_X 10
+#define CELL_SIZE_Y 10
+#define CELL_SIZE_Z 10
 
 # define KEY_ESC 65307
 
@@ -52,11 +56,14 @@ typedef struct s_hook_data
 	t_scene		scene;
 }	t_hook_data;
 
+//TODO aggiustare i const
 void	check_args(const uint16_t argc, char **argv);
-void	init_scene(t_scene *scene, int fd);
+void	init_scene(t_scene *scene);
+void	init_grid(t_grid *grid, t_scene scene);
 void	init_window(t_mlx_data *win_data);
 void	init_hooks(t_mlx_data *win_data, t_scene scene);
-void	parse(int fd, t_scene *scene);
+void	parse_scene(int fd, t_scene *scene);
+void	put_objects_in_grid(t_grid *grid, t_scene scene);
 void	render(const t_mlx_data mlx_data, const t_scene scene);
 void	my_mlx_pixel_put(const t_mlx_data data, const uint16_t x, const uint16_t y, const t_color color);
 void 	ft_quit(uint8_t id, char *msg);

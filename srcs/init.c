@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 16:21:35 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 19:51:31 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	check_args(const uint16_t argc, char **argv)
 		ft_quit(2, "invalid file extension");
 }
 
-void	init_scene(t_scene *scene, const int fd)
+void	init_scene(t_scene *scene)
 {
 	scene->amblight.brightness = 0;
 	scene->amblight.color.r = 0;
@@ -37,8 +37,6 @@ void	init_scene(t_scene *scene, const int fd)
 	scene->camera.fov = 0;
 	scene->lights = NULL;
 	scene->shapes = NULL;
-	parse(fd, scene);
-	//TODO free del buffer di gnl
 }
 
 void	init_window(t_mlx_data *win_data)

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 15:56:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 19:51:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ int	main(int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		ft_quit(4, NULL);
-	init_scene(&scene, fd);
+	init_scene(&scene);
+	parse_scene(fd, &scene);
+	init_grid(&scene.grid, scene);
+	put_objects_in_grid(&scene.grid, scene);
 	init_window(&mlx_data);
 	init_hooks(&mlx_data, scene);
 	render(mlx_data, scene);

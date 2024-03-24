@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 16:16:42 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 18:19:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,9 @@ typedef struct s_shape
 		t_plane		plane;
 		t_cylinder	cylinder;
 	};
+	//bounding box
+	t_point		min;
+	t_point		max;
 }	t_shape;
 
 #endif

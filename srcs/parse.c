@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 16:21:00 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 19:52:28 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static void		parse_camera(char *line, t_scene *scene);
 static void		parse_sphere(char *line, t_scene *scene);
 static void		parse_plane(char *line, t_scene *scene);
 static void		parse_cylinder(char *line, t_scene *scene);
-static t_coord	parse_coord(const char *str);
+static t_float3	parse_coord(const char *str);
 static t_color	parse_color(const char *str);
 
-void parse(const int fd, t_scene *scene)
+void parse_scene(const int fd, t_scene *scene)
 {
 	char	*line;
 
@@ -96,6 +96,7 @@ static void	parse_sphere(char *line, t_scene *scene)
 	sphere.color = parse_color(ft_strtok(NULL, spaces));
 	shape.type = SPHERE;
 	shape.sphere = sphere;
+	set_obj_extremes(&shape); //TODO setta la bounding box dell'oggetto
 	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
 }
 
@@ -109,6 +110,7 @@ static void	parse_plane(char *line, t_scene *scene)
 	plane.color = parse_color(ft_strtok(NULL, spaces));
 	shape.type = PLANE;
 	shape.plane = plane;
+	set_obj_extremes(&shape);
 	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
 }
 
@@ -124,12 +126,13 @@ static void	parse_cylinder(char *line, t_scene *scene)
 	cylinder.color = parse_color(ft_strtok(NULL, spaces));
 	shape.type = CYLINDER;
 	shape.cylinder = cylinder;
+	set_obj_extremes(&shape);
 	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
 }
 
-static t_coord	parse_coord(const char *str)
+static t_float3	parse_coord(const char *str)
 {
-	t_coord	coord;
+	t_float3	coord;
 
 	coord.x = ft_atof(str);
 	coord.y = ft_atof(ft_strtok(NULL, ","));

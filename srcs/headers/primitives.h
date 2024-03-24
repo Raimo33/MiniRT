@@ -22,15 +22,22 @@ typedef struct s_color
 	uint8_t		b;
 }	t_color;
 
-typedef struct s_coord
+typedef struct s_float3
 {
 	float		x;
 	float		y;
 	float		z;
-}	t_coord;
+}	t_float3;
 
-typedef t_coord t_point;
-typedef t_coord t_vector;
+typedef struct s_int3
+{
+	uint16_t	x;
+	uint16_t	y;
+	uint16_t	z;
+}	t_uint3;
+
+typedef t_float3 t_point;
+typedef t_float3 t_vector;
 
 typedef struct s_ray
 {

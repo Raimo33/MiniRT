@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 16:32:58 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 19:48:35 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,21 @@ typedef struct s_amblight
 	t_color		color;
 }	t_amblight;
 
+typedef struct	t_grid
+{
+	t_list		**cells; //un array di liste di shape. Ogni cella contiene le shape che la occupano
+	t_point		world_min;
+	t_point		world_max;
+	t_uint3		n_cells;
+}	t_grid;
+
 typedef struct	s_scene
 {
+	t_grid		grid;
 	t_list		*shapes;
 	t_list		*lights;
 	t_camera	camera;
 	t_amblight	amblight;
 }	t_scene;
-
-typedef struct	t_grid
-{
-	t_shape		*shapes;
-	uint16_t	n_cells_x;
-	uint16_t	n_cells_y;
-	uint16_t	n_cells_z;
-	float		cell_size_x;
-	float		cell_size_y;
-	float		cell_size_z;
-	t_point		world_min;
-	t_point		world_max;
-}	t_grid;
 
 #endif
