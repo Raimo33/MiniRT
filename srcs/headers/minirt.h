@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 15:40:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 16:43:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 
 #define WIN_HEIGHT 480
 #define WIN_WIDTH 640
+#define CELL_SIZE 10
 
 # define KEY_ESC 65307
 
