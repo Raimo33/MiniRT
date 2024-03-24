@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 22:23:11 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 16:13:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,7 @@ typedef struct s_amblight
 
 typedef struct	s_scene
 {
-	t_list		*spheres;
-	t_list		*planes;
-	t_list		*cylinders;
+	t_list		*shapes;
 	t_list		*lights;
 	t_camera	camera;
 	t_amblight	amblight;

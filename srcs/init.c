@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 22:25:54 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 16:21:35 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int key_hook(int keycode, t_hook_data *hook_data);
 
-void	check_args(uint16_t argc, char **argv)
+void	check_args(const uint16_t argc, char **argv)
 {
 	if (argc != 2)
 		ft_quit(1, "invalid number of arguments");
@@ -22,7 +22,7 @@ void	check_args(uint16_t argc, char **argv)
 		ft_quit(2, "invalid file extension");
 }
 
-void	init_scene(t_scene *scene, int fd)
+void	init_scene(t_scene *scene, const int fd)
 {
 	scene->amblight.brightness = 0;
 	scene->amblight.color.r = 0;
@@ -36,9 +36,7 @@ void	init_scene(t_scene *scene, int fd)
 	scene->camera.normal.z = 0;
 	scene->camera.fov = 0;
 	scene->lights = NULL;
-	scene->spheres = NULL;
-	scene->planes = NULL;
-	scene->cylinders = NULL;
+	scene->shapes = NULL;
 	parse(fd, scene);
 	//TODO free del buffer di gnl
 }
@@ -55,7 +53,7 @@ void	init_window(t_mlx_data *win_data)
 		ft_quit(3, "window initialization failed");
 }
 
-void init_hooks(t_mlx_data *win_data, t_scene scene)
+void init_hooks(t_mlx_data *win_data, const t_scene scene)
 {
 	t_hook_data *hook_data;
 	
@@ -68,7 +66,7 @@ void init_hooks(t_mlx_data *win_data, t_scene scene)
 	mlx_hook(win_data->win, 17, 1L << 17, close_win, hook_data);
 }
 
-static int key_hook(int keycode, t_hook_data *hook_data)
+static int key_hook(const int keycode, t_hook_data *hook_data)
 {
 	if (keycode == KEY_ESC)
 		close_win(hook_data);

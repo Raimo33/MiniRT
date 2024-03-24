@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 22:26:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 16:21:00 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static void		parse_camera(char *line, t_scene *scene);
 static void		parse_sphere(char *line, t_scene *scene);
 static void		parse_plane(char *line, t_scene *scene);
 static void		parse_cylinder(char *line, t_scene *scene);
-static t_coord	parse_coord(char *str);
-static t_color	parse_color(char *str);
+static t_coord	parse_coord(const char *str);
+static t_color	parse_color(const char *str);
 
-void parse(int fd, t_scene *scene)
+void parse(const int fd, t_scene *scene)
 {
-	char *line;
+	char	*line;
 
 	line = get_next_line(fd);
     while (line)
@@ -89,36 +89,45 @@ static void	parse_camera(char *line, t_scene *scene)
 static void	parse_sphere(char *line, t_scene *scene)
 {
 	t_sphere	sphere;
+	t_shape		shape;
 
 	sphere.center = parse_coord(ft_strtok(line, spaces));
 	sphere.radius = ft_atof(ft_strtok(NULL, spaces));
 	sphere.color = parse_color(ft_strtok(NULL, spaces));
-	ft_lstadd_front(&scene->spheres, ft_lstnew(&sphere));
+	shape.type = SPHERE;
+	shape.sphere = sphere;
+	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
 }
 
 static void	parse_plane(char *line, t_scene *scene)
 {
 	t_plane		plane;
+	t_shape		shape;
 
 	plane.center = parse_coord(ft_strtok(line, spaces));
 	plane.normal = parse_coord(ft_strtok(NULL, spaces));
 	plane.color = parse_color(ft_strtok(NULL, spaces));
-	ft_lstadd_front(&scene->planes, ft_lstnew(&plane));
+	shape.type = PLANE;
+	shape.plane = plane;
+	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
 }
 
 static void	parse_cylinder(char *line, t_scene *scene)
 {
 	t_cylinder	cylinder;
+	t_shape		shape;
 
 	cylinder.center = parse_coord(ft_strtok(line, spaces));
 	cylinder.normal = parse_coord(ft_strtok(NULL, spaces));
 	cylinder.diameter = ft_atof(ft_strtok(NULL, spaces));
 	cylinder.height = ft_atof(ft_strtok(NULL, spaces));
 	cylinder.color = parse_color(ft_strtok(NULL, spaces));
-	ft_lstadd_front(&scene->cylinders, ft_lstnew(&cylinder));
+	shape.type = CYLINDER;
+	shape.cylinder = cylinder;
+	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
 }
 
-static t_coord	parse_coord(char *str)
+static t_coord	parse_coord(const char *str)
 {
 	t_coord	coord;
 
@@ -128,7 +137,7 @@ static t_coord	parse_coord(char *str)
 	return (coord);
 }
 
-static t_color	parse_color(char *str)
+static t_color	parse_color(const char *str)
 {
 	t_color	color;
 

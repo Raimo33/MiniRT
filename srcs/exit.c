@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 22:02:12 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/24 16:21:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,5 @@ int close_win(t_hook_data *hook_data)
 static void destroy_scene(t_scene scene)
 {
 	ft_lstclear(&scene.lights, NULL);
-	ft_lstclear(&scene.spheres, NULL);
-	ft_lstclear(&scene.planes, NULL);
-	ft_lstclear(&scene.cylinders, NULL);
+	ft_lstclear(&scene.shapes, NULL);
 }

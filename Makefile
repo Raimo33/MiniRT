@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/23 22:18:08 by craimond         ###   ########.fr        #
+#    Updated: 2024/03/24 15:43:10 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 LIBFT_DIR = libft
 LIBFT_REPO = https://github.com/Raimo33/Libft.git
 
-UTILS = $(addprefix utils/, conditionals.c ft_strtok.c ft_atof.c ft_atoui.c get_next_line.c)
-SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c $(UTILS))
+UTILS = $(addprefix utils/, vector_operations.c mlx_utils.c conditionals.c ft_strtok.c ft_atof.c ft_atoui.c get_next_line.c)
+SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c render.c $(UTILS))
 
 OBJS = $(SRCS:.c=.o)
 
@@ -59,7 +59,7 @@ leaks: all
 		@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) scenes/scene.rt 2> leaks.log
 
 %.o: %.c $(HEADERS)
-		@echo -n "compiling " && echo $< | rev | cut -d'/' -f1 | rev 
+		@echo -n "compiling " && echo $< | rev | cut -d'/' -f1 | rev
 		@$(CC) $(CFLAGS) -I $(INCLUDES) -c $< -o $@
 
 clean:
