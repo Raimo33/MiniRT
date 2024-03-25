@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/25 15:25:52 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/25 18:26:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	init_scene(t_scene *scene)
 	scene->camera.fov = 0;
 	scene->lights = NULL;
 	scene->shapes = NULL;
+	scene->octree = (t_octree *)malloc(sizeof(t_octree));
 	scene->world_max.x = 0;
 	scene->world_max.y = 0;
 }

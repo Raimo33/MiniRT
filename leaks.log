@@ -1,77 +1,220 @@
-==128201== Memcheck, a memory error detector
-==128201== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==128201== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==128201== Command: ./minirt scenes/scene.rt
-==128201== 
-==128201== Use of uninitialised value of size 8
-==128201==    at 0x403B11: fill_octree (setup_scene.c:67)
-==128201==    by 0x4033E9: setup_scene (setup_scene.c:24)
-==128201==    by 0x402583: main (minirt.c:27)
-==128201==  Uninitialised value was created by a stack allocation
-==128201==    at 0x402504: main (minirt.c:16)
-==128201== 
-==128201== Use of uninitialised value of size 8
-==128201==    at 0x403B20: fill_octree (setup_scene.c:68)
-==128201==    by 0x4033E9: setup_scene (setup_scene.c:24)
-==128201==    by 0x402583: main (minirt.c:27)
-==128201==  Uninitialised value was created by a stack allocation
-==128201==    at 0x402504: main (minirt.c:16)
-==128201== 
-==128201== 
-==128201== HEAP SUMMARY:
-==128201==     in use at exit: 486,804 bytes in 4,682 blocks
-==128201==   total heap usage: 5,593 allocs, 911 frees, 631,413 bytes allocated
-==128201== 
-==128201== 20 bytes in 1 blocks are definitely lost in loss record 1 of 6
-==128201==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==128201==    by 0x402CB9: parse_light (parse.c:73)
-==128201==    by 0x402BFB: parse_line (parse.c:53)
-==128201==    by 0x402AD4: parse_scene (parse.c:33)
-==128201==    by 0x402577: main (minirt.c:26)
-==128201== 
-==128201== 64 bytes in 1 blocks are definitely lost in loss record 2 of 6
-==128201==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==128201==    by 0x40310C: parse_cylinder (parse.c:123)
-==128201==    by 0x402BFB: parse_line (parse.c:53)
-==128201==    by 0x402AD4: parse_scene (parse.c:33)
-==128201==    by 0x402577: main (minirt.c:26)
-==128201== 
-==128201== 6,656 bytes in 64 blocks are indirectly lost in loss record 3 of 6
-==128201==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==128201==    by 0x403B02: fill_octree (setup_scene.c:67)
-==128201==    by 0x403B80: fill_octree (setup_scene.c:68)
-==128201==    by 0x4033E9: setup_scene (setup_scene.c:24)
-==128201==    by 0x402583: main (minirt.c:27)
-==128201== 
-==128201== 53,248 bytes in 512 blocks are indirectly lost in loss record 4 of 6
-==128201==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==128201==    by 0x403B02: fill_octree (setup_scene.c:67)
-==128201==    by 0x403B80: fill_octree (setup_scene.c:68)
-==128201==    by 0x403B80: fill_octree (setup_scene.c:68)
-==128201==    by 0x4033E9: setup_scene (setup_scene.c:24)
-==128201==    by 0x402583: main (minirt.c:27)
-==128201== 
-==128201== 425,984 bytes in 4,096 blocks are indirectly lost in loss record 5 of 6
-==128201==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==128201==    by 0x403B02: fill_octree (setup_scene.c:67)
-==128201==    by 0x403B80: fill_octree (setup_scene.c:68)
-==128201==    by 0x403B80: fill_octree (setup_scene.c:68)
-==128201==    by 0x403B80: fill_octree (setup_scene.c:68)
-==128201==    by 0x4033E9: setup_scene (setup_scene.c:24)
-==128201==    by 0x402583: main (minirt.c:27)
-==128201== 
-==128201== 486,720 (832 direct, 485,888 indirect) bytes in 8 blocks are definitely lost in loss record 6 of 6
-==128201==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==128201==    by 0x403B02: fill_octree (setup_scene.c:67)
-==128201==    by 0x4033E9: setup_scene (setup_scene.c:24)
-==128201==    by 0x402583: main (minirt.c:27)
-==128201== 
-==128201== LEAK SUMMARY:
-==128201==    definitely lost: 916 bytes in 10 blocks
-==128201==    indirectly lost: 485,888 bytes in 4,672 blocks
-==128201==      possibly lost: 0 bytes in 0 blocks
-==128201==    still reachable: 0 bytes in 0 blocks
-==128201==         suppressed: 0 bytes in 0 blocks
-==128201== 
-==128201== For lists of detected and suppressed errors, rerun with: -s
-==128201== ERROR SUMMARY: 19 errors from 5 contexts (suppressed: 2 from 1)
+==145837== Memcheck, a memory error detector
+==145837== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==145837== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==145837== Command: ./minirt scenes/scene.rt
+==145837== 
+==145837== Conditional jump or move depends on uninitialised value(s)
+==145837==    at 0x402AB7: octree_clear (exit.c:50)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Uninitialised value was created by a heap allocation
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402771: init_scene (init.c:40)
+==145837==    by 0x402565: main (minirt.c:25)
+==145837== 
+==145837== Conditional jump or move depends on uninitialised value(s)
+==145837==    at 0x402AB7: octree_clear (exit.c:50)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Uninitialised value was created by a heap allocation
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x403B61: fill_octree (setup_scene.c:59)
+==145837==    by 0x403489: setup_scene (setup_scene.c:24)
+==145837==    by 0x402583: main (minirt.c:27)
+==145837== 
+==145837== Conditional jump or move depends on uninitialised value(s)
+==145837==    at 0x402AB7: octree_clear (exit.c:50)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Uninitialised value was created by a heap allocation
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x403B61: fill_octree (setup_scene.c:59)
+==145837==    by 0x403BDF: fill_octree (setup_scene.c:60)
+==145837==    by 0x403489: setup_scene (setup_scene.c:24)
+==145837==    by 0x402583: main (minirt.c:27)
+==145837== 
+==145837== Conditional jump or move depends on uninitialised value(s)
+==145837==    at 0x402AB7: octree_clear (exit.c:50)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Uninitialised value was created by a heap allocation
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x403B61: fill_octree (setup_scene.c:59)
+==145837==    by 0x403BDF: fill_octree (setup_scene.c:60)
+==145837==    by 0x403BDF: fill_octree (setup_scene.c:60)
+==145837==    by 0x403489: setup_scene (setup_scene.c:24)
+==145837==    by 0x402583: main (minirt.c:27)
+==145837== 
+==145837== Invalid free() / delete / delete[] / realloc()
+==145837==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402AF1: octree_clear (exit.c:56)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Address 0x4d76620 is 0 bytes inside a block of size 104 free'd
+==145837==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402B10: octree_clear (exit.c:60)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Block was alloc'd at
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x403B61: fill_octree (setup_scene.c:59)
+==145837==    by 0x403BDF: fill_octree (setup_scene.c:60)
+==145837==    by 0x403BDF: fill_octree (setup_scene.c:60)
+==145837==    by 0x403BDF: fill_octree (setup_scene.c:60)
+==145837==    by 0x403489: setup_scene (setup_scene.c:24)
+==145837==    by 0x402583: main (minirt.c:27)
+==145837== 
+==145837== Invalid free() / delete / delete[] / realloc()
+==145837==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402AF1: octree_clear (exit.c:56)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Address 0x4d764c0 is 0 bytes inside a block of size 104 free'd
+==145837==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402B10: octree_clear (exit.c:60)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Block was alloc'd at
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x403B61: fill_octree (setup_scene.c:59)
+==145837==    by 0x403BDF: fill_octree (setup_scene.c:60)
+==145837==    by 0x403489: setup_scene (setup_scene.c:24)
+==145837==    by 0x402583: main (minirt.c:27)
+==145837== 
+==145837== Invalid free() / delete / delete[] / realloc()
+==145837==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402AF1: octree_clear (exit.c:56)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Address 0x4d76410 is 0 bytes inside a block of size 104 free'd
+==145837==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402B10: octree_clear (exit.c:60)
+==145837==    by 0x402AE0: octree_clear (exit.c:55)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Block was alloc'd at
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x403B61: fill_octree (setup_scene.c:59)
+==145837==    by 0x403489: setup_scene (setup_scene.c:24)
+==145837==    by 0x402583: main (minirt.c:27)
+==145837== 
+==145837== Invalid free() / delete / delete[] / realloc()
+==145837==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402A94: destroy_scene (exit.c:43)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Address 0x4d72040 is 0 bytes inside a block of size 104 free'd
+==145837==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402B10: octree_clear (exit.c:60)
+==145837==    by 0x402A88: destroy_scene (exit.c:42)
+==145837==    by 0x4029F9: close_win (exit.c:29)
+==145837==    by 0x4061B1: mlx_loop (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40262E: main (minirt.c:31)
+==145837==  Block was alloc'd at
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402771: init_scene (init.c:40)
+==145837==    by 0x402565: main (minirt.c:25)
+==145837== 
+==145837== 
+==145837== HEAP SUMMARY:
+==145837==     in use at exit: 260 bytes in 7 blocks
+==145837==   total heap usage: 5,708 allocs, 10,382 frees, 644,243 bytes allocated
+==145837== 
+==145837== 16 bytes in 1 blocks are still reachable in loss record 1 of 7
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x4054E5: ft_lstnew (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x403015: parse_sphere (parse.c:101)
+==145837==    by 0x402C9B: parse_line (parse.c:53)
+==145837==    by 0x402B74: parse_scene (parse.c:33)
+==145837==    by 0x402577: main (minirt.c:26)
+==145837== 
+==145837== 16 bytes in 1 blocks are still reachable in loss record 2 of 7
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x4054E5: ft_lstnew (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40330C: parse_cylinder (parse.c:131)
+==145837==    by 0x402C9B: parse_line (parse.c:53)
+==145837==    by 0x402B74: parse_scene (parse.c:33)
+==145837==    by 0x402577: main (minirt.c:26)
+==145837== 
+==145837== 16 bytes in 1 blocks are still reachable in loss record 3 of 7
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x4054E5: ft_lstnew (in /nfs/homes/craimond/Desktop/MiniRT/MiniRT_GitHub/minirt)
+==145837==    by 0x40316C: parse_plane (parse.c:115)
+==145837==    by 0x402C9B: parse_line (parse.c:53)
+==145837==    by 0x402B74: parse_scene (parse.c:33)
+==145837==    by 0x402577: main (minirt.c:26)
+==145837== 
+==145837== 20 bytes in 1 blocks are definitely lost in loss record 4 of 7
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402D59: parse_light (parse.c:73)
+==145837==    by 0x402C9B: parse_line (parse.c:53)
+==145837==    by 0x402B74: parse_scene (parse.c:33)
+==145837==    by 0x402577: main (minirt.c:26)
+==145837== 
+==145837== 64 bytes in 1 blocks are still reachable in loss record 5 of 7
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x402F3C: parse_sphere (parse.c:95)
+==145837==    by 0x402C9B: parse_line (parse.c:53)
+==145837==    by 0x402B74: parse_scene (parse.c:33)
+==145837==    by 0x402577: main (minirt.c:26)
+==145837== 
+==145837== 64 bytes in 1 blocks are still reachable in loss record 6 of 7
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x4031AC: parse_cylinder (parse.c:123)
+==145837==    by 0x402C9B: parse_line (parse.c:53)
+==145837==    by 0x402B74: parse_scene (parse.c:33)
+==145837==    by 0x402577: main (minirt.c:26)
+==145837== 
+==145837== 64 bytes in 1 blocks are still reachable in loss record 7 of 7
+==145837==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==145837==    by 0x40304C: parse_plane (parse.c:109)
+==145837==    by 0x402C9B: parse_line (parse.c:53)
+==145837==    by 0x402B74: parse_scene (parse.c:33)
+==145837==    by 0x402577: main (minirt.c:26)
+==145837== 
+==145837== LEAK SUMMARY:
+==145837==    definitely lost: 20 bytes in 1 blocks
+==145837==    indirectly lost: 0 bytes in 0 blocks
+==145837==      possibly lost: 0 bytes in 0 blocks
+==145837==    still reachable: 240 bytes in 6 blocks
+==145837==         suppressed: 0 bytes in 0 blocks
+==145837== 
+==145837== For lists of detected and suppressed errors, rerun with: -s
+==145837== ERROR SUMMARY: 5267 errors from 9 contexts (suppressed: 2 from 1)

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/25 17:45:32 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/25 19:16:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ static void	parse_sphere(char *line, t_scene *scene)
 	sphere.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = SPHERE;
 	shape->sphere = sphere;
+	set_bounding_box(shape);
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
@@ -112,6 +113,7 @@ static void	parse_plane(char *line, t_scene *scene)
 	plane.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = PLANE;
 	shape->plane = plane;
+	set_bounding_box(shape);
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
@@ -128,6 +130,7 @@ static void	parse_cylinder(char *line, t_scene *scene)
 	cylinder.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = CYLINDER;
 	shape->cylinder = cylinder;
+	set_bounding_box(shape);
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
