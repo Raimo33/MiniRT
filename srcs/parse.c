@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 19:52:28 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/25 17:45:32 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void parse_scene(const int fd, t_scene *scene)
     while (line)
 	{
 		if (!is_empty_line(line) && !is_comment(line))
-			parse_line(line, scene);
+			parse_line(line, scene);			
 		free(line);
 		line = get_next_line(fd);
 	}
@@ -68,12 +68,13 @@ static void	parse_amblight(char *line, t_scene *scene)
 
 static void	parse_light(char *line, t_scene *scene)
 {
-	t_light		light;
+	t_light		*light;
 
-	light.center = parse_coord(ft_strtok(line, spaces));
-	light.brightness = ft_atof(ft_strtok(NULL, spaces));
-	light.color = parse_color(ft_strtok(NULL, spaces));
-	ft_lstadd_front(&scene->lights, ft_lstnew(&light));
+	light = (t_light *)malloc(sizeof(t_light));
+	light->center = parse_coord(ft_strtok(line, spaces));
+	light->brightness = ft_atof(ft_strtok(NULL, spaces));
+	light->color = parse_color(ft_strtok(NULL, spaces));
+	ft_lstadd_front(&scene->lights, ft_lstnew(light));
 }
 
 static void	parse_camera(char *line, t_scene *scene)
@@ -89,45 +90,45 @@ static void	parse_camera(char *line, t_scene *scene)
 static void	parse_sphere(char *line, t_scene *scene)
 {
 	t_sphere	sphere;
-	t_shape		shape;
+	t_shape		*shape;
 
+	shape = (t_shape *)malloc(sizeof(t_shape));
 	sphere.center = parse_coord(ft_strtok(line, spaces));
 	sphere.radius = ft_atof(ft_strtok(NULL, spaces));
 	sphere.color = parse_color(ft_strtok(NULL, spaces));
-	shape.type = SPHERE;
-	shape.sphere = sphere;
-	set_obj_extremes(&shape); //TODO setta la bounding box dell'oggetto
-	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
+	shape->type = SPHERE;
+	shape->sphere = sphere;
+	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
 static void	parse_plane(char *line, t_scene *scene)
 {
 	t_plane		plane;
-	t_shape		shape;
+	t_shape		*shape;
 
+	shape = (t_shape *)malloc(sizeof(t_shape));
 	plane.center = parse_coord(ft_strtok(line, spaces));
 	plane.normal = parse_coord(ft_strtok(NULL, spaces));
 	plane.color = parse_color(ft_strtok(NULL, spaces));
-	shape.type = PLANE;
-	shape.plane = plane;
-	set_obj_extremes(&shape);
-	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
+	shape->type = PLANE;
+	shape->plane = plane;
+	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
 static void	parse_cylinder(char *line, t_scene *scene)
 {
 	t_cylinder	cylinder;
-	t_shape		shape;
+	t_shape		*shape;
 
+	shape = (t_shape *)malloc(sizeof(t_shape));
 	cylinder.center = parse_coord(ft_strtok(line, spaces));
 	cylinder.normal = parse_coord(ft_strtok(NULL, spaces));
 	cylinder.diameter = ft_atof(ft_strtok(NULL, spaces));
 	cylinder.height = ft_atof(ft_strtok(NULL, spaces));
 	cylinder.color = parse_color(ft_strtok(NULL, spaces));
-	shape.type = CYLINDER;
-	shape.cylinder = cylinder;
-	set_obj_extremes(&shape);
-	ft_lstadd_front(&scene->shapes, ft_lstnew(&shape));
+	shape->type = CYLINDER;
+	shape->cylinder = cylinder;
+	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
 static t_float3	parse_coord(const char *str)

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 18:19:52 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/25 17:05:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ typedef struct s_cylinder
 
 typedef struct s_shape
 {
-	enum {SPHERE, PLANE, CYLINDER}	type;
+	enum {SPHERE, CYLINDER, PLANE}	type; //PLANE DEVE ESSERE L'ULTIMO DELLA SERIE
 	union
 	{
 		t_sphere	sphere;
-		t_plane		plane;
 		t_cylinder	cylinder;
+		t_plane		plane;
 	};
 	//bounding box
 	t_point		min;
