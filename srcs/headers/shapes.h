@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/25 18:48:34 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/26 19:14:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_plane
 	t_point		center;
 	t_vector	normal;
 	t_color		color;
+	t_point		vertices[4];
 }	t_plane;
 
 typedef struct s_cylinder

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/25 19:18:38 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/26 19:43:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void setup_scene(t_scene *scene)
 
 static void fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_top, t_vector box_bottom)
 {
-	t_vector	center;
+	t_point		center;
 	t_vector	size;
-	t_vector	new_box_top;
-	t_vector	new_box_bottom;
+	t_point		new_box_top;
+	t_point		new_box_bottom;
 	t_list		*shapes_inside_box;
 	uint16_t	i;
 
@@ -61,28 +61,27 @@ static void fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_
 		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
 		shapes_inside_box = get_shapes_inside_box(shapes, new_box_top, new_box_bottom);
 		fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
-		//TODO eventuale free di filtered shapes
+		ft_lstclear(&shapes_inside_box, free);
 		i++;
 	}
 }
 
-static t_list *get_shapes_inside_box(t_list *shapes, t_vector box_top, t_vector box_bottom)
+static t_list *get_shapes_inside_box(t_list *shapes, t_point box_top, t_point box_bottom)
 {
 	t_list		*shapes_inside_box;
 	t_shape		*shape;
-	t_vector	bb_min;
-	t_vector	bb_max;
 
 	shapes_inside_box = NULL;
 	while (shapes)
 	{
+		printf("box_top: %f %f %f\n", box_top.x, box_top.y, box_top.z);
+		printf("box_bottom: %f %f %f\n", box_bottom.x, box_bottom.y, box_bottom.z);
+		printf("\n\n\n");
 		shape = shapes->content;
-		bb_min = shape->bb_min;
-		bb_max = shape->bb_max;
-		if (bb_min.x >= box_bottom.x && bb_max.x <= box_top.x &&
-			bb_min.y >= box_bottom.y && bb_max.y <= box_top.y &&
-			bb_min.z >= box_bottom.z && bb_max.z <= box_top.z)
-			ft_lstadd_back(&shapes_inside_box, ft_lstnew(shape));
+		if (shape->bb_min.x >= box_bottom.x && shape->bb_max.x <= box_top.x &&
+			shape->bb_min.y >= box_bottom.y && shape->bb_max.y <= box_top.y &&
+			shape->bb_min.z >= box_bottom.z && shape->bb_max.z <= box_top.z)
+			ft_lstadd_front(&shapes_inside_box, ft_lstnew(shape));
 		shapes = shapes->next;
 	}
 	return (shapes_inside_box);
@@ -92,8 +91,8 @@ static void	set_world_extremes(t_scene *scene)
 {
 	t_list		*shapes;
 	t_shape		*shape;
-	t_vector	world_max = {0, 0, 0};
-	t_vector	world_min = {0, 0, 0};
+	t_point		world_max = {0, 0, 0};
+	t_point		world_min = {0, 0, 0};
 
 	//bb min e bb max delle shapes deve partire da 0,0,0
 
@@ -104,8 +103,8 @@ static void	set_world_extremes(t_scene *scene)
 	while (shapes)
 	{
 		shape = shapes->content;
-		world_max = (t_vector){fmax(world_max.x, shape->bb_max.x), fmax(world_max.y, shape->bb_max.y), fmax(world_max.z, shape->bb_max.z)};
-		world_min = (t_vector){fmin(world_min.x, shape->bb_min.x), fmin(world_min.y, shape->bb_min.y), fmin(world_min.z, shape->bb_min.z)};
+		world_max = (t_point){fmax(world_max.x, shape->bb_max.x), fmax(world_max.y, shape->bb_max.y), fmax(world_max.z, shape->bb_max.z)};
+		world_min = (t_point){fmin(world_min.x, shape->bb_min.x), fmin(world_min.y, shape->bb_min.y), fmin(world_min.z, shape->bb_min.z)};
 		shapes = shapes->next;
 	}
 	scene->world_min = world_min;
@@ -137,10 +136,38 @@ static void	set_bb_sphere(t_shape *shape)
 	shape->bb_max = (t_point){shape->sphere.center.x + shape->sphere.radius, shape->sphere.center.y + shape->sphere.radius, shape->sphere.center.z + shape->sphere.radius};
 }
 
+//bounding box for plane
 static void set_bb_plane(t_shape *shape)
 {
-	shape->bb_min = (t_point){-WORLD_SIZE, -WORLD_SIZE, -WORLD_SIZE};
-	shape->bb_max = (t_point){WORLD_SIZE, WORLD_SIZE, WORLD_SIZE};
+	t_vector 	u;
+	t_vector 	v;
+	t_vector 	r;
+	const float	size = WORLD_SIZE / 2;
+	
+	r = (t_vector){1, 0, 0};
+	if (fabs(vec_dot(r, shape->plane.normal)) > 0.999)
+    	r = (t_vector){0, 1, 0};
+	
+	u = vec_cross(r, shape->plane.normal);
+	v = vec_cross(u, shape->plane.normal);
+
+	u = vec_normalize(u);
+	v = vec_normalize(v);
+
+	t_point bb_min = {
+    	-(size * fabs(u.x)) - (size * fabs(v.x)),
+    	-(size * fabs(u.y)) - (size * fabs(v.y)),
+    	-(size * fabs(u.z)) - (size * fabs(v.z))
+	};
+
+	t_point bb_max = {
+		size * fabs(u.x) + (size * fabs(v.x)),
+	 	size * fabs(u.y) + (size * fabs(v.y)),
+		size * fabs(u.z) + (size * fabs(v.z))
+	};
+
+	shape->bb_max = bb_max;
+	shape->bb_min = bb_min;
 }
 
 //axis aligned bounding box for cylinder

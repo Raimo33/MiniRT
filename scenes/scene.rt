@@ -1,5 +1,10 @@
+#ambient light
 A 					0.2									255,255,255
+
+#light
 L 0,0,-3 			0.6									10,0,255
+
+#camera
 C 0,0,0				0,0,1 				90
 
 #sfera

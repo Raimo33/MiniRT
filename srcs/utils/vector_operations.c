@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 16:00:05 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/26 19:38:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,9 @@ t_vector	vec_negate(t_vector a) //restituisce il vettore opposto
 	result.y = -a.y;
 	result.z = -a.z;
 	return (result);
+}
+
+float	vec_dot(t_vector a, t_vector b) //prodotto scalare
+{
+	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }

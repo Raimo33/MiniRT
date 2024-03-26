@@ -52,5 +52,6 @@ t_vector	vec_div(t_vector a, t_vector b);
 t_vector	vec_cross(t_vector a, t_vector b);
 t_vector	vec_normalize(t_vector a);
 t_vector	vec_negate(t_vector a);
+float		vec_dot(t_vector a, t_vector b);
 
 #endif
