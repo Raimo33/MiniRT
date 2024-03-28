@@ -6,7 +6,7 @@
 /*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/28 13:58:27 by egualand         ###   ########.fr       */
+/*   Updated: 2024/03/28 14:51:41 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,11 @@
 
 # define KEY_ESC 65307
 
-static const char	spaces[] = " \t\n\v\f\r";
+#define OCTREE_DEPTH 4
 
+static const char		spaces[] = " \t\n\v\f\r";
+
+static const t_color	BACKGROUND_COLOR = {0, 0, 0};
 typedef struct s_mlx_data
 {
 	void			*win;
@@ -72,5 +75,6 @@ bool	is_space(char c);
 float 	ft_atof(const char *str);
 uint8_t ft_atoui(const char *str);
 char 	*ft_strtok(char *const str, const char *const sep);
+bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
 
 #endif

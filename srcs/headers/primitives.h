@@ -45,6 +45,22 @@ typedef struct s_ray
 	t_vector	direction;
 }	t_ray;
 
+typedef struct s_material
+{
+    t_color     color;
+    float       specular;
+    float       reflectivity;
+
+}   t_material;
+
+typedef struct s_hit
+{
+    t_point     point;
+    t_vector    normal;
+    float       distance;
+    t_material  material;
+}   t_hit;
+
 t_vector	vec_add(t_vector a, t_vector b);
 t_vector	vec_sub(t_vector a, t_vector b);
 t_vector	vec_mul(t_vector a, t_vector b);

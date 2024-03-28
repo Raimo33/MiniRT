@@ -6,7 +6,7 @@
 /*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/28 13:58:30 by egualand         ###   ########.fr       */
+/*   Updated: 2024/03/28 14:47:32 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_b
 void setup_scene(t_scene *scene)
 {
 	set_world_extremes(scene);
-	fill_octree(scene->octree, scene->shapes, 4, scene->world_max, scene->world_min);
+	fill_octree(scene->octree, scene->shapes, OCTREE_DEPTH, scene->world_max, scene->world_min);
 }
 
 static uint16_t fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_top, t_vector box_bottom)
@@ -69,6 +69,7 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, int depth, t_vector 
 	t_list		*shapes_inside_box;
 	uint16_t	i;
 
+	node->depth = depth;
 	if (depth == 0)
 	{
 		node->shapes = shapes;
@@ -95,13 +96,10 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, int depth, t_vector 
 
 		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
 		shapes_inside_box = get_shapes_inside_box(shapes, new_box_top, new_box_bottom);
-		if (ft_lstsize(shapes_inside_box) > 0) {
-			printf("nshapes %d\n", ft_lstsize(shapes_inside_box));
-		}
 		node->n_shapes += fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
 		i++;
 	}
-	return node->n_shapes;
+	return (node->n_shapes);
 }
 
 static t_list *get_shapes_inside_box(t_list *shapes, t_point box_top, t_point box_bottom)
