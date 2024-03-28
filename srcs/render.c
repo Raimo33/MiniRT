@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/24 16:23:37 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/28 13:59:04 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,6 @@ static t_color	trace_ray(const t_scene scene, const t_ray ray)
 	(void)scene;
 	(void)ray;
 	//TODO implementare il tracciamento dei raggi
+	
 	return ((t_color){0, 255, 0});
 }

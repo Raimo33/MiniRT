@@ -3,21 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   setup_scene.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/26 19:43:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/28 13:58:30 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static void 	fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_top, t_vector box_bottom);
+static uint16_t	fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_top, t_vector box_bottom);
 static void		set_world_extremes(t_scene *scene);
 static void		set_bb_sphere(t_shape *shape);
 static void		set_bb_cylinder(t_shape *shape);
 static void		set_bb_plane(t_shape *shape);
 static t_list	*get_shapes_inside_box(t_list *shapes, t_vector box_top, t_vector box_bottom);
+
+int  boxes_overlap(t_point box1_top, t_point box1_bottom, t_point box2_top, t_point box2_bottom)
+{
+    return (box1_bottom.x <= box2_top.x && box1_top.x >= box2_bottom.x &&
+            box1_bottom.y <= box2_top.y && box1_top.y >= box2_bottom.y &&
+            box1_bottom.z <= box2_top.z && box1_top.z >= box2_bottom.z);
+}
+
+bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min)
+{
+    float tmin = -FLT_MAX;
+    float tmax = FLT_MAX;
+	float ray_direction[3] = {ray.direction.x, ray.direction.y, ray.direction.z};
+	float bb_max[3] = {bounding_box_max.x, bounding_box_max.y, bounding_box_max.z};
+	float bb_min[3] = {bounding_box_min.x, bounding_box_min.y, bounding_box_min.z};
+	float ray_origin[3] = {ray.origin.x, ray.origin.y, ray.origin.z};
+
+    for (int i = 0; i < 3; i++)
+	{
+        float invD = 1.0f / ray_direction[i];
+        float t0 = (bb_min[i] - ray_origin[i]) * invD;
+        float t1 = (bb_max[i] - ray_origin[i]) * invD;
+        if (invD < 0.0f)
+		{
+            float temp = t0;
+            t0 = t1;
+            t1 = temp;
+        }
+        tmin = t0 > tmin ? t0 : tmin;
+        tmax = t1 < tmax ? t1 : tmax;
+        if (tmax <= tmin)
+            return (false);
+    }
+    return (true);
+}
 
 void setup_scene(t_scene *scene)
 {
@@ -25,7 +60,7 @@ void setup_scene(t_scene *scene)
 	fill_octree(scene->octree, scene->shapes, 4, scene->world_max, scene->world_min);
 }
 
-static void fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_top, t_vector box_bottom)
+static uint16_t fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_top, t_vector box_bottom)
 {
 	t_point		center;
 	t_vector	size;
@@ -40,7 +75,7 @@ static void fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_
 		node->box_top = box_top;
 		node->box_bottom = box_bottom;
 		node->n_shapes = ft_lstsize(shapes);
-		return ;
+		return node->n_shapes;
 	}
 	//world.min a sx e world.max a dx
 	center = (t_vector){(box_top.x + box_bottom.x) / 2, (box_top.y + box_bottom.y) / 2, (box_top.z + box_bottom.z) / 2};
@@ -60,31 +95,26 @@ static void fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_
 
 		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
 		shapes_inside_box = get_shapes_inside_box(shapes, new_box_top, new_box_bottom);
-		fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
-		ft_lstclear(&shapes_inside_box, free);
+		if (ft_lstsize(shapes_inside_box) > 0) {
+			printf("nshapes %d\n", ft_lstsize(shapes_inside_box));
+		}
+		node->n_shapes += fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
 		i++;
 	}
+	return node->n_shapes;
 }
 
 static t_list *get_shapes_inside_box(t_list *shapes, t_point box_top, t_point box_bottom)
 {
-	t_list		*shapes_inside_box;
-	t_shape		*shape;
-
-	shapes_inside_box = NULL;
-	while (shapes)
-	{
-		printf("box_top: %f %f %f\n", box_top.x, box_top.y, box_top.z);
-		printf("box_bottom: %f %f %f\n", box_bottom.x, box_bottom.y, box_bottom.z);
-		printf("\n\n\n");
-		shape = shapes->content;
-		if (shape->bb_min.x >= box_bottom.x && shape->bb_max.x <= box_top.x &&
-			shape->bb_min.y >= box_bottom.y && shape->bb_max.y <= box_top.y &&
-			shape->bb_min.z >= box_bottom.z && shape->bb_max.z <= box_top.z)
-			ft_lstadd_front(&shapes_inside_box, ft_lstnew(shape));
-		shapes = shapes->next;
-	}
-	return (shapes_inside_box);
+    t_list  *inside_shapes = NULL;
+    while (shapes)
+    {
+        t_shape *current_shape = (t_shape*)shapes->content;
+        if (boxes_overlap(box_top, box_bottom, current_shape->bb_max, current_shape->bb_min))
+			ft_lstadd_back(&inside_shapes, ft_lstnew(current_shape));
+        shapes = shapes->next;
+    }
+    return (inside_shapes);
 }
 
 static void	set_world_extremes(t_scene *scene)
