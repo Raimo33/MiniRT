@@ -6,13 +6,13 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/28 23:35:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 00:25:23 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static uint16_t	fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_top, t_vector box_bottom);
+static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom);
 static void		set_world_extremes(t_scene *scene);
 static void		set_bb_sphere(t_shape *shape);
 static void		set_bb_cylinder(t_shape *shape);
@@ -82,6 +82,7 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vec
 	//world.min a sx e world.max a dx
 	center = (t_vector){(box_top.x + box_bottom.x) / 2, (box_top.y + box_bottom.y) / 2, (box_top.z + box_bottom.z) / 2};
 	size = (t_vector){(box_top.x - box_bottom.x) / 2, (box_top.y - box_bottom.y) / 2, (box_top.z - box_bottom.z) / 2};
+	node->children = (t_octree **)malloc(sizeof(t_octree *) * 8);
 	i = -1;
 	while (++i < 8)
 	{
@@ -108,11 +109,13 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vec
 static t_list *get_shapes_inside_box(t_list *shapes, t_point box_top, t_point box_bottom)
 {
     t_list  *inside_shapes = NULL;
+	t_shape *current_shape;
+
     while (shapes)
     {
-        t_shape *current_shape = (t_shape*)shapes->content;
+        current_shape = (t_shape*)shapes->content;
         if (boxes_overlap(box_top, box_bottom, current_shape->bb_max, current_shape->bb_min))
-			ft_lstadd_back(&inside_shapes, ft_lstnew(current_shape));
+			ft_lstadd_front(&inside_shapes, ft_lstnew(current_shape));
         shapes = shapes->next;
     }
     return (inside_shapes);
@@ -142,7 +145,7 @@ static void	set_world_extremes(t_scene *scene)
 	scene->world_max = world_max;
 }
 
-void set_bounding_box(t_shape *shape)
+void	set_bounding_box(t_shape *shape)
 {
 	void (*const	get_bb_funcs[])(t_shape *) = {&set_bb_sphere, &set_bb_cylinder, &set_bb_plane}; //deve essere lo stesso ordine dell enum type
 	const uint8_t	n_shapes = sizeof(get_bb_funcs) / sizeof(get_bb_funcs[0]);

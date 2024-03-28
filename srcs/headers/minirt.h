@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/28 23:27:04 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 00:09:13 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,5 @@ float 			ft_atof(const char *str);
 uint8_t 		ft_atoui(const char *str);
 char 			*ft_strtok(char *const str, const char *const sep);
 bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
-inline t_color	hex_to_rgb(const uint32_t hex);
 
 #endif

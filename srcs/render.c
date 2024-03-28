@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/28 23:28:11 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 00:48:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ static t_ray	get_ray(const t_scene scene, const uint16_t x, const uint16_t y);
 static t_color	trace_ray(const t_scene scene, const t_ray ray);
 static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere);
 static t_point	ray_point_at_parameter(const t_ray ray, float t);
-static void		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit, bool *hit_found);
-static void		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
+static bool		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
+static bool		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static t_color	compute_color_at_intersection(const t_hit hit, const t_scene scene);
 
 void render(const t_mlx_data mlx_data, const t_scene scene)
@@ -48,8 +48,7 @@ static t_ray	get_ray(const t_scene scene, const uint16_t x, const uint16_t y)
 {
 	const t_vector	world_up = {0, 1, 0};
 	const float		aspect_ratio = (float)WIN_WIDTH / (float)WIN_HEIGHT;
-	const float		t_material	material;
-	fov = scene.camera.fov * M_PI / 180; //fov da grad in radianti
+	const float		fov = scene.camera.fov * M_PI / 180; //fov da grad in radianti
 	const float		viewport_height = 2 * tan(fov / 2);
 	const float		viewport_width = aspect_ratio * viewport_height;
 
@@ -84,20 +83,28 @@ static t_ray	get_ray(const t_scene scene, const uint16_t x, const uint16_t y)
 	return (ray_direction);
 }
 
-static t_color trace_ray(const t_scene scene, const t_ray ray)
+static t_color	trace_ray(const t_scene scene, const t_ray ray)
 {
     t_hit			closest_hit = 
 	{
 		.distance = FLT_MAX,
 		.point = {0, 0, 0},
 		.normal = {0, 0, 0},
-		.material = {0, 0, 0}
+		.material = NULL
 	};
-	t_color			color;
-	static const	bg_color = hex_to_rgb(BACKGROUND_COLOR);
+	t_color					color;
+	static const t_color	bg_color = 
+	{
+		.r = (BACKGROUND_COLOR >> 16) & 0xFF,
+		.g = (BACKGROUND_COLOR >> 8) & 0xFF,
+		.b = BACKGROUND_COLOR & 0xFF
+	};
 
     if (!traverse_octree(scene.octree, ray, &closest_hit)) //aka no hit found
+	{
+		printf("NO HIT\n");
 		return (bg_color);
+	}
     // Calcolare il colore del pixel in base all'intersezione più vicina
 	// Senza considerare le luci e i materiali per ora
     color = compute_color_at_intersection(closest_hit, scene);
@@ -106,11 +113,11 @@ static t_color trace_ray(const t_scene scene, const t_ray ray)
 
 static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere)
 {
-    t_vector oc = vec_sub(ray.origin, sphere.center);
-    float a = vec_dot(ray.direction, ray.direction);
-    float b = 2.0 * vec_dot(oc, ray.direction);
-    float c = vec_dot(oc, oc) - sphere.radius * sphere.radius;
-    float discriminant = b * b - 4 * a * c;
+    t_vector	oc = vec_sub(ray.origin, sphere.center);
+    float 		a = vec_dot(ray.direction, ray.direction);
+    float 		b = 2.0 * vec_dot(oc, ray.direction);
+    float 		c = vec_dot(oc, oc) - sphere.radius * sphere.radius;
+    float 		discriminant = b * b - 4 * a * c;
 
     if (discriminant < 0)
         return (-1);
@@ -122,55 +129,65 @@ static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere)
 			return (t1);
         if (t2 > 0)
 			return (t2);
-        return -1;
+        return (-1);
     }
 }
 
 static t_point ray_point_at_parameter(const t_ray ray, float t)
 {
-    t_point point;
+    t_point	point;
+
     point.x = ray.origin.x + t * ray.direction.x;
     point.y = ray.origin.y + t * ray.direction.y;
     point.z = ray.origin.z + t * ray.direction.z;
-    return point;
+
+    return (point);
 }
 
-static void check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit, bool *hit_found)
+static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
-	t_list *l = node->shapes;
-	while (l != NULL)
+	t_list	*shapes;
+	t_shape	*shape;
+	float	t;
+	bool	has_hit;
+
+	has_hit = false;
+	shapes = node->shapes;
+	while (shapes)
 	{
-		t_shape *shape = (t_shape *)l->content;
+		shape = (t_shape *)shapes->content;
 		if (shape->type == SPHERE)
 		{
-            float t = intersect_ray_sphere(ray, shape->sphere);
+            t = intersect_ray_sphere(ray, shape->sphere);
             if (t > 0 && t < closest_hit->distance)
 			{
                 closest_hit->distance = t;
                 closest_hit->point = ray_point_at_parameter(ray, t);
                 closest_hit->normal = vec_sub(closest_hit->point, shape->sphere.center);
                 closest_hit->normal = vec_normalize(closest_hit->normal);
-                closest_hit->material = shape->sphere.material; 
+                closest_hit->material = &shape->material;
+				has_hit = true;
             }
         }
-		l = l->next;
+		shapes = shapes->next;
 	}
+	return (has_hit);
 }
 
 static bool	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
 	uint8_t	i;
-	
-    // Controllo se il raggio interseca il bounding box del nodo
-    if (!ray_intersects_aabb(ray, node->box_top, node->box_bottom))
-        return (false);
+
+	// Controllo se il raggio interseca il bounding box del nodo
+	if (!ray_intersects_aabb(ray, node->box_top, node->box_bottom))
+		return (false);
 
 	// Se c'e' solo una shape all'interno o se il nodo è una leaf, controlla le intersezioni con le forme
-    if (node->n_shapes == 1 || node->children == NULL)
-        return (check_shapes_in_node(node, ray, closest_hit));
-    else
+	if (node->n_shapes == 1 || node->children == NULL)
+		return (check_shapes_in_node(node, ray, closest_hit));
+	else
 	{
-        // Altrimenti, continua a scendere nell'albero
+		// Altrimenti, continua a scendere nell'albero
 		i = 0;
 		while (i < 8)
 		{
@@ -178,13 +195,16 @@ static bool	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closes
 				return (true); //early stop se trova un hit
 			i++;
 		}
-    }
+	}
+	return (false);
 }
 
 static t_color compute_color_at_intersection(const t_hit hit, const t_scene scene)
 {
-	(void)hit;
-	(void)scene; //TODO serve scene??
+	(void)scene;
+	
+	if (hit.material)
+		return (hit.material->color);
 	
     return ((t_color){.r = 255, .g = 255, .b = 255});
 }

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/25 19:16:25 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 00:17:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static void	parse_sphere(char *line, t_scene *scene)
 	shape = (t_shape *)malloc(sizeof(t_shape));
 	sphere.center = parse_coord(ft_strtok(line, spaces));
 	sphere.radius = ft_atof(ft_strtok(NULL, spaces));
-	sphere.color = parse_color(ft_strtok(NULL, spaces));
+	shape->material.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = SPHERE;
 	shape->sphere = sphere;
 	set_bounding_box(shape);
@@ -110,7 +110,7 @@ static void	parse_plane(char *line, t_scene *scene)
 	shape = (t_shape *)malloc(sizeof(t_shape));
 	plane.center = parse_coord(ft_strtok(line, spaces));
 	plane.normal = parse_coord(ft_strtok(NULL, spaces));
-	plane.color = parse_color(ft_strtok(NULL, spaces));
+	shape->material.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = PLANE;
 	shape->plane = plane;
 	set_bounding_box(shape);
@@ -127,7 +127,7 @@ static void	parse_cylinder(char *line, t_scene *scene)
 	cylinder.normal = parse_coord(ft_strtok(NULL, spaces));
 	cylinder.diameter = ft_atof(ft_strtok(NULL, spaces));
 	cylinder.height = ft_atof(ft_strtok(NULL, spaces));
-	cylinder.color = parse_color(ft_strtok(NULL, spaces));
+	shape->material.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = CYLINDER;
 	shape->cylinder = cylinder;
 	set_bounding_box(shape);

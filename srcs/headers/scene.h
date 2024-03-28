@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/28 22:50:32 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 00:24:38 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct s_amblight
 
 typedef	struct s_octree
 {
-	struct s_octree	*children[8];
+	struct s_octree	**children;
 	t_list			*shapes;
 	uint16_t		n_shapes;
 	t_vector		box_top;
