@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_scene.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/28 14:47:32 by egualand         ###   ########.fr       */
+/*   Updated: 2024/03/28 23:35:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void setup_scene(t_scene *scene)
 	fill_octree(scene->octree, scene->shapes, OCTREE_DEPTH, scene->world_max, scene->world_min);
 }
 
-static uint16_t fill_octree(t_octree *node, t_list *shapes, int depth, t_vector box_top, t_vector box_bottom)
+static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom)
 {
 	t_point		center;
 	t_vector	size;
@@ -70,19 +70,20 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, int depth, t_vector 
 	uint16_t	i;
 
 	node->depth = depth;
-	if (depth == 0)
+	if (depth == 0) //foglia
 	{
+		node->children = NULL; //fondamentale, e' cio' che distingue un nodo foglia da uno interno
 		node->shapes = shapes;
 		node->box_top = box_top;
 		node->box_bottom = box_bottom;
 		node->n_shapes = ft_lstsize(shapes);
-		return node->n_shapes;
+		return (node->n_shapes);
 	}
 	//world.min a sx e world.max a dx
 	center = (t_vector){(box_top.x + box_bottom.x) / 2, (box_top.y + box_bottom.y) / 2, (box_top.z + box_bottom.z) / 2};
 	size = (t_vector){(box_top.x - box_bottom.x) / 2, (box_top.y - box_bottom.y) / 2, (box_top.z - box_bottom.z) / 2};
-	i = 0;
-	while (i < 8)
+	i = -1;
+	while (++i < 8)
 	{
 		new_box_top = center;
 		new_box_bottom = center;
@@ -94,10 +95,12 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, int depth, t_vector 
 		new_box_top.z += (i & 4) ? size.z : 0;
 		new_box_bottom.z += (i & 4) ? 0 : -size.z;
 
-		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
 		shapes_inside_box = get_shapes_inside_box(shapes, new_box_top, new_box_bottom);
+		node->children[i] = NULL;
+		if (!shapes_inside_box)
+			continue ;
+		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
 		node->n_shapes += fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
-		i++;
 	}
 	return (node->n_shapes);
 }

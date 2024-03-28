@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/25 18:26:59 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/28 22:52:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	check_args(const uint16_t argc, char **argv)
 {
 	if (argc != 2)
 		ft_quit(1, "invalid number of arguments");
-	if (ft_strncmp(argv[1] + ft_strlen(argv[1]) - 3, ".rt", 3) != 0)
+	if (ft_strncmp(argv[1] + ft_strlen(argv[1]) - 3, ".rt", 4) != 0)
 		ft_quit(2, "invalid file extension");
 }
 
