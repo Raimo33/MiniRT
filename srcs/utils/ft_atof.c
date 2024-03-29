@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:09:28 by egualand          #+#    #+#             */
-/*   Updated: 2024/03/23 22:05:10 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 16:27:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ float	ft_atof(const char *str)
 {
 	float		result;
 	float		sign;
+	float		divisor;
 	float		dec;
 	uint16_t	i;
 
@@ -32,10 +33,12 @@ float	ft_atof(const char *str)
 		result = result * 10 + (str[i++] - '0');
 	if (str[i] == '.')
 		i++;
+	divisor = 1;
 	while (ft_isdigit(str[i]))
 	{
 		dec = dec * 10 + (str[i++] - '0');
-		result = result + dec / 10;
+		divisor *= 10;
 	}
+	result += dec / divisor;
 	return (result * sign);
 }
