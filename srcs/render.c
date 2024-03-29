@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 19:07:35 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 19:09:34 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static void		setup_camera(t_camera *cam);
 static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
 static t_color	trace_ray(const t_scene scene, const t_ray ray);
 static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere);
+static float	intersect_ray_plane(const t_ray ray, const t_plane plane);
 static t_point	ray_point_at_parameter(const t_ray ray, float t);
 static bool		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static bool		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
@@ -159,6 +160,18 @@ static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 				has_hit = true;
             }
         }
+		else if (shape->type == PLANE)
+		{
+			t = intersect_ray_plane(ray, shape->plane);
+			if (t > 0 && t < closest_hit->distance)
+			{
+				closest_hit->distance = t;
+				closest_hit->point = ray_point_at_parameter(ray, t);
+				closest_hit->normal = shape->plane.normal;
+				closest_hit->material = &shape->material;
+				has_hit = true;
+			}
+		}
 		shapes = shapes->next;
 	}
 	return (has_hit);
