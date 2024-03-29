@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 16:00:31 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 19:07:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,8 @@ static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere)
         return (0);
     }
 }
+
+static float	intersect_ray_plane
 
 static t_point ray_point_at_parameter(const t_ray ray, float t)
 {
