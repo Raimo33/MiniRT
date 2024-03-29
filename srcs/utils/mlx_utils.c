@@ -6,23 +6,26 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 15:23:58 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 00:09:34 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 16:19:03 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-static inline uint16_t	rgb_to_int(const t_color color);
+static uint32_t	rgb_to_int(const t_color color, const uint8_t endianess);
 
 void	my_mlx_pixel_put(const t_mlx_data data, const uint16_t x, const uint16_t y, const t_color color)
 {
 	void	*dst;
 
 	dst = data.addr + (y * data.line_length + x * (data.bits_per_pixel / 8));
-	*(unsigned int *)dst = rgb_to_int(color);
+	*(unsigned int *)dst = rgb_to_int(color, data.endian);
 }
 
-static inline uint16_t	rgb_to_int(const t_color color)
+static uint32_t	rgb_to_int(const t_color color, const uint8_t endianess)
 {
-	return ((color.r << 16) + (color.g << 8) + color.b);
+	if (endianess == 0) //little endian system (intel) least significant byte first
+		return (color.b << 16 | color.g << 8 | color.r);
+	else //big endian system (motorola) most significant byte first
+		return (color.r << 16 | color.g << 8 | color.b);
 }

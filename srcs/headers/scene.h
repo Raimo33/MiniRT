@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 13:02:51 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 15:41:04 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ typedef struct s_camera
 	t_point		center;
 	t_vector	normal;
 	uint8_t		fov;
+	float		viewport_height;
+	float		viewport_width;
+	t_vector	forward;
+	t_vector	right;
+	t_vector	up;
 }	t_camera;
 
 typedef struct s_light

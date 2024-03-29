@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 00:09:13 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 15:44:38 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void			init_hooks(t_mlx_data *win_data, t_scene scene);
 void			parse_scene(int fd, t_scene *scene);
 void			set_bounding_box(t_shape *shape);
 void			setup_scene(t_scene *scene);
-void			render(const t_mlx_data mlx_data, const t_scene scene);
+void			render(const t_mlx_data mlx_data, t_scene scene);
 void			my_mlx_pixel_put(const t_mlx_data data, const uint16_t x, const uint16_t y, const t_color color);
 void 			ft_quit(uint8_t id, char *msg);
 int				close_win(t_hook_data *hook_data);
