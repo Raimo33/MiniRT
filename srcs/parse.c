@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 00:17:53 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 12:41:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ static void	parse_amblight(char *line, t_scene *scene)
 {
 	t_amblight	amblight;
 
-	amblight.brightness = ft_atof(ft_strtok(line, spaces));
+	ft_strtok(line, spaces); //per skippare la lettera
+	amblight.brightness = ft_atof(ft_strtok(NULL, spaces));
 	amblight.color = parse_color(ft_strtok(NULL, spaces));
 	scene->amblight = amblight;
 }
@@ -71,7 +72,8 @@ static void	parse_light(char *line, t_scene *scene)
 	t_light		*light;
 
 	light = (t_light *)malloc(sizeof(t_light));
-	light->center = parse_coord(ft_strtok(line, spaces));
+	ft_strtok(line, spaces); //per skippare la lettera
+	light->center = parse_coord(ft_strtok(NULL, spaces));
 	light->brightness = ft_atof(ft_strtok(NULL, spaces));
 	light->color = parse_color(ft_strtok(NULL, spaces));
 	ft_lstadd_front(&scene->lights, ft_lstnew(light));
@@ -81,7 +83,8 @@ static void	parse_camera(char *line, t_scene *scene)
 {
 	t_camera	camera;
 
-	camera.center = parse_coord(ft_strtok(line, spaces));
+	ft_strtok(line, spaces); //per skippare la lettera
+	camera.center = parse_coord(ft_strtok(NULL, spaces));
 	camera.normal = parse_coord(ft_strtok(NULL, spaces));
 	camera.fov = ft_atoui(ft_strtok(NULL, spaces));
 	scene->camera = camera;
@@ -93,7 +96,8 @@ static void	parse_sphere(char *line, t_scene *scene)
 	t_shape		*shape;
 
 	shape = (t_shape *)malloc(sizeof(t_shape));
-	sphere.center = parse_coord(ft_strtok(line, spaces));
+	ft_strtok(line, spaces); //per skippare la lettera
+	sphere.center = parse_coord(ft_strtok(NULL, spaces));
 	sphere.radius = ft_atof(ft_strtok(NULL, spaces));
 	shape->material.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = SPHERE;
@@ -108,7 +112,8 @@ static void	parse_plane(char *line, t_scene *scene)
 	t_shape		*shape;
 
 	shape = (t_shape *)malloc(sizeof(t_shape));
-	plane.center = parse_coord(ft_strtok(line, spaces));
+	ft_strtok(line, spaces); //per skippare la lettera
+	plane.center = parse_coord(ft_strtok(NULL, spaces));
 	plane.normal = parse_coord(ft_strtok(NULL, spaces));
 	shape->material.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = PLANE;
@@ -123,7 +128,8 @@ static void	parse_cylinder(char *line, t_scene *scene)
 	t_shape		*shape;
 
 	shape = (t_shape *)malloc(sizeof(t_shape));
-	cylinder.center = parse_coord(ft_strtok(line, spaces));
+	ft_strtok(line, spaces); //per skippare la lettera
+	cylinder.center = parse_coord(ft_strtok(NULL, spaces));
 	cylinder.normal = parse_coord(ft_strtok(NULL, spaces));
 	cylinder.diameter = ft_atof(ft_strtok(NULL, spaces));
 	cylinder.height = ft_atof(ft_strtok(NULL, spaces));
@@ -139,8 +145,8 @@ static t_float3	parse_coord(const char *str)
 	t_float3	coord;
 
 	coord.x = ft_atof(str);
-	coord.y = ft_atof(ft_strtok(NULL, ","));
-	coord.z = ft_atof(ft_strtok(NULL, ","));
+	coord.y = ft_atof(ft_strchr(str, ',') + 1);
+	coord.z = ft_atof(ft_strrchr(str, ',') + 1);
 	return (coord);
 }
 
@@ -149,7 +155,7 @@ static t_color	parse_color(const char *str)
 	t_color	color;
 
 	color.r = ft_atoui(str);
-	color.g = ft_atoui(ft_strtok(NULL, ","));
-	color.b = ft_atoui(ft_strtok(NULL, ","));
+	color.g = ft_atoui(ft_strchr(str, ',') + 1);
+	color.b = ft_atoui(ft_strrchr(str, ',') + 1);
 	return (color);
 }

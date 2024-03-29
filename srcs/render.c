@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 00:48:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 13:11:26 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,10 @@ static t_ray	get_ray(const t_scene scene, const uint16_t x, const uint16_t y)
 	const float		fov = scene.camera.fov * M_PI / 180; //fov da grad in radianti
 	const float		viewport_height = 2 * tan(fov / 2);
 	const float		viewport_width = aspect_ratio * viewport_height;
-
 	//calcolo dei vettori base della camera
 	const t_vector	forward = vec_normalize(vec_negate(scene.camera.normal)); //opposto della normale (la normale punta verso l'osservatore)
 	const t_vector	right = vec_normalize(vec_cross(world_up, forward)); //trova il terzo vettore perpendicolare ad entrambi
 	const t_vector	up = vec_normalize(vec_cross(forward, right)); //trova il terzo vettore perpendicolare ad entrambi
-
 	//calcolo della posizione del viewport
 	//centro del viewport: (0, 0)
 	//angolo in alto sx del viewport: (-1, 1), angolo alto dx del viewport: (1, 1), angolo basso sx del viewport: (-1, -1), angolo basso dx del viewport: (1, -1)
@@ -67,7 +65,6 @@ static t_ray	get_ray(const t_scene scene, const uint16_t x, const uint16_t y)
 	//coordinate sul piano cartesiano vero [-1, 1]
 	const float		real_viewport_x = screen_viewport_x * 2 - 1;
 	const float		real_viewport_y = 1 - screen_viewport_y * 2;
-	
 	//calcolo del vettore che parte dalla camera verso il pixel (sul piano immaginario viewport)
 	const t_vector direction = //vettore direzione
 	{
@@ -101,10 +98,7 @@ static t_color	trace_ray(const t_scene scene, const t_ray ray)
 	};
 
     if (!traverse_octree(scene.octree, ray, &closest_hit)) //aka no hit found
-	{
-		printf("NO HIT\n");
 		return (bg_color);
-	}
     // Calcolare il colore del pixel in base all'intersezione più vicina
 	// Senza considerare le luci e i materiali per ora
     color = compute_color_at_intersection(closest_hit, scene);

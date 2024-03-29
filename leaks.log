@@ -1,448 +1,679 @@
-==87658== Memcheck, a memory error detector
-==87658== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==87658== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==87658== Command: ./minirt scenes/scene.rt
-==87658== 
-==87658== Invalid read of size 4
-==87658==    at 0x4046E1: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75c34 is 100 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 8
-==87658==    at 0x4046E7: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75c2c is 92 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 4
-==87658==    at 0x4046FF: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75c28 is 88 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 8
-==87658==    at 0x404708: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75c20 is 80 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid free() / delete / delete[] / realloc()
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75bd0 is 0 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 4
-==87658==    at 0x4046E1: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75c34 is 100 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 8
-==87658==    at 0x4046E7: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75c2c is 92 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 4
-==87658==    at 0x4046FF: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75c28 is 88 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 8
-==87658==    at 0x404708: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75c20 is 80 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid free() / delete / delete[] / realloc()
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x405D63: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x405D63: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d75bd0 is 0 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402EAC: parse_sphere (parse.c:95)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid free() / delete / delete[] / realloc()
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x405D63: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d76b20 is 0 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x405D63: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x40314C: parse_cylinder (parse.c:125)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid free() / delete / delete[] / realloc()
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d779e0 is 0 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402FCC: parse_plane (parse.c:110)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 4
-==87658==    at 0x4046E1: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d77a44 is 100 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402FCC: parse_plane (parse.c:110)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 8
-==87658==    at 0x4046E7: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d77a3c is 92 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402FCC: parse_plane (parse.c:110)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 4
-==87658==    at 0x4046FF: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d77a38 is 88 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402FCC: parse_plane (parse.c:110)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== Invalid read of size 8
-==87658==    at 0x404708: get_shapes_inside_box (setup_scene.c:83)
-==87658==    by 0x403B76: fill_octree (setup_scene.c:69)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Address 0x4d77a30 is 80 bytes inside a block of size 104 free'd
-==87658==    at 0x483CA3F: free (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405D7E: ft_lstclear (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403C13: fill_octree (setup_scene.c:71)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658==  Block was alloc'd at
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402FCC: parse_plane (parse.c:110)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== 
-==87658== HEAP SUMMARY:
-==87658==     in use at exit: 486,788 bytes in 4,684 blocks
-==87658==   total heap usage: 6,063 allocs, 2,208 frees, 641,172 bytes allocated
-==87658== 
-==87658== 16 bytes in 1 blocks are still reachable in loss record 1 of 8
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405BC5: ft_lstnew (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x402F8E: parse_sphere (parse.c:102)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== 16 bytes in 1 blocks are still reachable in loss record 2 of 8
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405BC5: ft_lstnew (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x4032B5: parse_cylinder (parse.c:134)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== 16 bytes in 1 blocks are still reachable in loss record 3 of 8
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x405BC5: ft_lstnew (in /nfs/homes/egualand/course_common_core/miniRT/minirt)
-==87658==    by 0x403113: parse_plane (parse.c:117)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== 20 bytes in 1 blocks are definitely lost in loss record 4 of 8
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x402CC9: parse_light (parse.c:73)
-==87658==    by 0x402C0B: parse_line (parse.c:53)
-==87658==    by 0x402AE4: parse_scene (parse.c:33)
-==87658==    by 0x402577: main (minirt.c:26)
-==87658== 
-==87658== 6,656 bytes in 64 blocks are indirectly lost in loss record 5 of 8
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x403B0D: fill_octree (setup_scene.c:68)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658== 
-==87658== 53,248 bytes in 512 blocks are indirectly lost in loss record 6 of 8
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x403B0D: fill_octree (setup_scene.c:68)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658== 
-==87658== 425,984 bytes in 4,096 blocks are indirectly lost in loss record 7 of 8
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x403B0D: fill_octree (setup_scene.c:68)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403BEC: fill_octree (setup_scene.c:70)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658== 
-==87658== 486,720 (832 direct, 485,888 indirect) bytes in 8 blocks are definitely lost in loss record 8 of 8
-==87658==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==87658==    by 0x403B0D: fill_octree (setup_scene.c:68)
-==87658==    by 0x403539: setup_scene (setup_scene.c:32)
-==87658==    by 0x402583: main (minirt.c:27)
-==87658== 
-==87658== LEAK SUMMARY:
-==87658==    definitely lost: 852 bytes in 9 blocks
-==87658==    indirectly lost: 485,888 bytes in 4,672 blocks
-==87658==      possibly lost: 0 bytes in 0 blocks
-==87658==    still reachable: 48 bytes in 3 blocks
-==87658==         suppressed: 0 bytes in 0 blocks
-==87658== 
-==87658== For lists of detected and suppressed errors, rerun with: -s
-==87658== ERROR SUMMARY: 8647 errors from 18 contexts (suppressed: 2 from 1)
+==12810== Memcheck, a memory error detector
+==12810== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==12810== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==12810== Command: ./minirt scenes/scene.rt
+==12810== 
+==12810== Conditional jump or move depends on uninitialised value(s)
+==12810==    at 0x10D5CB: traverse_octree (render.c:181)
+==12810==    by 0x10D097: trace_ray (render.c:101)
+==12810==    by 0x10CBBA: render (render.c:39)
+==12810==    by 0x10AA40: main (minirt.c:30)
+==12810==  Uninitialised value was created by a heap allocation
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BE6D: fill_octree (setup_scene.c:107)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== Conditional jump or move depends on uninitialised value(s)
+==12810==    at 0x10D5CB: traverse_octree (render.c:181)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D097: trace_ray (render.c:101)
+==12810==    by 0x10CBBA: render (render.c:39)
+==12810==    by 0x10AA40: main (minirt.c:30)
+==12810==  Uninitialised value was created by a heap allocation
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BE6D: fill_octree (setup_scene.c:107)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== Conditional jump or move depends on uninitialised value(s)
+==12810==    at 0x10D5CB: traverse_octree (render.c:181)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D097: trace_ray (render.c:101)
+==12810==    by 0x10CBBA: render (render.c:39)
+==12810==    by 0x10AA40: main (minirt.c:30)
+==12810==  Uninitialised value was created by a heap allocation
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BE6D: fill_octree (setup_scene.c:107)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== Conditional jump or move depends on uninitialised value(s)
+==12810==    at 0x10D5CB: traverse_octree (render.c:181)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D097: trace_ray (render.c:101)
+==12810==    by 0x10CBBA: render (render.c:39)
+==12810==    by 0x10AA40: main (minirt.c:30)
+==12810==  Uninitialised value was created by a heap allocation
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BE6D: fill_octree (setup_scene.c:107)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 
+==12810== Process terminating with default action of signal 2 (SIGINT)
+==12810==    at 0x10D5AA: traverse_octree (render.c:177)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D64F: traverse_octree (render.c:189)
+==12810==    by 0x10D097: trace_ray (render.c:101)
+==12810==    by 0x10CBBA: render (render.c:39)
+==12810==    by 0x10AA40: main (minirt.c:30)
+==12810== 
+==12810== HEAP SUMMARY:
+==12810==     in use at exit: 439,333 bytes in 10,066 blocks
+==12810==   total heap usage: 10,212 allocs, 146 frees, 467,310 bytes allocated
+==12810== 
+==12810== 3 bytes in 1 blocks are still reachable in loss record 1 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4B5058E: strdup (strdup.c:42)
+==12810==    by 0x48B0B45: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 8 bytes in 1 blocks are still reachable in loss record 2 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4B5058E: strdup (strdup.c:42)
+==12810==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 8 bytes in 1 blocks are still reachable in loss record 3 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4870B34: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48729DF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 10 bytes in 1 blocks are still reachable in loss record 4 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4B5058E: strdup (strdup.c:42)
+==12810==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x4917213: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 16 bytes in 1 blocks are still reachable in loss record 5 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10E376: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10B21F: parse_light (parse.c:79)
+==12810==    by 0x10B096: parse_line (parse.c:53)
+==12810==    by 0x10AF56: parse_scene (parse.c:33)
+==12810==    by 0x10A9AB: main (minirt.c:26)
+==12810== 
+==12810== 16 bytes in 1 blocks are still reachable in loss record 6 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10E376: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10B3FD: parse_sphere (parse.c:106)
+==12810==    by 0x10B096: parse_line (parse.c:53)
+==12810==    by 0x10AF56: parse_scene (parse.c:33)
+==12810==    by 0x10A9AB: main (minirt.c:26)
+==12810== 
+==12810== 16 bytes in 1 blocks are still reachable in loss record 7 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10E376: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10B6E4: parse_cylinder (parse.c:140)
+==12810==    by 0x10B096: parse_line (parse.c:53)
+==12810==    by 0x10AF56: parse_scene (parse.c:33)
+==12810==    by 0x10A9AB: main (minirt.c:26)
+==12810== 
+==12810== 16 bytes in 1 blocks are still reachable in loss record 8 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10E376: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10B55F: parse_plane (parse.c:122)
+==12810==    by 0x10B096: parse_line (parse.c:53)
+==12810==    by 0x10AF56: parse_scene (parse.c:33)
+==12810==    by 0x10A9AB: main (minirt.c:26)
+==12810== 
+==12810== 16 bytes in 1 blocks are still reachable in loss record 9 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4CE22EE: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 20 bytes in 1 blocks are still reachable in loss record 10 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10B16D: parse_light (parse.c:74)
+==12810==    by 0x10B096: parse_line (parse.c:53)
+==12810==    by 0x10AF56: parse_scene (parse.c:33)
+==12810==    by 0x10A9AB: main (minirt.c:26)
+==12810== 
+==12810== 21 bytes in 1 blocks are still reachable in loss record 11 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B103E: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 24 bytes in 1 blocks are still reachable in loss record 12 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4872041: XextCreateExtension (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48724CC: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 24 bytes in 1 blocks are still reachable in loss record 13 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4B5058E: strdup (strdup.c:42)
+==12810==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 24 bytes in 1 blocks are still reachable in loss record 14 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48729F5: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 24 bytes in 1 blocks are still reachable in loss record 15 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48BEA65: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C72C6: _XReply (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C777E: XSync (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10F2A0: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10F4D2: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC36: init_window (init.c:51)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 29 bytes in 1 blocks are still reachable in loss record 16 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48AA0CD: _XUpdateAtomCache (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48AC929: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EBC2: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 32 bytes in 1 blocks are still reachable in loss record 17 of 69
+==12810==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4CE615E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE6237: xcb_get_extension_data (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE62EE: xcb_prefetch_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE6364: xcb_get_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x48B152B: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 32 bytes in 1 blocks are still reachable in loss record 18 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4CDF1B7: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CDFA08: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CDFEB0: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE0E44: xcb_wait_for_reply (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE6292: xcb_get_extension_data (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE62EE: xcb_prefetch_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE6364: xcb_get_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x48B152B: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 32 bytes in 1 blocks are still reachable in loss record 19 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48727FF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 32 bytes in 1 blocks are still reachable in loss record 20 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48727FF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 33 bytes in 1 blocks are still reachable in loss record 21 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48AA0CD: _XUpdateAtomCache (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48AC929: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EBAB: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 40 bytes in 1 blocks are still reachable in loss record 22 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48C11F1: _XPollfdCacheInit (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B0E71: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 48 bytes in 1 blocks are still reachable in loss record 23 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10ABA8: init_scene (init.c:41)
+==12810==    by 0x10A997: main (minirt.c:25)
+==12810== 
+==12810== 48 bytes in 1 blocks are still reachable in loss record 24 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48C0E71: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 48 bytes in 1 blocks are still reachable in loss record 25 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48C0E87: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 64 bytes in 1 blocks are still reachable in loss record 26 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BBD3: fill_octree (setup_scene.c:81)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 72 bytes in 1 blocks are still reachable in loss record 27 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B0F20: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 88 bytes in 1 blocks are still reachable in loss record 28 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10F1AB: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10F4D2: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC36: init_window (init.c:51)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 96 bytes in 1 blocks are still reachable in loss record 29 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10ACAC: init_hooks (init.c:62)
+==12810==    by 0x10A9FA: main (minirt.c:29)
+==12810== 
+==12810== 109 bytes in 1 blocks are still reachable in loss record 30 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B1710: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 112 bytes in 1 blocks are still reachable in loss record 31 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10B328: parse_sphere (parse.c:98)
+==12810==    by 0x10B096: parse_line (parse.c:53)
+==12810==    by 0x10AF56: parse_scene (parse.c:33)
+==12810==    by 0x10A9AB: main (minirt.c:26)
+==12810== 
+==12810== 112 bytes in 1 blocks are still reachable in loss record 32 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10B5AF: parse_cylinder (parse.c:130)
+==12810==    by 0x10B096: parse_line (parse.c:53)
+==12810==    by 0x10AF56: parse_scene (parse.c:33)
+==12810==    by 0x10A9AB: main (minirt.c:26)
+==12810== 
+==12810== 112 bytes in 1 blocks are still reachable in loss record 33 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10B448: parse_plane (parse.c:114)
+==12810==    by 0x10B096: parse_line (parse.c:53)
+==12810==    by 0x10AF56: parse_scene (parse.c:33)
+==12810==    by 0x10A9AB: main (minirt.c:26)
+==12810== 
+==12810== 112 bytes in 1 blocks are still reachable in loss record 34 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48C0D72: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 112 bytes in 1 blocks are still reachable in loss record 35 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B1200: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 128 bytes in 1 blocks are still reachable in loss record 36 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B112E: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 128 bytes in 1 blocks are still reachable in loss record 37 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x4917213: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 128 bytes in 1 blocks are still reachable in loss record 38 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 128 bytes in 1 blocks are still reachable in loss record 39 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 136 bytes in 1 blocks are still reachable in loss record 40 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10EAFF: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 136 bytes in 1 blocks are still reachable in loss record 41 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48710C3: XShmCreateImage (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10F1D6: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10F4D2: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC36: init_window (init.c:51)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 152 bytes in 1 blocks are still reachable in loss record 42 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x491740E: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 160 bytes in 1 blocks are still reachable in loss record 43 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x489F9EF: XCreateGC (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B15A4: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 160 bytes in 1 blocks are still reachable in loss record 44 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x489F9EF: XCreateGC (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10ED4E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC15: init_window (init.c:49)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 168 bytes in 1 blocks are still reachable in loss record 45 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B10B2: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 208 bytes in 1 blocks are still reachable in loss record 46 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4870AE9: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48729DF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==12810==    by 0x10E943: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10EBD1: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 208 bytes in 1 blocks are still reachable in loss record 47 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C6EC0: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C7205: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10F045: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ED8E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC15: init_window (init.c:49)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 288 bytes in 18 blocks are still reachable in loss record 48 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10E376: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10BFA6: get_shapes_inside_box (setup_scene.c:123)
+==12810==    by 0x10BE27: fill_octree (setup_scene.c:101)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 384 bytes in 8 blocks are still reachable in loss record 49 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BE6D: fill_octree (setup_scene.c:107)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 416 bytes in 2 blocks are still reachable in loss record 50 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C6EC0: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C71D0: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10F045: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ED8E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC15: init_window (init.c:49)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 512 bytes in 1 blocks are still reachable in loss record 51 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48AC46A: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48AC84E: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EBAB: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 512 bytes in 8 blocks are still reachable in loss record 52 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BBD3: fill_octree (setup_scene.c:81)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 936 bytes in 1 blocks are still reachable in loss record 53 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10ECB0: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC15: init_window (init.c:49)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 1,024 bytes in 1 blocks are still reachable in loss record 54 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4B26BA3: _IO_file_doallocate (filedoalloc.c:101)
+==12810==    by 0x4B35CDF: _IO_doallocbuf (genops.c:347)
+==12810==    by 0x4B34F5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==12810==    by 0x4B336D4: _IO_new_file_xsputn (fileops.c:1243)
+==12810==    by 0x4B336D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==12810==    by 0x4B1D14C: outstring_func (vfprintf-internal.c:239)
+==12810==    by 0x4B1D14C: __vfprintf_internal (vfprintf-internal.c:1263)
+==12810==    by 0x4B0879E: printf (printf.c:33)
+==12810==    by 0x10CB82: render (render.c:38)
+==12810==    by 0x10AA40: main (minirt.c:30)
+==12810== 
+==12810== 1,184 bytes in 74 blocks are still reachable in loss record 55 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10E376: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10BFA6: get_shapes_inside_box (setup_scene.c:123)
+==12810==    by 0x10BE27: fill_octree (setup_scene.c:101)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 2,288 bytes in 11 blocks are still reachable in loss record 56 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C6F01: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C71D0: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10F045: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ED8E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC15: init_window (init.c:49)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 2,704 bytes in 13 blocks are still reachable in loss record 57 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C6F01: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48C7205: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10F045: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ED8E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10AC15: init_window (init.c:49)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 3,072 bytes in 64 blocks are still reachable in loss record 58 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BE6D: fill_octree (setup_scene.c:107)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 4,096 bytes in 64 blocks are still reachable in loss record 59 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BBD3: fill_octree (setup_scene.c:81)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 4,704 bytes in 1 blocks are still reachable in loss record 60 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B0B31: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 8,352 bytes in 522 blocks are still reachable in loss record 61 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10E376: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10BFA6: get_shapes_inside_box (setup_scene.c:123)
+==12810==    by 0x10BE27: fill_octree (setup_scene.c:101)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 14,612 bytes in 1 blocks are still reachable in loss record 62 of 69
+==12810==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4CE24FB: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 16,384 bytes in 1 blocks are still reachable in loss record 63 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B0EBE: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 21,168 bytes in 1 blocks are still reachable in loss record 64 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x4CE2204: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==12810==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 24,576 bytes in 512 blocks are still reachable in loss record 65 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BE6D: fill_octree (setup_scene.c:107)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 32,768 bytes in 512 blocks are still reachable in loss record 66 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BBD3: fill_octree (setup_scene.c:81)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 33,600 bytes in 2 blocks are still reachable in loss record 67 of 69
+==12810==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x48B1290: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==12810==    by 0x10EB17: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10ABE9: init_window (init.c:48)
+==12810==    by 0x10A9C6: main (minirt.c:28)
+==12810== 
+==12810== 65,696 bytes in 4,106 blocks are still reachable in loss record 68 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10E376: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==12810==    by 0x10BFA6: get_shapes_inside_box (setup_scene.c:123)
+==12810==    by 0x10BE27: fill_octree (setup_scene.c:101)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== 196,608 bytes in 4,096 blocks are still reachable in loss record 69 of 69
+==12810==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12810==    by 0x10BE6D: fill_octree (setup_scene.c:107)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BEBD: fill_octree (setup_scene.c:109)
+==12810==    by 0x10BB1F: setup_scene (setup_scene.c:60)
+==12810==    by 0x10A9B7: main (minirt.c:27)
+==12810== 
+==12810== LEAK SUMMARY:
+==12810==    definitely lost: 0 bytes in 0 blocks
+==12810==    indirectly lost: 0 bytes in 0 blocks
+==12810==      possibly lost: 0 bytes in 0 blocks
+==12810==    still reachable: 439,333 bytes in 10,066 blocks
+==12810==         suppressed: 0 bytes in 0 blocks
+==12810== 
+==12810== For lists of detected and suppressed errors, rerun with: -s
+==12810== ERROR SUMMARY: 73668 errors from 4 contexts (suppressed: 1 from 1)

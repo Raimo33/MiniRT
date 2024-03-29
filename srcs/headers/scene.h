@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 00:24:38 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 13:02:51 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ typedef	struct s_octree
 	uint16_t		n_shapes;
 	t_vector		box_top;
 	t_vector		box_bottom;
-	int 			depth; //TODO valutare se toglierlo da qua, e computarlo separatamente
 }	t_octree;
 
 typedef struct	s_scene

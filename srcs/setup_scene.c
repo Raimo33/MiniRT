@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 00:25:23 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 13:10:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vec
 	t_list		*shapes_inside_box;
 	uint16_t	i;
 
-	node->depth = depth;
 	if (depth == 0) //foglia
 	{
 		node->children = NULL; //fondamentale, e' cio' che distingue un nodo foglia da uno interno
@@ -79,10 +78,13 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vec
 		node->n_shapes = ft_lstsize(shapes);
 		return (node->n_shapes);
 	}
+	node->children = (t_octree **)malloc(sizeof(t_octree *) * 8);
+	node->box_bottom = box_bottom;
+	node->box_top = box_top;
+	node->shapes = shapes;
 	//world.min a sx e world.max a dx
 	center = (t_vector){(box_top.x + box_bottom.x) / 2, (box_top.y + box_bottom.y) / 2, (box_top.z + box_bottom.z) / 2};
 	size = (t_vector){(box_top.x - box_bottom.x) / 2, (box_top.y - box_bottom.y) / 2, (box_top.z - box_bottom.z) / 2};
-	node->children = (t_octree **)malloc(sizeof(t_octree *) * 8);
 	i = -1;
 	while (++i < 8)
 	{
@@ -97,10 +99,13 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vec
 		new_box_bottom.z += (i & 4) ? 0 : -size.z;
 
 		shapes_inside_box = get_shapes_inside_box(shapes, new_box_top, new_box_bottom);
-		node->children[i] = NULL;
 		if (!shapes_inside_box)
-			continue ;
+		{
+			node->children[i] = NULL;
+			continue ;	
+		}
 		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
+		//e' molto piu efficiente fare += e far ritornare alla funzione il numero piuttosto che fare lstsize su ogni nodo
 		node->n_shapes += fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
 	}
 	return (node->n_shapes);
