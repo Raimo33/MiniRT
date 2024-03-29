@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 12:41:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 17:03:49 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,10 @@ static t_float3	parse_coord(const char *str)
 	t_float3	coord;
 
 	coord.x = ft_atof(str);
-	coord.y = ft_atof(ft_strchr(str, ',') + 1);
-	coord.z = ft_atof(ft_strrchr(str, ',') + 1);
+	str = ft_strchr(str, ',') + 1;
+	coord.y = ft_atof(str);
+	str = ft_strchr(str, ',') + 1;
+	coord.z = ft_atof(str);
 	return (coord);
 }
 
@@ -155,7 +157,9 @@ static t_color	parse_color(const char *str)
 	t_color	color;
 
 	color.r = ft_atoui(str);
-	color.g = ft_atoui(ft_strchr(str, ',') + 1);
-	color.b = ft_atoui(ft_strrchr(str, ',') + 1);
+	str = ft_strchr(str, ',') + 1;
+	color.g = ft_atoui(str);
+	str = ft_strchr(str, ',') + 1;
+	color.b = ft_atoui(str);
 	return (color);
 }
