@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 19:07:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 19:07:35 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,20 @@ static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere)
     }
 }
 
-static float	intersect_ray_plane
+static float	intersect_ray_plane(const t_ray ray, const t_plane plane)
+{
+	float	denom;
+	float	t;
+
+	denom = vec_dot(plane.normal, ray.direction);
+	if (fabs(denom) > 0.0001)
+	{
+		t = vec_dot(vec_sub(plane.center, ray.origin), plane.normal) / denom;
+		if (t >= 0)
+			return (t);
+	}
+	return (-1);
+}
 
 static t_point ray_point_at_parameter(const t_ray ray, float t)
 {
