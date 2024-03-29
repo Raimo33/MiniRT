@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 15:44:38 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 19:20:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 # define WIN_HEIGHT 480
 # define WIN_WIDTH 640
-# define WORLD_SIZE 1000
+# define WORLD_SIZE 100
 # define KEY_ESC 65307
 # define OCTREE_DEPTH 4
 # define BACKGROUND_COLOR 0x000000 //così lo puo definire l'utente
