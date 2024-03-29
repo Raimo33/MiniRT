@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 13:11:26 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 14:42:05 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,24 +108,36 @@ static t_color	trace_ray(const t_scene scene, const t_ray ray)
 static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere)
 {
     t_vector	oc = vec_sub(ray.origin, sphere.center);
-    float 		a = vec_dot(ray.direction, ray.direction);
-    float 		b = 2.0 * vec_dot(oc, ray.direction);
-    float 		c = vec_dot(oc, oc) - sphere.radius * sphere.radius;
-    float 		discriminant = b * b - 4 * a * c;
+    float		a = vec_dot(ray.direction, ray.direction);
+    float		b = 2.0 * vec_dot(oc, ray.direction);
+    float		c = vec_dot(oc, oc) - sphere.radius * sphere.radius;
+    float		discriminant = b * b - 4 * a * c;
 
     if (discriminant < 0)
-        return (-1);
+        return (-1); // No intersection
     else
 	{
-        float t1 = (-b - sqrt(discriminant)) / (2*a);
-        float t2 = (-b + sqrt(discriminant)) / (2*a);
-        if (t1 > 0)
-			return (t1);
-        if (t2 > 0)
-			return (t2);
-        return (-1);
+        float t1 = (-b - sqrt(discriminant)) / (2 * a);
+        float t2 = (-b + sqrt(discriminant)) / (2 * a);
+        
+        // Both t1 and t2 are behind the ray
+		//TODO t1 e t2 sono negativi per qualche motivo
+        if (t1 < 0 && t2 < 0)
+            return (-1);
+
+        // Return the smallest positive t (closest intersection)
+        if (t1 > 0 && t2 > 0)
+            return (t1 < t2 ? t1 : t2); // Return the smaller of the two
+        else if (t1 > 0)
+            return (t1); // Only t1 is positive
+        else if (t2 > 0)
+            return (t2); // Only t2 is positive (t1 < 0)
+        // This handles an edge case where both t1 and t2 are 0, which is very rare
+        // and would mean the ray origin is on the sphere's surface.
+        return (0);
     }
 }
+
 
 static t_point ray_point_at_parameter(const t_ray ray, float t)
 {
@@ -155,6 +167,7 @@ static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
             t = intersect_ray_sphere(ray, shape->sphere);
             if (t > 0 && t < closest_hit->distance)
 			{
+				printf("hit\n");
                 closest_hit->distance = t;
                 closest_hit->point = ray_point_at_parameter(ray, t);
                 closest_hit->normal = vec_sub(closest_hit->point, shape->sphere.center);
@@ -199,6 +212,5 @@ static t_color compute_color_at_intersection(const t_hit hit, const t_scene scen
 	
 	if (hit.material)
 		return (hit.material->color);
-	
     return ((t_color){.r = 255, .g = 255, .b = 255});
 }

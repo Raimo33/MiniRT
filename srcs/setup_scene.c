@@ -6,13 +6,13 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 13:10:08 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/29 14:16:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom);
+static void		fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom);
 static void		set_world_extremes(t_scene *scene);
 static void		set_bb_sphere(t_shape *shape);
 static void		set_bb_cylinder(t_shape *shape);
@@ -60,7 +60,7 @@ void setup_scene(t_scene *scene)
 	fill_octree(scene->octree, scene->shapes, OCTREE_DEPTH, scene->world_max, scene->world_min);
 }
 
-static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom)
+static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom)
 {
 	t_point		center;
 	t_vector	size;
@@ -76,7 +76,7 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vec
 		node->box_top = box_top;
 		node->box_bottom = box_bottom;
 		node->n_shapes = ft_lstsize(shapes);
-		return (node->n_shapes);
+		return ;
 	}
 	node->children = (t_octree **)malloc(sizeof(t_octree *) * 8);
 	node->box_bottom = box_bottom;
@@ -105,10 +105,9 @@ static uint16_t fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vec
 			continue ;	
 		}
 		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
-		//e' molto piu efficiente fare += e far ritornare alla funzione il numero piuttosto che fare lstsize su ogni nodo
-		node->n_shapes += fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
+		node->n_shapes = ft_lstsize(shapes_inside_box);
+		fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
 	}
-	return (node->n_shapes);
 }
 
 static t_list *get_shapes_inside_box(t_list *shapes, t_point box_top, t_point box_bottom)
