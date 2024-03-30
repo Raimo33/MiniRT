@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 19:10:59 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 10:52:40 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,14 @@ static float	intersect_ray_plane(const t_ray ray, const t_plane plane)
 			return (t);
 	}
 	return (-1);
+}
+
+static float	intersect_ray_cylinder(const t_ray ray, t_cylinder cylinder)
+{
+	t_vector	oc
+	
+	
+	
 }
 
 static t_point ray_point_at_parameter(const t_ray ray, float t)
