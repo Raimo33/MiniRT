@@ -6,14 +6,15 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 13:16:26 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 13:40:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere)
+float	intersect_ray_sphere(const t_ray ray, const t_shape *shape)
 {
+	const t_sphere	sphere = shape->sphere;
     const t_vector	oc = vec_sub(ray.origin, sphere.center);
     const float		a = vec_dot(ray.direction, ray.direction);
     const float		b = 2.0 * vec_dot(oc, ray.direction);
@@ -46,8 +47,9 @@ static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere)
     }
 }
 
-static float	intersect_ray_plane(const t_ray ray, const t_plane plane)
+float	intersect_ray_plane(const t_ray ray, const t_shape *shape)
 {
+	const t_plane	plane = shape->plane;
 	float	denom;
 	float	t;
 
@@ -61,10 +63,11 @@ static float	intersect_ray_plane(const t_ray ray, const t_plane plane)
 	return (-1);
 }
 
-static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder)
+float	intersect_ray_cylinder(const t_ray ray, const t_shape *shape)
 {
-	const float		radius = cylinder.diameter / 2.0f;
-	const t_vector	oc = vec_sub(ray.origin, cylinder.center);
+	const t_cylinder	cylinder = shape->cylinder;
+	const float			radius = cylinder.diameter / 2.0f;
+	const t_vector		oc = vec_sub(ray.origin, cylinder.center);
 	
 	// Coefficients for the quadratic equation (Ax^2 + Bx + C = 0)
     const float A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder.direction), 2);
@@ -98,4 +101,32 @@ static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder)
 		i++;
 	}
 	return (valid_t);
+}
+
+bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min)
+{
+    float tmin = -FLT_MAX;
+    float tmax = FLT_MAX;
+	float ray_direction[3] = {ray.direction.x, ray.direction.y, ray.direction.z};
+	float bb_max[3] = {bounding_box_max.x, bounding_box_max.y, bounding_box_max.z};
+	float bb_min[3] = {bounding_box_min.x, bounding_box_min.y, bounding_box_min.z};
+	float ray_origin[3] = {ray.origin.x, ray.origin.y, ray.origin.z};
+
+    for (int i = 0; i < 3; i++)
+	{
+        float invD = 1.0f / ray_direction[i];
+        float t0 = (bb_min[i] - ray_origin[i]) * invD;
+        float t1 = (bb_max[i] - ray_origin[i]) * invD;
+        if (invD < 0.0f)
+		{
+            float temp = t0;
+            t0 = t1;
+            t1 = temp;
+        }
+        tmin = t0 > tmin ? t0 : tmin;
+        tmax = t1 < tmax ? t1 : tmax;
+        if (tmax <= tmin)
+            return (false);
+    }
+    return (true);
 }

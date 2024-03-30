@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/29 14:05:51 by craimond         ###   ########.fr        #
+#    Updated: 2024/03/30 13:42:31 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ LIBFT_DIR = libft
 LIBFT_REPO = https://github.com/Raimo33/Libft.git
 
 UTILS = $(addprefix utils/, vector_operations.c mlx_utils.c conditionals.c ft_strtok.c ft_atof.c ft_atoui.c get_next_line.c)
-SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c setup_scene.c render.c $(UTILS))
+SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c setup_scene.c render.c  intersections.c $(UTILS))
 
 OBJS = $(SRCS:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 11:09:55 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 13:40:21 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,34 +24,6 @@ int  boxes_overlap(t_point box1_top, t_point box1_bottom, t_point box2_top, t_po
     return (box1_bottom.x <= box2_top.x && box1_top.x >= box2_bottom.x &&
             box1_bottom.y <= box2_top.y && box1_top.y >= box2_bottom.y &&
             box1_bottom.z <= box2_top.z && box1_top.z >= box2_bottom.z);
-}
-
-bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min)
-{
-    float tmin = -FLT_MAX;
-    float tmax = FLT_MAX;
-	float ray_direction[3] = {ray.direction.x, ray.direction.y, ray.direction.z};
-	float bb_max[3] = {bounding_box_max.x, bounding_box_max.y, bounding_box_max.z};
-	float bb_min[3] = {bounding_box_min.x, bounding_box_min.y, bounding_box_min.z};
-	float ray_origin[3] = {ray.origin.x, ray.origin.y, ray.origin.z};
-
-    for (int i = 0; i < 3; i++)
-	{
-        float invD = 1.0f / ray_direction[i];
-        float t0 = (bb_min[i] - ray_origin[i]) * invD;
-        float t1 = (bb_max[i] - ray_origin[i]) * invD;
-        if (invD < 0.0f)
-		{
-            float temp = t0;
-            t0 = t1;
-            t1 = temp;
-        }
-        tmin = t0 > tmin ? t0 : tmin;
-        tmax = t1 < tmax ? t1 : tmax;
-        if (tmax <= tmin)
-            return (false);
-    }
-    return (true);
 }
 
 void setup_scene(t_scene *scene)

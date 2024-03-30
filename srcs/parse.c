@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 11:06:42 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 14:45:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ static t_float3	parse_coord(const char *str)
 {
 	t_float3	coord;
 
+	//TODO abbellire, check syntax
 	coord.x = ft_atof(str);
 	str = ft_strchr(str, ',') + 1;
 	coord.y = ft_atof(str);

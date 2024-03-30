@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 19:20:25 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 14:42:58 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # include "../headers/get_next_line.h"
 # include "scene.h"
 
-# define WIN_HEIGHT 480
-# define WIN_WIDTH 640
+# define WIN_WIDTH 1280
+# define WIN_HEIGHT 720
 # define WORLD_SIZE 100
 # define KEY_ESC 65307
 # define OCTREE_DEPTH 4
@@ -73,5 +73,9 @@ float 			ft_atof(const char *str);
 uint8_t 		ft_atoui(const char *str);
 char 			*ft_strtok(char *const str, const char *const sep);
 bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
+float			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
+float			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
+float			intersect_ray_plane(const t_ray ray, const t_shape *shape);
+
 
 #endif

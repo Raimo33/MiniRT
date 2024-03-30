@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 13:20:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 14:45:49 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 static void		setup_camera(t_camera *cam);
 static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
 static t_color	trace_ray(const t_scene scene, const t_ray ray);
-static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere);
-static float	intersect_ray_plane(const t_ray ray, const t_plane plane);
-static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder);
 static t_point	ray_point_at_parameter(const t_ray ray, float t);
 static bool		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static bool		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
@@ -58,8 +55,11 @@ static void	setup_camera(t_camera *cam)
 	cam->viewport_width = aspect_ratio * cam->viewport_height;
 	//calcolo dei vettori base della camera
 	cam->forward = vec_normalize(cam->normal); //la normale punta verso il punto di interesse
+	printf("forward: %f %f %f\n", cam->forward.x, cam->forward.y, cam->forward.z);
 	cam->right = vec_normalize(vec_cross(world_up, cam->forward)); //trova il terzo vettore perpendicolare ad entrambi
+	printf("right: %f %f %f\n", cam->right.x, cam->right.y, cam->right.z);
 	cam->up = vec_normalize(vec_cross(cam->forward, cam->right)); //trova il terzo vettore perpendicolare ad entrambi
+	printf("up: %f %f %f\n", cam->up.x, cam->up.y, cam->up.z);
 }
 
 static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
@@ -138,11 +138,11 @@ static bool	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closes
 
 static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
-	static const float (*const intersect[3])(const t_ray, const float t) = 
+	static float (*const intersect[3])(const t_ray, const t_shape *) = //stesso ordine di enum e struct
 	{
 		&intersect_ray_sphere,
-		&intersect_ray_plane,
-		&intersect_ray_cylinder
+		&intersect_ray_cylinder,
+		&intersect_ray_plane
 	};
 	t_list	*shapes;
 	t_shape	*shape;
@@ -154,44 +154,24 @@ static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 	while (shapes)
 	{
 		shape = (t_shape *)shapes->content;
-		// if (shape->type == SPHERE)
-		// {
-        //     t = intersect_ray_sphere(ray, shape->sphere);
-        //     if (t > 0 && t < closest_hit->distance)
-		// 	{
-        //         closest_hit->distance = t;
-        //         closest_hit->point = ray_point_at_parameter(ray, t);
-        //         closest_hit->normal = vec_sub(closest_hit->point, shape->sphere.center);
-        //         closest_hit->normal = vec_normalize(closest_hit->normal);
-        //         closest_hit->material = &shape->material;
-		// 		has_hit = true;
-        //     }
-        // }
-		// else if (shape->type == PLANE)
-		// {
-		// 	t = intersect_ray_plane(ray, shape->plane);
-		// 	if (t > 0 && t < closest_hit->distance)
-		// 	{
-		// 		closest_hit->distance = t;
-		// 		closest_hit->point = ray_point_at_parameter(ray, t);
-		// 		closest_hit->normal = shape->plane.normal;
-		// 		closest_hit->material = &shape->material;
-		// 		has_hit = true;
-		// 	}
-		// }
-		// else if (shape->type == CYLINDER)
-		// {
-		// 	t = intersect_ray_cylinder(ray, shape->cylinder);
-		// 	if (t > 0 && t < closest_hit->distance)
-		// 	{
-		// 		closest_hit->distance = t;
-		// 		closest_hit->point = ray_point_at_parameter(ray, t);
-		// 		closest_hit->normal = vec_sub(closest_hit->point, shape->cylinder.center);
-		// 		closest_hit->normal = vec_normalize(closest_hit->normal);
-		// 		closest_hit->material = &shape->material;
-		// 		has_hit = true;
-		// 	}
-		// }
+		t = intersect[shape->type](ray, shape);
+		if (t > 0 && t < closest_hit->distance)
+		{
+			closest_hit->distance = t;
+			closest_hit->point = ray_point_at_parameter(ray, t);
+			closest_hit->material = &shape->material;
+			switch (shape->type)
+			{
+				case SPHERE:
+				case CYLINDER:
+					closest_hit->normal = vec_normalize(vec_sub(closest_hit->point, shape->cylinder.center));
+					break;
+				case PLANE:
+					closest_hit->normal = shape->plane.normal;
+					break;
+			}
+			has_hit = true;
+		}
 		shapes = shapes->next;
 	}
 	return (has_hit);
@@ -211,7 +191,7 @@ static t_point ray_point_at_parameter(const t_ray ray, float t)
 static t_color compute_color_at_intersection(const t_hit hit, const t_scene scene)
 {
 	(void)scene;
-	
+
 	//TODO implementare il calcolo del colore
-    return (hit.material->color);
+	return (hit.material->color);
 }
