@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 11:12:32 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:23:18 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,15 +264,16 @@ static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder)
 	uint8_t i = 0;
 	while (i < 2)
 	{
-		if (t[i] <= 0)
-			continue ;
-		const t_point	point = vec_add(ray.origin, vec_scale(ray.direction, t[i]));
-		const t_vector	vec_from_center_to_point = vec_sub(point, cylinder.center);
-		const float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
+		if (t[i] > 0)
+		{
+			const t_point	point = vec_add(ray.origin, vec_scale(ray.direction, t[i]));
+			const t_vector	vec_from_center_to_point = vec_sub(point, cylinder.center);
+			const float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
 
-		if (fabs(projection_lenght) <= cylinder.height / 2.0f)
-			if (valid_t < 0 || t[i] < valid_t)
-				valid_t = t[i]; // Update with the smaller positive t
+			if (fabs(projection_lenght) <= cylinder.height / 2.0f)
+				if (valid_t < 0 || t[i] < valid_t)
+					valid_t = t[i]; // Update with the smaller positive t	
+		}
 		i++;
 	}
 	return (valid_t);

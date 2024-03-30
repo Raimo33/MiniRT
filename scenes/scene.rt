@@ -15,7 +15,7 @@ sp 0,-1,-1			1.5									30,100,255
 sp -10,3,9			5									255,0,128
 
 #cilindro
-cy 0,0,0			0.0,1,0.6		5 15				109,17,33 #TODO loop infinito con 0,0,1
+cy 0,0,0			0.0,1,0.6		5 15				10,140,33 #TODO loop infinito con 0,0,1
 
 #piano
 # pl 0,0,2			0,1,0.2								150,0,0
