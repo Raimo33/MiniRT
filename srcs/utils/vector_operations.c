@@ -6,13 +6,13 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/26 19:38:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:13:44 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-t_vector	vec_add(t_vector a, t_vector b) //somma di vettori
+t_vector	vec_add(const t_vector a, const t_vector b) //somma di vettori
 {
 	t_vector	result;
 
@@ -22,7 +22,7 @@ t_vector	vec_add(t_vector a, t_vector b) //somma di vettori
 	return (result);
 }
 
-t_vector	vec_sub(t_vector a, t_vector b) //sottrazione di vettori
+t_vector	vec_sub(const t_vector a, const t_vector b) //sottrazione di vettori
 {
 	t_vector	result;
 
@@ -32,7 +32,7 @@ t_vector	vec_sub(t_vector a, t_vector b) //sottrazione di vettori
 	return (result);
 }
 
-t_vector	vec_mul(t_vector a, t_vector b) //moltiplicazione di vettori
+t_vector	vec_mul(const t_vector a, const t_vector b) //moltiplicazione di vettori
 {
 	t_vector	result;
 
@@ -42,7 +42,7 @@ t_vector	vec_mul(t_vector a, t_vector b) //moltiplicazione di vettori
 	return (result);
 }
 
-t_vector	vec_div(t_vector a, t_vector b) //divisione di vettori
+t_vector	vec_div(const t_vector a, const t_vector b) //divisione di vettori
 {
 	t_vector	result;
 
@@ -52,7 +52,7 @@ t_vector	vec_div(t_vector a, t_vector b) //divisione di vettori
 	return (result);
 }
 
-t_vector	vec_cross(t_vector a, t_vector b) //restituisce un vettore perpendicolare ad entrambi i vettori dati
+t_vector	vec_cross(const t_vector a, const t_vector b) //restituisce un vettore perpendicolare ad entrambi i vettori dati
 {
 	t_vector	result;
 
@@ -62,7 +62,7 @@ t_vector	vec_cross(t_vector a, t_vector b) //restituisce un vettore perpendicola
 	return (result);
 }
 
-t_vector	vec_normalize(t_vector a) //rende un vettore lungo 1
+t_vector	vec_normalize(const t_vector a) //rende un vettore lungo 1
 {
 	float		len;
 	t_vector	result;
@@ -74,7 +74,7 @@ t_vector	vec_normalize(t_vector a) //rende un vettore lungo 1
 	return (result);
 }
 
-t_vector	vec_negate(t_vector a) //restituisce il vettore opposto
+t_vector	vec_negate(const t_vector a) //restituisce il vettore opposto
 {
 	t_vector	result;
 
@@ -84,7 +84,17 @@ t_vector	vec_negate(t_vector a) //restituisce il vettore opposto
 	return (result);
 }
 
-float	vec_dot(t_vector a, t_vector b) //prodotto scalare
+t_vector 	vec_scale(const t_vector a, const float scale) //moltiplica un vettore per uno scalare
+{
+	t_vector	result;
+
+	result.x = a.x * scale;
+	result.y = a.y * scale;
+	result.z = a.z * scale;
+	return (result);
+}
+
+float	vec_dot(const t_vector a, const t_vector b) //prodotto scalare
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }

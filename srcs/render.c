@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 11:10:52 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:12:32 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,13 +242,13 @@ static float	intersect_ray_plane(const t_ray ray, const t_plane plane)
 
 static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder)
 {
+	const float		radius = cylinder.diameter / 2.0f;
 	const t_vector	oc = vec_sub(ray.origin, cylinder.center);
-	const 
 	
 	// Coefficients for the quadratic equation (Ax^2 + Bx + C = 0)
     const float A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder.direction), 2);
     const float B = 2 * (vec_dot(ray.direction, oc) - (vec_dot(ray.direction, cylinder.direction) * vec_dot(oc, cylinder.direction)));
-    const float C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder.direction), 2) - cylinder.radius * cylinder.radius;
+    const float C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder.direction), 2) - radius * radius;
 
 	const float discriminant = B * B - 4 * A * C;
 	if (discriminant < 0)
@@ -266,7 +266,7 @@ static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder)
 	{
 		if (t[i] <= 0)
 			continue ;
-		const t_point	point = vec_add(ray.origin, vec_mul(ray.direction, t[i]));
+		const t_point	point = vec_add(ray.origin, vec_scale(ray.direction, t[i]));
 		const t_vector	vec_from_center_to_point = vec_sub(point, cylinder.center);
 		const float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
 
