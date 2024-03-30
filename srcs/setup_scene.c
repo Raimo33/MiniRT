@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 10:49:26 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:06:56 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ static void set_bb_plane(t_shape *shape)
 //axis aligned bounding box for cylinder
 static void	set_bb_cylinder(t_shape *shape)
 {
-	const t_vector	orientation = shape->cylinder.normal;
+	const t_vector	orientation = shape->cylinder.direction;
 	const t_vector	center = shape->cylinder.center;
 
 	const float r = shape->cylinder.diameter / 2;

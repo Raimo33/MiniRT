@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/28 22:50:58 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:06:18 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_plane
 typedef struct s_cylinder
 {
 	t_point		center;
-	t_vector	normal;
+	t_vector	direction;
 	float		diameter;
 	float		height;
 }	t_cylinder;
