@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 11:06:56 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:09:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,9 +217,6 @@ static void	set_bb_cylinder(t_shape *shape)
 	const float r = shape->cylinder.diameter / 2;
 	const float h = shape->cylinder.height;
 
-	t_point bb_min;
-	t_point bb_max;
-	
 	t_vector axis_max = (t_vector){
         center.x + orientation.x * (h / 2),
         center.y + orientation.y * (h / 2),
@@ -231,21 +228,16 @@ static void	set_bb_cylinder(t_shape *shape)
         center.z - orientation.z * (h / 2),
 	};
 
-	bb_min = axis_min;
-    bb_max = axis_max;
+	t_point bb_min = (t_point) axis_min;
+	t_point bb_max = (t_point) axis_max;
 
-    float expandX = sqrt(1 - orientation.x * orientation.x) * r;
-    float expandY = sqrt(1 - orientation.y * orientation.y) * r;
-    float expandZ = sqrt(1 - orientation.z * orientation.z) * r;
+   	bb_min.x -= r;
+	bb_min.y -= r;
+	bb_min.z -= r;
 
-    bb_min.x = fmin(bb_min.x, center.x - expandX);
-    bb_max.x = fmax(bb_max.x, center.x + expandX);
-
-    bb_min.y = fmin(bb_min.y, center.y - expandY);
-    bb_max.y = fmax(bb_max.y, center.y + expandY);
-
-    bb_min.z = fmin(bb_min.z, center.z - expandZ);
-    bb_max.z = fmax(bb_max.z, center.z + expandZ);
+	bb_max.x += r;
+	bb_max.y += r;
+	bb_max.z += r;
 
 	shape->bb_min = bb_min;
 	shape->bb_max = bb_max;

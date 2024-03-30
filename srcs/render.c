@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 11:06:04 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:10:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,7 @@ static float	intersect_ray_plane(const t_ray ray, const t_plane plane)
 static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder)
 {
 	const t_vector	oc = vec_sub(ray.origin, cylinder.center);
+	const 
 	
 	// Coefficients for the quadratic equation (Ax^2 + Bx + C = 0)
     const float A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder.direction), 2);
