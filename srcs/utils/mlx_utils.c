@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 15:23:58 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 16:19:03 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:20:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	my_mlx_pixel_put(const t_mlx_data data, const uint16_t x, const uint16_t y,
 
 static uint32_t	rgb_to_int(const t_color color, const uint8_t endianess)
 {
-	if (endianess == 0) //little endian system (intel) least significant byte first
+	if (endianess == 1) //big endian system (motorola) most significant byte first
 		return (color.b << 16 | color.g << 8 | color.r);
-	else //big endian system (motorola) most significant byte first
+	else  //little endian system (intel) least significant byte first
 		return (color.r << 16 | color.g << 8 | color.b);
 }
