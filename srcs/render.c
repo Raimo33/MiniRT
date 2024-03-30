@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 10:55:00 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 10:58:44 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,18 +179,19 @@ static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 
 static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere)
 {
-    t_vector	oc = vec_sub(ray.origin, sphere.center);
-    float		a = vec_dot(ray.direction, ray.direction);
-    float		b = 2.0 * vec_dot(oc, ray.direction);
-    float		c = vec_dot(oc, oc) - sphere.radius * sphere.radius;
-    float		discriminant = b * b - 4 * a * c;
+    const t_vector	oc = vec_sub(ray.origin, sphere.center);
+    const float		a = vec_dot(ray.direction, ray.direction);
+    const float		b = 2.0 * vec_dot(oc, ray.direction);
+    const float		c = vec_dot(oc, oc) - sphere.radius * sphere.radius;
+    const float		discriminant = b * b - 4 * a * c;
 
     if (discriminant < 0)
         return (-1); // No intersection
     else
 	{
-        float t1 = (-b - sqrt(discriminant)) / (2 * a);
-        float t2 = (-b + sqrt(discriminant)) / (2 * a);
+		const float sqrt_discriminant = sqrt(discriminant);
+        const float t1 = (-b - sqrt_discriminant) / (2 * a);
+        const float t2 = (-b + sqrt_discriminant) / (2 * a);
         
         // Both t1 and t2 are behind the ray
 		//TODO t1 e t2 sono negativi per qualche motivo
@@ -238,8 +239,10 @@ static float	intersect_ray_cylinder(const t_ray ray, t_cylinder cylinder)
 	if (discriminant < 0)
 		return (-1); // No intersection
 
-	const float t1 = (-B - sqrt(discriminant)) / (2 * A);
-	const float t2 = (-B + sqrt(discriminant)) / (2 * A);
+	const float sqrt_discriminant = sqrt(discriminant);
+	const float t[2]
+	const float t1 = (-B - sqrt_discriminant) / (2 * A);
+	const float t2 = (-B + sqrt_discriminant) / (2 * A);
 
 	if (t1 > 0 && t2 > 0)
 		return (t1 < t2 ? t1 : t2); // Return the smaller of the two
