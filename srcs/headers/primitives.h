@@ -60,6 +60,13 @@ typedef struct s_hit
     t_material	*material; //questo puntatore occupa 8, l'oggetto occuperebbe 4+4+4*3
 }   t_hit;
 
+t_vector	vec_add(const t_vector a, const t_vector b); //somma di vettori
+t_vector	vec_add(const t_vector a, const t_vector b);
+t_vector	vec_sub(const t_vector a, const t_vector b);
+t_vector	vec_scale(const t_vector v, float scalar);
+t_vector	vec_cross(const t_vector a, const t_vector b);
+t_vector	vec_normalize(const t_vector v);
+float		vec_dot(const t_vector a, const t_vector b);
 
 
 #endif
