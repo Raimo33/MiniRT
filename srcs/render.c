@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 10:58:44 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:01:47 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,17 +240,23 @@ static float	intersect_ray_cylinder(const t_ray ray, t_cylinder cylinder)
 		return (-1); // No intersection
 
 	const float sqrt_discriminant = sqrt(discriminant);
-	const float t[2]
-	const float t1 = (-B - sqrt_discriminant) / (2 * A);
-	const float t2 = (-B + sqrt_discriminant) / (2 * A);
+	const float t[2] = {
+		(-B - sqrt_discriminant) / (2 * A),
+		(-B + sqrt_discriminant) / (2 * A)
+	};
 
-	if (t1 > 0 && t2 > 0)
-		return (t1 < t2 ? t1 : t2); // Return the smaller of the two
-	else if (t1 > 0)
-		return (t1); // Only t1 is positive
-	else if (t2 > 0)
-		return (t2); // Only t2 is positive (t1 < 0)
-	return (-1);
+	uint8_t i = 0;
+	while (i < 2)
+	{
+		if (t[i] <= 0)
+			continue ;
+		t_point		point = vec_add(ray.origin, vec_mul(ray.direction, t[i]));
+		t_vector	vec_from_center_to_point = vec_sub(point, cylinder.center);
+		float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
+
+		if (fabs(projection_lenght) <= cylinder.height / 2)
+			return (t[i]);
+	}
 	
 }
 
