@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 10:52:40 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 10:55:00 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,9 +227,27 @@ static float	intersect_ray_plane(const t_ray ray, const t_plane plane)
 
 static float	intersect_ray_cylinder(const t_ray ray, t_cylinder cylinder)
 {
-	t_vector	oc
+	const t_vector	oc = vec_sub(ray.origin, cylinder.center);
 	
-	
+	// Coefficients for the quadratic equation (Ax^2 + Bx + C = 0)
+    const float A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder.direction), 2);
+    const float B = 2 * (vec_dot(ray.direction, oc) - (vec_dot(ray.direction, cylinder.direction) * vec_dot(oc, cylinder.direction)));
+    const float C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder.direction), 2) - cylinder.radius * cylinder.radius;
+
+	const float discriminant = B * B - 4 * A * C;
+	if (discriminant < 0)
+		return (-1); // No intersection
+
+	const float t1 = (-B - sqrt(discriminant)) / (2 * A);
+	const float t2 = (-B + sqrt(discriminant)) / (2 * A);
+
+	if (t1 > 0 && t2 > 0)
+		return (t1 < t2 ? t1 : t2); // Return the smaller of the two
+	else if (t1 > 0)
+		return (t1); // Only t1 is positive
+	else if (t2 > 0)
+		return (t2); // Only t2 is positive (t1 < 0)
+	return (-1);
 	
 }
 
