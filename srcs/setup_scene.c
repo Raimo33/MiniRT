@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 14:16:52 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 10:49:26 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,10 +177,10 @@ static void	set_bb_sphere(t_shape *shape)
 //bounding box for plane
 static void set_bb_plane(t_shape *shape)
 {
-	t_vector 	u;
-	t_vector 	v;
-	t_vector 	r;
-	const float	size = WORLD_SIZE / 2;
+	t_vector 			u;
+	t_vector 			v;
+	t_vector 			r;
+	static const float	size = WORLD_SIZE / 2;
 	
 	r = (t_vector){1, 0, 0};
 	if (fabs(vec_dot(r, shape->plane.normal)) > 0.999)
