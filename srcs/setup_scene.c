@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 13:40:21 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 15:41:03 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ static void set_bb_plane(t_shape *shape)
 	t_vector 			v;
 	t_vector 			r;
 	static const float	size = WORLD_SIZE / 2;
+	static const float  thickness = 0.001; // Define a small thickness
 	
 	r = (t_vector){1, 0, 0};
 	if (fabs(vec_dot(r, shape->plane.normal)) > 0.999)
@@ -175,6 +176,15 @@ static void set_bb_plane(t_shape *shape)
 	 	size * fabs(u.y) + (size * fabs(v.y)),
 		size * fabs(u.z) + (size * fabs(v.z))
 	};
+
+	// Add a small thickness to the bounding box
+	bb_min.x -= shape->plane.normal.x * thickness;
+	bb_min.y -= shape->plane.normal.y * thickness;
+	bb_min.z -= shape->plane.normal.z * thickness;
+
+	bb_max.x += shape->plane.normal.x * thickness;
+	bb_max.y += shape->plane.normal.y * thickness;
+	bb_max.z += shape->plane.normal.z * thickness;
 
 	shape->bb_max = bb_max;
 	shape->bb_min = bb_min;

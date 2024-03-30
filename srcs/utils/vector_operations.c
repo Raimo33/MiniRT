@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 15:05:26 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 15:19:04 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,27 +52,14 @@ t_vector	vec_div(const t_vector a, const t_vector b) //divisione di vettori
 	return (result);
 }
 
-static inline bool is_vec_equal(const t_vector a, const t_vector b) //confronto di vettori
+bool is_vec_equal(const t_vector a, const t_vector b) //confronto di vettori
 {
 	return (a.x == b.x && a.y == b.y && a.z == b.z);
-}
-
-static void vec_disequate(const t_vector a, t_vector *to_disequate)
-{
-	if (a.x == to_disequate->x)
-		to_disequate->x += 0.000001;
-	if (a.y == to_disequate->y)
-		to_disequate->y += 0.000001;
-	if (a.z == to_disequate->z)
-		to_disequate->z += 0.000001;
 }
 
 t_vector	vec_cross(const t_vector a, t_vector b) //restituisce un vettore perpendicolare ad entrambi i vettori dati
 {
 	t_vector	result;
-
-	if (is_vec_equal(a, b))
-		vec_disequate(a, &b);
 		
 	result.x = a.y * b.z - a.z * b.y;
 	result.y = a.z * b.x - a.x * b.z;

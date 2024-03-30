@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 14:45:49 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 15:52:51 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ static void	setup_camera(t_camera *cam)
 	cam->viewport_width = aspect_ratio * cam->viewport_height;
 	//calcolo dei vettori base della camera
 	cam->forward = vec_normalize(cam->normal); //la normale punta verso il punto di interesse
-	printf("forward: %f %f %f\n", cam->forward.x, cam->forward.y, cam->forward.z);
-	cam->right = vec_normalize(vec_cross(world_up, cam->forward)); //trova il terzo vettore perpendicolare ad entrambi
-	printf("right: %f %f %f\n", cam->right.x, cam->right.y, cam->right.z);
+	if (is_vec_equal(cam->forward, world_up)) //se la normale è uguale al vettore up del mondo
+		cam->right = (t_vector){1, 0, 0};
+	else
+		cam->right = vec_normalize(vec_cross(world_up, cam->forward)); //trova il terzo vettore perpendicolare ad entrambi
 	cam->up = vec_normalize(vec_cross(cam->forward, cam->right)); //trova il terzo vettore perpendicolare ad entrambi
-	printf("up: %f %f %f\n", cam->up.x, cam->up.y, cam->up.z);
 }
 
 static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
@@ -128,8 +128,8 @@ static bool	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closes
 		i = 0;
 		while (i < 8)
 		{
-			if (node->children[i] && traverse_octree(node->children[i], ray, closest_hit) == true)
-				return (true); //early stop se trova un hit
+			if (node->children[i])
+				traverse_octree(node->children[i], ray, closest_hit);
 			i++;
 		}
 	}
