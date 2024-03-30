@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 11:01:47 by craimond         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:04:34 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
 static t_color	trace_ray(const t_scene scene, const t_ray ray);
 static float	intersect_ray_sphere(const t_ray ray, const t_sphere sphere);
 static float	intersect_ray_plane(const t_ray ray, const t_plane plane);
+static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder);
 static t_point	ray_point_at_parameter(const t_ray ray, float t);
 static bool		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static bool		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
@@ -172,6 +173,19 @@ static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 				has_hit = true;
 			}
 		}
+		else if (shape->type == CYLINDER)
+		{
+			t = intersect_ray_cylinder(ray, shape->cylinder);
+			if (t > 0 && t < closest_hit->distance)
+			{
+				closest_hit->distance = t;
+				closest_hit->point = ray_point_at_parameter(ray, t);
+				closest_hit->normal = vec_sub(closest_hit->point, shape->cylinder.center);
+				closest_hit->normal = vec_normalize(closest_hit->normal);
+				closest_hit->material = &shape->material;
+				has_hit = true;
+			}
+		}
 		shapes = shapes->next;
 	}
 	return (has_hit);
@@ -226,7 +240,7 @@ static float	intersect_ray_plane(const t_ray ray, const t_plane plane)
 	return (-1);
 }
 
-static float	intersect_ray_cylinder(const t_ray ray, t_cylinder cylinder)
+static float	intersect_ray_cylinder(const t_ray ray, const t_cylinder cylinder)
 {
 	const t_vector	oc = vec_sub(ray.origin, cylinder.center);
 	
@@ -244,20 +258,23 @@ static float	intersect_ray_cylinder(const t_ray ray, t_cylinder cylinder)
 		(-B - sqrt_discriminant) / (2 * A),
 		(-B + sqrt_discriminant) / (2 * A)
 	};
+	float	valid_t = -1;
 
 	uint8_t i = 0;
 	while (i < 2)
 	{
 		if (t[i] <= 0)
 			continue ;
-		t_point		point = vec_add(ray.origin, vec_mul(ray.direction, t[i]));
-		t_vector	vec_from_center_to_point = vec_sub(point, cylinder.center);
-		float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
+		const t_point	point = vec_add(ray.origin, vec_mul(ray.direction, t[i]));
+		const t_vector	vec_from_center_to_point = vec_sub(point, cylinder.center);
+		const float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
 
-		if (fabs(projection_lenght) <= cylinder.height / 2)
-			return (t[i]);
+		if (fabs(projection_lenght) <= cylinder.height / 2.0f)
+			if (valid_t < 0 || t[i] < valid_t)
+				valid_t = t[i]; // Update with the smaller positive t
+		i++;
 	}
-	
+	return (valid_t);
 }
 
 static t_point ray_point_at_parameter(const t_ray ray, float t)
