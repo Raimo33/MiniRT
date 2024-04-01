@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersections.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 15:55:54 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:10:25 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ float	intersect_ray_plane(const t_ray ray, const t_shape *shape)
 	float	t;
 
 	denom = vec_dot(plane.normal, ray.direction);
-	if (fabs(denom) > 0.0001)
+	if (fabs(denom) > EPSILON)
 	{
 		t = vec_dot(vec_sub(plane.center, ray.origin), plane.normal) / denom;
 		if (t >= 0)
@@ -69,8 +69,8 @@ float	intersect_ray_plane(const t_ray ray, const t_shape *shape)
 
 float	intersect_ray_cylinder(const t_ray ray, const t_shape *shape)
 {
-	const float 		t1 = intersect_cylinder_side(ray, &shape->cylinder);
-	const float 		t2 = intersect_cylinder_caps(ray, &shape->cylinder);
+	const float	t1 = intersect_cylinder_side(ray, &shape->cylinder);
+	const float	t2 = intersect_cylinder_caps(ray, &shape->cylinder);
 
 	if (t2 > 0 && (t1 < 0 || t2 < t1))
 		return (t2);
@@ -79,16 +79,8 @@ float	intersect_ray_cylinder(const t_ray ray, const t_shape *shape)
 
 static float	intersect_cylinder_caps(const t_ray ray, const t_cylinder *cylinder)
 {
-	float		t1, t2;
-	t_vector	extreme_center;
-
-	//top cap
-	extreme_center = vec_add(cylinder->center, vec_scale(cylinder->direction, cylinder->height / 2.0));
-    t1 = intersect_cylinder_cap(ray, cylinder, extreme_center);
-
-	//bottom cap
-	extreme_center = vec_sub(cylinder->center, vec_scale(cylinder->direction, cylinder->height / 2.0));
-    t2 = intersect_cylinder_cap(ray, cylinder, extreme_center);
+    const float t1 = intersect_cylinder_cap(ray, cylinder, cylinder->top_cap_center);
+    const float t2 = intersect_cylinder_cap(ray, cylinder, cylinder->bottom_cap_center);
 	if (t1 > 0 && (t1 < t2 || t2 < 0))
 		return (t1);
 	return (t2);
@@ -116,16 +108,17 @@ static float	intersect_cylinder_side(const t_ray ray, const t_cylinder *cylinder
 	// Coefficients for the quadratic equation (Ax^2 + Bx + C = 0)
     const float A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder->direction), 2);
     const float B = 2 * (vec_dot(ray.direction, oc) - (vec_dot(ray.direction, cylinder->direction) * vec_dot(oc, cylinder->direction)));
-    const float C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder->direction), 2) - cylinder->radius * cylinder->radius;
+    const float C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder->direction), 2) - cylinder->sqr_radius;
 
 	const float discriminant = B * B - 4 * A * C;
 	if (discriminant < 0)
 		return (-1); // No intersection
 
 	const float sqrt_discriminant = sqrt(discriminant);
+	const float two_times_a = 2 * A;
 	const float t[2] = {
-		(-B - sqrt_discriminant) / (2 * A),
-		(-B + sqrt_discriminant) / (2 * A)
+		(-B - sqrt_discriminant) / two_times_a,
+		(-B + sqrt_discriminant) / two_times_a
 	};
 	float	valid_t = -1;
 
@@ -139,8 +132,12 @@ static float	intersect_cylinder_side(const t_ray ray, const t_cylinder *cylinder
 			const float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder->direction);
 
 			if (fabs(projection_lenght) <= cylinder->height / 2.0f)
-				if (valid_t < 0 || t[i] < valid_t)
-					valid_t = t[i]; // Update with the smaller positive t	
+			{
+				valid_t = t[i];
+				break ;
+			}
+				//if (valid_t < 0 || t[i] < valid_t)
+					//valid_t = t[i]; // Update with the smaller positive t	
 		}
 		i++;
 	}

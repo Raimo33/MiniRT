@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_scene.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 15:50:01 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:05:27 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void		set_bb_sphere(t_shape *shape);
 static void		set_bb_cylinder(t_shape *shape);
 static void		set_bb_plane(t_shape *shape);
 static t_list	*get_shapes_inside_box(t_list *shapes, t_vector box_top, t_vector box_bottom);
-static void 	normalize_and_set_bb(t_scene *scene);
+static void 	set_shapes_data(t_scene *scene);
 
 int  boxes_overlap(t_point box1_top, t_point box1_bottom, t_point box2_top, t_point box2_bottom)
 {
@@ -29,15 +29,16 @@ int  boxes_overlap(t_point box1_top, t_point box1_bottom, t_point box2_top, t_po
 
 void setup_scene(t_scene *scene)
 {
-	normalize_and_set_bb(scene);
+	set_shapes_data(scene);
 	set_world_extremes(scene);
 	fill_octree(scene->octree, scene->shapes, OCTREE_DEPTH, scene->world_max, scene->world_min);
 }
 
-static void normalize_and_set_bb(t_scene *scene)
+static void set_shapes_data(t_scene *scene)
 {
-	t_shape	*shape;
-	t_list	*node;
+	t_shape		*shape;
+	t_list		*node;
+	t_cylinder	*cylinder;
 	
 	node = scene->shapes;
 	while (node)
@@ -50,7 +51,11 @@ static void normalize_and_set_bb(t_scene *scene)
 				shape->plane.normal = vec_normalize(shape->plane.normal);
 				break ;
 			case CYLINDER:
-				shape->cylinder.direction = vec_normalize(shape->cylinder.direction);
+				cylinder = &shape->cylinder;
+				cylinder->sqr_radius = cylinder->radius * cylinder->radius;
+				cylinder->direction = vec_normalize(cylinder->direction);
+				cylinder->top_cap_center = vec_add(cylinder->center, vec_scale(cylinder->direction, cylinder->height / 2.0));
+				cylinder->bottom_cap_center = vec_sub(cylinder->center, vec_scale(cylinder->direction, cylinder->height / 2.0));
 				break ;
 			default:
 				break ;
@@ -181,7 +186,7 @@ static void set_bb_plane(t_shape *shape)
 	t_vector 			v;
 	t_vector 			r;
 	static const float	size = WORLD_SIZE / 2;
-	static const float  thickness = 0.001; // Define a small thickness
+	static const float  thickness = EPSILON; // Define a small thickness
 	
 	r = (t_vector){1, 0, 0};
 	if (fabs(vec_dot(r, shape->plane.normal)) > 0.999)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shapes.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 15:47:49 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:05:11 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ typedef struct s_cylinder
 	t_point		center;
 	t_vector	direction;
 	float		radius;
+	float		sqr_radius;
 	float		height;
+	t_point		top_cap_center;
+	t_point		bottom_cap_center;
 }	t_cylinder;
 
 typedef struct s_shape
