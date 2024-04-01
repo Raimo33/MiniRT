@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/02 01:18:57 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/02 01:24:40 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ static t_vector	get_random_in_unit_sphere(void)
 	return (p);
 }
 
-static float	rand_float(const float min, const float max);
+static float	rand_float(const float min, const float max)
 {
 	return (min + (max - min) * rand() / (float)RAND_MAX);
 }
@@ -166,6 +166,7 @@ static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t dep
 	// if (n_rays == 0 || rays == NULL)
 	// 	return (BACKGROUND_COLOR);
 	accumulated_color = 0;
+	total_weight = 0;
 	while (n_rays--)
 	{
 		uint32_t	ray_color = ray_bouncing(scene, rays[n_rays], depth + 1);
@@ -305,7 +306,7 @@ inline static t_point ray_point_at_parameter(const t_ray ray, float t)
 //     return ((result_r << 16) | (result_g << 8) | result_b);
 // }
 
-inline static float	fclamp(const float value, const float min, const float max);
+inline static float	fclamp(const float value, const float min, const float max)
 {
 	return (value < min ? min : (value > max ? max : value));
 }
