@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 18:51:16 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 21:23:39 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static t_ray	get_reflected_ray(const t_ray ray, const t_vector normal, const t_p
 
 static uint32_t ray_bouncing(const t_scene scene, t_ray ray)
 {
-	uint16_t 	i;
+	uint64_t 	i;
 	uint32_t	color;
 	t_hit		*hit_info;
 	float		attenuation_factor;

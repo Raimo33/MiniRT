@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 18:53:09 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 21:21:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 #  define BACKGROUND_COLOR 0x000000 //così lo puo definire l'utente
 # endif
 # ifndef MAX_BONUCE
-#  define MAX_BOUNCE 400
+#  define MAX_BOUNCE 10000
 # endif
 # define KEY_ESC 65307
 # define OCTREE_DEPTH 4
