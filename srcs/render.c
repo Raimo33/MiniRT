@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 18:01:21 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:51:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
-static uint32_t			ray_bouncing(const t_scene scene, t_ray ray, const uint8_t endianess);
+static uint32_t			ray_bouncing(const t_scene scene, t_ray ray);
 static t_hit			*trace_ray(const t_scene scene, t_ray ray);
 static t_ray			get_reflected_ray(const t_ray ray, const t_vector normal, const t_point point, const t_material *material);
 static inline t_point	ray_point_at_parameter(const t_ray ray, float t);
 static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void				traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
-static uint32_t			compute_color_at_intersection(const t_hit hit, const t_scene scene);
 static t_vector 		get_cylinder_normal(t_shape *shape, t_point point);
+static uint32_t 		compute_color_at_intersection(const uint32_t prev_color, const t_material *material, const float attenuation_factor);
+static uint32_t 		blend_colors(uint32_t color1, uint32_t color2, float ratio);
+inline static float		fclamp(float value, float min, float max);
 
 void render(const t_mlx_data mlx_data, t_scene scene)
 {
@@ -39,7 +41,7 @@ void render(const t_mlx_data mlx_data, t_scene scene)
 		while (x < WIN_WIDTH)
 		{
 			ray = get_ray(&scene.camera, x, y);
-			color = ray_bouncing(scene, ray, (uint8_t)mlx_data.endian);
+			color = ray_bouncing(scene, ray);
 			my_mlx_pixel_put(mlx_data, x, y, color);
 			x++;
 		}
@@ -94,36 +96,39 @@ static t_ray	get_reflected_ray(const t_ray ray, const t_vector normal, const t_p
 	const float		dot = vec_dot(ray.direction, normal);
 	const t_vector	reflected = vec_sub(ray.direction, vec_scale(normal, 2 * dot));
 	const t_ray		reflected_ray = {point, reflected};
+	(void)material;
+	//TODO materiali piu grezzi (es. roccia) riflettono il raggio in modo diverso (randomicita' minima)
 
 	return (reflected_ray);
 }
 
-static uint32_t ray_bouncing(const t_scene scene, t_ray ray, const uint8_t endianess)
+static uint32_t ray_bouncing(const t_scene scene, t_ray ray)
 {
-	int 		i = 0;
+	uint16_t 	i;
 	uint32_t	color;
 	t_hit		*hit_info;
-	
+	float		attenuation_factor;
+
+	color = 0x000000;
+	attenuation_factor = 1.0f;
+	i = 0;
 	while (i < MAX_BOUNCE)
 	{
 		hit_info = trace_ray(scene, ray);
-		color += hit_info->material.color;
-		ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, hit_info->material);
+		if (!hit_info)
+			break ;
+		color = compute_color_at_intersection(color, &hit_info->material, attenuation_factor);
+		// attenuation_factor *= hit_info->material.reflectivity;
+		attenuation_factor *= 0.8f;
+		ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, &hit_info->material);
 		i++;
 	}
-	return (hex_to_rgb(color, endianess));
+	return (color);
 }
 
 static t_hit	*trace_ray(const t_scene scene, const t_ray ray)
 {
-	uint32_t					color;
-	static const uint32_t	bg_color = 
-	{
-		.r = (BACKGROUND_COLOR >> 16) & 0xFF,
-		.g = (BACKGROUND_COLOR >> 8) & 0xFF,
-		.b = BACKGROUND_COLOR & 0xFF
-	};
-    t_hit					*closest_hit = (t_hit *)malloc(sizeof(t_hit));
+    t_hit		*closest_hit = (t_hit *)malloc(sizeof(t_hit));
 
 	*closest_hit = (t_hit)
 	{
@@ -137,7 +142,6 @@ static t_hit	*trace_ray(const t_scene scene, const t_ray ray)
 		return (NULL);
     // Calcolare il colore del pixel in base all'intersezione più vicina
 	// Senza considerare le luci e i materiali per ora
-    closest_hit->material.color = rgb_to_hex(compute_color_at_intersection(*closest_hit, scene));
     return (closest_hit);
 }
 
@@ -220,10 +224,40 @@ inline static t_point ray_point_at_parameter(const t_ray ray, float t)
 	});
 }
 
-static uint32_t compute_color_at_intersection(const t_hit hit, const t_scene scene)
+static uint32_t	compute_color_at_intersection(const uint32_t prev_color, const t_material *material, const float attenuation_factor)
 {
-	(void)scene;
+    // // Assuming a white light source for simplicity
+    // const uint32_t light_color = 0xFFFFFF;
 
-	//TODO implementare il calcolo del colore
-	return (hex_to_rgb(hit.material.color, endieads));
+    // // Base color affected by material color and light color
+    // uint32_t base_color = blend_colors(prev_color, material->color, 1.0f - material->reflectivity);
+    
+    // // Specular highlight (simplified calculation)
+    // // This would normally depend on the angle between the light source, the normal at the point of intersection, and the view direction
+    // // For this example, assume a fixed specular contribution for demonstration purposes
+    // uint32_t specular_highlight = blend_colors(light_color, 0x000000, 1.0f - material->specular_strength);
+
+    // // Combine base color with specular highlight, assuming the highlight affects the overall color subtly
+    // uint32_t final_color = blend_colors(base_color, specular_highlight, 0.1f); // Specular highlights are usually subtle
+
+    return (blend_colors(prev_color, material->color, attenuation_factor));
+}
+
+static uint32_t blend_colors(uint32_t color1, uint32_t color2, float ratio)
+{
+	uint8_t result_r;
+	uint8_t result_g;
+	uint8_t result_b;
+	
+    ratio = fclamp(ratio, 0.0f, 1.0f);
+	result_r = (uint8_t)(((color1 >> 16) & 0xFF) * (1.0f - ratio) + ((color2 >> 16) & 0xFF) * ratio);
+	result_g = (uint8_t)(((color1 >> 8) & 0xFF) * (1.0f - ratio) + ((color2 >> 8) & 0xFF) * ratio);
+	result_b = (uint8_t)((color1 & 0xFF) * (1.0f - ratio) + (color2 & 0xFF) * ratio);
+
+    return ((result_r << 16) | (result_g << 8) | result_b);
+}
+
+inline static float	fclamp(float value, float min, float max)
+{
+	return (value < min ? min : (value > max ? max : value));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 15:23:58 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 18:00:32 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:15:11 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ void	my_mlx_pixel_put(const t_mlx_data data, const uint16_t x, const uint16_t y,
 	void	*dst;
 
 	dst = data.addr + (y * data.line_length + x * (data.bits_per_pixel / 8));
-	*(unsigned int *)dst = rgb_to_hex(color, data.endian);
+	if (data.endian == 1)
+		*(uint32_t *)dst = color;
+	else
+		*(uint32_t *)dst = color >> 8 | color << 24;
 }
 

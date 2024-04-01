@@ -43,8 +43,8 @@ typedef struct s_ray
 typedef struct s_material
 {
     uint32_t    color; //hex
-    float       specular;
-    float       reflectivity;
+    float       specular_strength; // Specular highlight strength
+    float       reflectivity; // 0 (not reflective) to 1 (perfect mirror)
 }   t_material;
 
 typedef struct s_hit
@@ -52,7 +52,7 @@ typedef struct s_hit
     t_point     point;
     t_vector    normal;
     float       distance;
-    t_material	material; //questo puntatore occupa 8, l'oggetto occuperebbe 4+4+4*3
+    t_material	material;
 }   t_hit;
 
 t_vector	vec_add(const t_vector a, const t_vector b); //somma di vettori
