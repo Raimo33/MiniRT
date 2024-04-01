@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 15:48:06 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:59:59 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void		parse_sphere(char *line, t_scene *scene);
 static void		parse_plane(char *line, t_scene *scene);
 static void		parse_cylinder(char *line, t_scene *scene);
 static t_float3	parse_coord(const char *str);
-static t_color	parse_color(const char *str);
+static uint32_t	parse_color(const char *str);
 
 void parse_scene(const int fd, t_scene *scene)
 {
@@ -150,14 +150,16 @@ static t_float3	parse_coord(const char *str)
 	return (coord);
 }
 
-static t_color	parse_color(const char *str)
+static uint32_t	parse_color(const char *str)
 {
-	t_color	color;
+	uint8_t		r;
+	uint8_t		g;
+	uint8_t		b;
 
-	color.r = ft_atoui(str);
+	r = ft_atoui(str);
 	str = ft_strchr(str, ',') + 1;
-	color.g = ft_atoui(str);
+	g = ft_atoui(str);
 	str = ft_strchr(str, ',') + 1;
-	color.b = ft_atoui(str);
-	return (color);
+	b = ft_atoui(str);
+	return (r << 16 | g << 8 | b);
 }

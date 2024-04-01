@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/29 12:23:32 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:59:16 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ void	check_args(const uint16_t argc, char **argv)
 void	init_scene(t_scene *scene)
 {
 	scene->amblight.brightness = 0;
-	scene->amblight.color.r = 0;
-	scene->amblight.color.g = 0;
-	scene->amblight.color.b = 0;
+	scene->amblight.color = 0x000000;
 	scene->camera.center.x = 0;
 	scene->camera.center.y = 0;
 	scene->camera.center.z = 0;

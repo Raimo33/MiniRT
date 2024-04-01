@@ -3,28 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 15:10:10 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 18:01:21 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static void		setup_camera(t_camera *cam);
-static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
-static t_color	trace_ray(const t_scene scene, const t_ray ray);
-static t_point	ray_point_at_parameter(const t_ray ray, float t);
-static void		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
-static void		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
-static t_color	compute_color_at_intersection(const t_hit hit, const t_scene scene);
-static t_vector get_cylinder_normal(t_shape *shape, t_point point);
+static void				setup_camera(t_camera *cam);
+static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
+static uint32_t			ray_bouncing(const t_scene scene, t_ray ray, const uint8_t endianess);
+static t_hit			*trace_ray(const t_scene scene, t_ray ray);
+static t_ray			get_reflected_ray(const t_ray ray, const t_vector normal, const t_point point, const t_material *material);
+static inline t_point	ray_point_at_parameter(const t_ray ray, float t);
+static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
+static void				traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
+static uint32_t			compute_color_at_intersection(const t_hit hit, const t_scene scene);
+static t_vector 		get_cylinder_normal(t_shape *shape, t_point point);
 
 void render(const t_mlx_data mlx_data, t_scene scene)
 {
 	t_ray	ray;
-	t_color	color;
+	uint32_t	color;
 	int		x;
 	int		y;
 	
@@ -37,7 +39,7 @@ void render(const t_mlx_data mlx_data, t_scene scene)
 		while (x < WIN_WIDTH)
 		{
 			ray = get_ray(&scene.camera, x, y);
-			color = trace_ray(scene, ray);
+			color = ray_bouncing(scene, ray, (uint8_t)mlx_data.endian);
 			my_mlx_pixel_put(mlx_data, x, y, color);
 			x++;
 		}
@@ -87,30 +89,56 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
 	return (ray_direction);
 }
 
-static t_color	trace_ray(const t_scene scene, const t_ray ray)
+static t_ray	get_reflected_ray(const t_ray ray, const t_vector normal, const t_point point, const t_material *material)
 {
-    t_hit			closest_hit = 
+	const float		dot = vec_dot(ray.direction, normal);
+	const t_vector	reflected = vec_sub(ray.direction, vec_scale(normal, 2 * dot));
+	const t_ray		reflected_ray = {point, reflected};
+
+	return (reflected_ray);
+}
+
+static uint32_t ray_bouncing(const t_scene scene, t_ray ray, const uint8_t endianess)
+{
+	int 		i = 0;
+	uint32_t	color;
+	t_hit		*hit_info;
+	
+	while (i < MAX_BOUNCE)
 	{
-		.distance = FLT_MAX,
-		.point = {0, 0, 0},
-		.normal = {0, 0, 0},
-		.material = NULL
-	};
-	t_color					color;
-	static const t_color	bg_color = 
+		hit_info = trace_ray(scene, ray);
+		color += hit_info->material.color;
+		ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, hit_info->material);
+		i++;
+	}
+	return (hex_to_rgb(color, endianess));
+}
+
+static t_hit	*trace_ray(const t_scene scene, const t_ray ray)
+{
+	uint32_t					color;
+	static const uint32_t	bg_color = 
 	{
 		.r = (BACKGROUND_COLOR >> 16) & 0xFF,
 		.g = (BACKGROUND_COLOR >> 8) & 0xFF,
 		.b = BACKGROUND_COLOR & 0xFF
 	};
+    t_hit					*closest_hit = (t_hit *)malloc(sizeof(t_hit));
 
-    traverse_octree(scene.octree, ray, &closest_hit);
-	if (closest_hit.distance == FLT_MAX)
-		return (bg_color);
+	*closest_hit = (t_hit)
+	{
+		.distance = FLT_MAX,
+		.point = {0, 0, 0},
+		.normal = {0, 0, 0},
+		.material = {0, 0, 0}
+	};
+    traverse_octree(scene.octree, ray, closest_hit);
+	if (closest_hit->distance == FLT_MAX)
+		return (NULL);
     // Calcolare il colore del pixel in base all'intersezione più vicina
 	// Senza considerare le luci e i materiali per ora
-    color = compute_color_at_intersection(closest_hit, scene);
-    return (color);
+    closest_hit->material.color = rgb_to_hex(compute_color_at_intersection(*closest_hit, scene));
+    return (closest_hit);
 }
 
 static void	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit)
@@ -153,7 +181,7 @@ static void check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 		{
 			closest_hit->distance = t;
 			closest_hit->point = ray_point_at_parameter(ray, t);
-			closest_hit->material = &shape->material;
+			closest_hit->material = shape->material;
 			switch (shape->type)
 			{
 				case SPHERE:
@@ -182,21 +210,20 @@ static t_vector get_cylinder_normal(t_shape *shape, t_point point)
 	return (normal);
 }
 
-static t_point ray_point_at_parameter(const t_ray ray, float t)
+inline static t_point ray_point_at_parameter(const t_ray ray, float t)
 {
-    t_point	point;
-
-    point.x = ray.origin.x + t * ray.direction.x;
-    point.y = ray.origin.y + t * ray.direction.y;
-    point.z = ray.origin.z + t * ray.direction.z;
-
-    return (point);
+    return ((t_point)
+	{
+		.x = ray.origin.x + t * ray.direction.x,
+		.y = ray.origin.y + t * ray.direction.y,
+		.z = ray.origin.z + t * ray.direction.z
+	});
 }
 
-static t_color compute_color_at_intersection(const t_hit hit, const t_scene scene)
+static uint32_t compute_color_at_intersection(const t_hit hit, const t_scene scene)
 {
 	(void)scene;
 
 	//TODO implementare il calcolo del colore
-	return (hit.material->color);
+	return (hex_to_rgb(hit.material.color, endieads));
 }

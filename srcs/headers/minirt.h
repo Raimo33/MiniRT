@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 14:42:58 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 17:59:00 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,23 @@
 # include "../headers/get_next_line.h"
 # include "scene.h"
 
-# define WIN_WIDTH 1280
-# define WIN_HEIGHT 720
-# define WORLD_SIZE 100
+# ifndef WIN_WIDTH
+#  define WIN_WIDTH 1280
+# endif
+# ifndef WIN_HEIGHT
+#  define WIN_HEIGHT 720
+# endif
+# ifndef WORLD_SIZE
+#  define WORLD_SIZE 100
+# endif
+# ifndef BACKGROUND_COLOR
+#  define BACKGROUND_COLOR 0x000000 //così lo puo definire l'utente
+# endif
+# ifndef MAX_BONUCE
+#  define MAX_BOUNCE 400
+# endif
 # define KEY_ESC 65307
 # define OCTREE_DEPTH 4
-# define BACKGROUND_COLOR 0x000000 //così lo puo definire l'utente
 
 static const char		spaces[] = " \t\n\v\f\r";
 
@@ -63,7 +74,7 @@ void			parse_scene(int fd, t_scene *scene);
 void			set_bounding_box(t_shape *shape);
 void			setup_scene(t_scene *scene);
 void			render(const t_mlx_data mlx_data, t_scene scene);
-void			my_mlx_pixel_put(const t_mlx_data data, const uint16_t x, const uint16_t y, const t_color color);
+void			my_mlx_pixel_put(const t_mlx_data data, const uint16_t x, const uint16_t y, const uint32_t color);
 void 			ft_quit(uint8_t id, char *msg);
 int				close_win(t_hook_data *hook_data);
 bool			is_empty_line(const char *line);
@@ -76,6 +87,8 @@ bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding
 float			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
 float			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 float			intersect_ray_plane(const t_ray ray, const t_shape *shape);
+uint32_t		rgb_to_hex(const uint32_t color, const uint8_t endianess);
+uint32_t			hex_to_rgb(const uint32_t hex, const uint8_t endianess);
 
 
 #endif

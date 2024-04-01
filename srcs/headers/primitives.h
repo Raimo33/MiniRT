@@ -17,13 +17,6 @@
 
 # define EPSILON 1e-6
 
-typedef struct s_color
-{
-	uint8_t		r;
-	uint8_t		g;
-	uint8_t		b;
-}	t_color;
-
 typedef struct s_float3
 {
 	float		x;
@@ -49,7 +42,7 @@ typedef struct s_ray
 
 typedef struct s_material
 {
-    t_color     color;
+    uint32_t    color; //hex
     float       specular;
     float       reflectivity;
 }   t_material;
@@ -59,7 +52,7 @@ typedef struct s_hit
     t_point     point;
     t_vector    normal;
     float       distance;
-    t_material	*material; //questo puntatore occupa 8, l'oggetto occuperebbe 4+4+4*3
+    t_material	material; //questo puntatore occupa 8, l'oggetto occuperebbe 4+4+4*3
 }   t_hit;
 
 t_vector	vec_add(const t_vector a, const t_vector b); //somma di vettori
