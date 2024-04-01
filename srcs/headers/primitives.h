@@ -15,6 +15,8 @@
 
 # include <stdint.h>
 
+# define EPSILON 1e-6
+
 typedef struct s_color
 {
 	uint8_t		r;

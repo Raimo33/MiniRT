@@ -6,11 +6,15 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 13:40:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:55:54 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
+
+static float	intersect_cylinder_side(const t_ray ray, const t_cylinder *cylinder);
+static float	intersect_cylinder_caps(const t_ray ray, const t_cylinder *cylinder);
+static float	intersect_cylinder_cap(const t_ray ray, const t_cylinder *cylinder, const t_vector extreme_center);
 
 float	intersect_ray_sphere(const t_ray ray, const t_shape *shape)
 {
@@ -65,14 +69,54 @@ float	intersect_ray_plane(const t_ray ray, const t_shape *shape)
 
 float	intersect_ray_cylinder(const t_ray ray, const t_shape *shape)
 {
-	const t_cylinder	cylinder = shape->cylinder;
-	const float			radius = cylinder.diameter / 2.0f;
-	const t_vector		oc = vec_sub(ray.origin, cylinder.center);
-	
+	const float 		t1 = intersect_cylinder_side(ray, &shape->cylinder);
+	const float 		t2 = intersect_cylinder_caps(ray, &shape->cylinder);
+
+	if (t2 > 0 && (t1 < 0 || t2 < t1))
+		return (t2);
+	return (t1);
+}
+
+static float	intersect_cylinder_caps(const t_ray ray, const t_cylinder *cylinder)
+{
+	float		t1, t2;
+	t_vector	extreme_center;
+
+	//top cap
+	extreme_center = vec_add(cylinder->center, vec_scale(cylinder->direction, cylinder->height / 2.0));
+    t1 = intersect_cylinder_cap(ray, cylinder, extreme_center);
+
+	//bottom cap
+	extreme_center = vec_sub(cylinder->center, vec_scale(cylinder->direction, cylinder->height / 2.0));
+    t2 = intersect_cylinder_cap(ray, cylinder, extreme_center);
+	if (t1 > 0 && (t1 < t2 || t2 < 0))
+		return (t1);
+	return (t2);
+}
+
+static float	intersect_cylinder_cap(const t_ray ray, const t_cylinder *cylinder, const t_vector extreme_center)
+{
+    const float denom = vec_dot(ray.direction, cylinder->direction);
+	float t = -1;
+
+    if (fabs(denom) > EPSILON)
+	{
+        const float 	t_cap = vec_dot(vec_sub(extreme_center, ray.origin), cylinder->direction) / denom;
+        const t_vector	p_cap = vec_add(ray.origin, vec_scale(ray.direction, t_cap));
+        if (vec_dot(vec_sub(p_cap, extreme_center), vec_sub(p_cap, extreme_center)) <= cylinder->radius * cylinder->radius && t_cap > 0)
+            t = t_cap;
+    }
+	return (t);
+}
+
+static float	intersect_cylinder_side(const t_ray ray, const t_cylinder *cylinder)
+{
+	const t_vector		oc = vec_sub(ray.origin, cylinder->center);
+
 	// Coefficients for the quadratic equation (Ax^2 + Bx + C = 0)
-    const float A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder.direction), 2);
-    const float B = 2 * (vec_dot(ray.direction, oc) - (vec_dot(ray.direction, cylinder.direction) * vec_dot(oc, cylinder.direction)));
-    const float C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder.direction), 2) - radius * radius;
+    const float A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder->direction), 2);
+    const float B = 2 * (vec_dot(ray.direction, oc) - (vec_dot(ray.direction, cylinder->direction) * vec_dot(oc, cylinder->direction)));
+    const float C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder->direction), 2) - cylinder->radius * cylinder->radius;
 
 	const float discriminant = B * B - 4 * A * C;
 	if (discriminant < 0)
@@ -91,10 +135,10 @@ float	intersect_ray_cylinder(const t_ray ray, const t_shape *shape)
 		if (t[i] > 0)
 		{
 			const t_point	point = vec_add(ray.origin, vec_scale(ray.direction, t[i]));
-			const t_vector	vec_from_center_to_point = vec_sub(point, cylinder.center);
-			const float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
+			const t_vector	vec_from_center_to_point = vec_sub(point, cylinder->center);
+			const float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder->direction);
 
-			if (fabs(projection_lenght) <= cylinder.height / 2.0f)
+			if (fabs(projection_lenght) <= cylinder->height / 2.0f)
 				if (valid_t < 0 || t[i] < valid_t)
 					valid_t = t[i]; // Update with the smaller positive t	
 		}

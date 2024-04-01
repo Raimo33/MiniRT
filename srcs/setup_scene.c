@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 15:41:03 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:50:01 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void		set_bb_sphere(t_shape *shape);
 static void		set_bb_cylinder(t_shape *shape);
 static void		set_bb_plane(t_shape *shape);
 static t_list	*get_shapes_inside_box(t_list *shapes, t_vector box_top, t_vector box_bottom);
+static void 	normalize_and_set_bb(t_scene *scene);
 
 int  boxes_overlap(t_point box1_top, t_point box1_bottom, t_point box2_top, t_point box2_bottom)
 {
@@ -28,8 +29,35 @@ int  boxes_overlap(t_point box1_top, t_point box1_bottom, t_point box2_top, t_po
 
 void setup_scene(t_scene *scene)
 {
+	normalize_and_set_bb(scene);
 	set_world_extremes(scene);
 	fill_octree(scene->octree, scene->shapes, OCTREE_DEPTH, scene->world_max, scene->world_min);
+}
+
+static void normalize_and_set_bb(t_scene *scene)
+{
+	t_shape	*shape;
+	t_list	*node;
+	
+	node = scene->shapes;
+	while (node)
+	{
+		shape = (t_shape *)node->content;
+		set_bounding_box(shape);
+		switch (shape->type)
+		{
+			case PLANE:
+				shape->plane.normal = vec_normalize(shape->plane.normal);
+				break ;
+			case CYLINDER:
+				shape->cylinder.direction = vec_normalize(shape->cylinder.direction);
+				break ;
+			default:
+				break ;
+		}
+		node = node->next;
+	}
+	scene->camera.normal = vec_normalize(scene->camera.normal);
 }
 
 static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom)
@@ -196,7 +224,7 @@ static void	set_bb_cylinder(t_shape *shape)
 	const t_vector	orientation = shape->cylinder.direction;
 	const t_vector	center = shape->cylinder.center;
 
-	const float r = shape->cylinder.diameter / 2;
+	const float r = shape->cylinder.radius;
 	const float h = shape->cylinder.height;
 
 	t_vector axis_max = (t_vector){

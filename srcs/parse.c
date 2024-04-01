@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 14:45:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:48:06 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,10 @@ static void	parse_sphere(char *line, t_scene *scene)
 	shape = (t_shape *)malloc(sizeof(t_shape));
 	ft_strtok(line, spaces); //per skippare la lettera
 	sphere.center = parse_coord(ft_strtok(NULL, spaces));
-	sphere.radius = ft_atof(ft_strtok(NULL, spaces));
+	sphere.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	shape->material.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = SPHERE;
 	shape->sphere = sphere;
-	set_bounding_box(shape);
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
@@ -118,7 +117,6 @@ static void	parse_plane(char *line, t_scene *scene)
 	shape->material.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = PLANE;
 	shape->plane = plane;
-	set_bounding_box(shape);
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
@@ -131,12 +129,11 @@ static void	parse_cylinder(char *line, t_scene *scene)
 	ft_strtok(line, spaces); //per skippare la lettera
 	cylinder.center = parse_coord(ft_strtok(NULL, spaces));
 	cylinder.direction = parse_coord(ft_strtok(NULL, spaces));
-	cylinder.diameter = ft_atof(ft_strtok(NULL, spaces));
+	cylinder.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	cylinder.height = ft_atof(ft_strtok(NULL, spaces));
 	shape->material.color = parse_color(ft_strtok(NULL, spaces));
 	shape->type = CYLINDER;
 	shape->cylinder = cylinder;
-	set_bounding_box(shape);
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 

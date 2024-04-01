@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 14:02:44 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:10:10 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static t_point	ray_point_at_parameter(const t_ray ray, float t);
 static void		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static t_color	compute_color_at_intersection(const t_hit hit, const t_scene scene);
+static t_vector get_cylinder_normal(t_shape *shape, t_point point);
 
 void render(const t_mlx_data mlx_data, t_scene scene)
 {
@@ -156,8 +157,10 @@ static void check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 			switch (shape->type)
 			{
 				case SPHERE:
+					closest_hit->normal = vec_normalize(vec_sub(closest_hit->point, shape->sphere.center));
+					break;
 				case CYLINDER:
-					closest_hit->normal = vec_normalize(vec_sub(closest_hit->point, shape->cylinder.center));
+					closest_hit->normal = get_cylinder_normal(shape, closest_hit->point);
 					break;
 				case PLANE:
 					closest_hit->normal = shape->plane.normal;
@@ -166,6 +169,17 @@ static void check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 		}
 		shapes = shapes->next;
 	}
+}
+
+static t_vector get_cylinder_normal(t_shape *shape, t_point point)
+{
+	const t_cylinder	cylinder = shape->cylinder;
+	const t_vector		vec_from_center_to_point = vec_sub(point, cylinder.center);
+	const float			projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
+	const t_vector		projection = vec_add(cylinder.center, vec_scale(cylinder.direction, projection_lenght));
+	const t_vector		normal = vec_normalize(vec_sub(point, projection));
+
+	return (normal);
 }
 
 static t_point ray_point_at_parameter(const t_ray ray, float t)
