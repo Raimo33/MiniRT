@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/30 15:52:51 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 14:02:44 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ static void		setup_camera(t_camera *cam);
 static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
 static t_color	trace_ray(const t_scene scene, const t_ray ray);
 static t_point	ray_point_at_parameter(const t_ray ray, float t);
-static bool		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
-static bool		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
+static void		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
+static void		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static t_color	compute_color_at_intersection(const t_hit hit, const t_scene scene);
 
 void render(const t_mlx_data mlx_data, t_scene scene)
@@ -103,7 +103,8 @@ static t_color	trace_ray(const t_scene scene, const t_ray ray)
 		.b = BACKGROUND_COLOR & 0xFF
 	};
 
-    if (!traverse_octree(scene.octree, ray, &closest_hit)) //aka no hit found
+    traverse_octree(scene.octree, ray, &closest_hit);
+	if (closest_hit.distance == FLT_MAX)
 		return (bg_color);
     // Calcolare il colore del pixel in base all'intersezione più vicina
 	// Senza considerare le luci e i materiali per ora
@@ -111,32 +112,26 @@ static t_color	trace_ray(const t_scene scene, const t_ray ray)
     return (color);
 }
 
-static bool	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit)
+static void	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
 	uint8_t	i;
 
 	// Controllo se il raggio interseca il bounding box del nodo
-	if (!ray_intersects_aabb(ray, node->box_top, node->box_bottom))
-		return (false);
-
+	if (!node || !ray_intersects_aabb(ray, node->box_top, node->box_bottom))
+		return ;
 	// Se c'e' solo una shape all'interno o se il nodo è una leaf, controlla le intersezioni con le forme
 	if (node->n_shapes == 1 || node->children == NULL)
-		return (check_shapes_in_node(node, ray, closest_hit));
+		check_shapes_in_node(node, ray, closest_hit);
 	else
 	{
 		// Altrimenti, continua a scendere nell'albero
 		i = 0;
 		while (i < 8)
-		{
-			if (node->children[i])
-				traverse_octree(node->children[i], ray, closest_hit);
-			i++;
-		}
+			traverse_octree(node->children[i++], ray, closest_hit);
 	}
-	return (false);
 }
 
-static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
+static void check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
 	static float (*const intersect[3])(const t_ray, const t_shape *) = //stesso ordine di enum e struct
 	{
@@ -147,9 +142,7 @@ static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 	t_list	*shapes;
 	t_shape	*shape;
 	float	t;
-	bool	has_hit;
 
-	has_hit = false;
 	shapes = node->shapes;
 	while (shapes)
 	{
@@ -170,11 +163,9 @@ static bool check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 					closest_hit->normal = shape->plane.normal;
 					break;
 			}
-			has_hit = true;
 		}
 		shapes = shapes->next;
 	}
-	return (has_hit);
 }
 
 static t_point ray_point_at_parameter(const t_ray ray, float t)
