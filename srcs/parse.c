@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 17:59:59 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/01 23:10:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ static void	parse_sphere(char *line, t_scene *scene)
 	sphere.center = parse_coord(ft_strtok(NULL, spaces));
 	sphere.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	shape->material.color = parse_color(ft_strtok(NULL, spaces));
+	shape->material.reflectivity = ft_atof(ft_strtok(NULL, spaces));
+	shape->material.specular_strength = ft_atof(ft_strtok(NULL, spaces));
 	shape->type = SPHERE;
 	shape->sphere = sphere;
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
@@ -115,6 +117,8 @@ static void	parse_plane(char *line, t_scene *scene)
 	plane.center = parse_coord(ft_strtok(NULL, spaces));
 	plane.normal = parse_coord(ft_strtok(NULL, spaces));
 	shape->material.color = parse_color(ft_strtok(NULL, spaces));
+	shape->material.reflectivity = ft_atof(ft_strtok(NULL, spaces));
+	shape->material.specular_strength = ft_atof(ft_strtok(NULL, spaces));
 	shape->type = PLANE;
 	shape->plane = plane;
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
@@ -132,6 +136,8 @@ static void	parse_cylinder(char *line, t_scene *scene)
 	cylinder.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	cylinder.height = ft_atof(ft_strtok(NULL, spaces));
 	shape->material.color = parse_color(ft_strtok(NULL, spaces));
+	shape->material.reflectivity = ft_atof(ft_strtok(NULL, spaces));
+	shape->material.specular_strength = ft_atof(ft_strtok(NULL, spaces));
 	shape->type = CYLINDER;
 	shape->cylinder = cylinder;
 	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));

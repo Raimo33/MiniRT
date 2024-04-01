@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 21:21:52 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/02 01:10:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,13 @@
 # include "../headers/get_next_line.h"
 # include "scene.h"
 
-# ifndef WIN_WIDTH
-#  define WIN_WIDTH 1280
-# endif
-# ifndef WIN_HEIGHT
-#  define WIN_HEIGHT 720
-# endif
-# ifndef WORLD_SIZE
-#  define WORLD_SIZE 100
-# endif
-# ifndef BACKGROUND_COLOR
-#  define BACKGROUND_COLOR 0x000000 //così lo puo definire l'utente
-# endif
-# ifndef MAX_BONUCE
-#  define MAX_BOUNCE 10000
-# endif
+# define WIN_WIDTH 1280
+# define WIN_HEIGHT 720
+# define WORLD_SIZE 100
+# define BACKGROUND_COLOR 0x000000
+# define MAX_BOUNCE 100
+# define MIN_REFLECTED_RAYS 10
+# define ROUGHNESS_SCALING_FACTOR 50
 # define KEY_ESC 65307
 # define OCTREE_DEPTH 4
 
@@ -87,8 +79,6 @@ bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding
 float			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
 float			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 float			intersect_ray_plane(const t_ray ray, const t_shape *shape);
-uint32_t		rgb_to_hex(const uint32_t color, const uint8_t endianess);
-uint32_t			hex_to_rgb(const uint32_t hex, const uint8_t endianess);
 
 
 #endif

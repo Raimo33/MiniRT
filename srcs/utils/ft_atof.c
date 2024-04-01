@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:09:28 by egualand          #+#    #+#             */
-/*   Updated: 2024/03/29 16:27:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/01 23:06:49 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ float	ft_atof(const char *str)
 	float		dec;
 	uint16_t	i;
 
+	if (!str)
+		return (0);
 	i = 0;
 	result = 0;
 	sign = 1;

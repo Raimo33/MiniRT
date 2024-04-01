@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 21:23:39 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/02 01:18:57 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,20 @@
 
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
-static uint32_t			ray_bouncing(const t_scene scene, t_ray ray);
-static t_hit			*trace_ray(const t_scene scene, t_ray ray);
-static t_ray			get_reflected_ray(const t_ray ray, const t_vector normal, const t_point point, const t_material *material);
+static uint32_t			ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t depth);
+static float			compute_ray_weight(t_vector ray_direction, t_vector normal, const t_material *material);
+static t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
+static t_ray			*get_reflected_rays(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_material *material, uint16_t *n_rays);
 static inline t_point	ray_point_at_parameter(const t_ray ray, float t);
 static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void				traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static t_vector 		get_cylinder_normal(t_shape *shape, t_point point);
-static uint32_t 		compute_color_at_intersection(const uint32_t prev_color, const t_material *material, const float attenuation_factor);
-static uint32_t 		blend_colors(uint32_t color1, uint32_t color2, float ratio);
-inline static float		fclamp(float value, float min, float max);
+static t_vector			get_random_in_unit_sphere(void);
+static t_vector			generate_random_vector_in_hemisphere(const t_vector normal, const float roughness);
+static uint16_t			get_ray_count_based_on_roughness(const float roughness);
+inline static float		fclamp(const float value, const float min, const float max);
+static float			rand_float(const float min, const float max);
+
 
 void render(const t_mlx_data mlx_data, t_scene scene)
 {
@@ -41,7 +45,7 @@ void render(const t_mlx_data mlx_data, t_scene scene)
 		while (x < WIN_WIDTH)
 		{
 			ray = get_ray(&scene.camera, x, y);
-			color = ray_bouncing(scene, ray);
+			color = ray_bouncing(&scene, ray, 0);
 			my_mlx_pixel_put(mlx_data, x, y, color);
 			x++;
 		}
@@ -91,42 +95,107 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
 	return (ray_direction);
 }
 
-static t_ray	get_reflected_ray(const t_ray ray, const t_vector normal, const t_point point, const t_material *material)
+//TODO scattered reflection
+//TODO roughness (random perturbation)
+static t_ray	*get_reflected_rays(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_material *material, uint16_t *n_rays)
 {
-	const float		dot = vec_dot(ray.direction, normal);
-	const t_vector	reflected = vec_sub(ray.direction, vec_scale(normal, 2 * dot));
-	const t_ray		reflected_ray = {point, reflected};
-	(void)material;
-	//TODO materiali piu grezzi (es. roccia) riflettono il raggio in modo diverso (randomicita' minima)
+	uint16_t	n = get_ray_count_based_on_roughness(material->roughness);
+	t_ray		*reflected_rays = (t_ray *)malloc(sizeof(t_ray) * (n));
 
-	return (reflected_ray);
-}
-
-static uint32_t ray_bouncing(const t_scene scene, t_ray ray)
-{
-	uint64_t 	i;
-	uint32_t	color;
-	t_hit		*hit_info;
-	float		attenuation_factor;
-
-	color = 0x000000;
-	attenuation_factor = 1.0f;
-	i = 0;
-	while (i < MAX_BOUNCE)
+	*n_rays = n;
+	while (n--)
 	{
-		hit_info = trace_ray(scene, ray);
-		if (!hit_info)
-			break ;
-		color = compute_color_at_intersection(color, &hit_info->material, attenuation_factor);
-		// attenuation_factor *= hit_info->material.reflectivity;
-		attenuation_factor *= 0.8f;
-		ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, &hit_info->material);
-		i++;
+		t_vector	perturbation = generate_random_vector_in_hemisphere(normal, material->roughness);
+		t_vector	scattered_direction = vec_normalize(vec_add(incoming_ray.direction, perturbation));
+
+		reflected_rays[n] = (t_ray){point, scattered_direction};
 	}
-	return (color);
+	return (reflected_rays);
 }
 
-static t_hit	*trace_ray(const t_scene scene, const t_ray ray)
+static uint16_t	get_ray_count_based_on_roughness(const float roughness)
+{
+    float base = MIN_REFLECTED_RAYS; // Minimum number of rays for the least rough surfaces
+    float factor = ROUGHNESS_SCALING_FACTOR; // Scaling factor for maximum roughness
+
+    // Non-linear scaling: as roughness increases, the number of rays grows more quickly
+    return (base + pow(roughness, 2) * (factor - base));
+}
+
+static t_vector	generate_random_vector_in_hemisphere(const t_vector normal, const float roughness)
+{
+	const t_vector	in_unit_sphere = get_random_in_unit_sphere();
+    // Scale the vector in the unit sphere by roughness, if roughness is 0, stick with the normal
+	const t_vector	perturbation = vec_scale(in_unit_sphere, roughness);
+	const t_vector	adjusted_direction = vec_normalize(vec_add(perturbation, normal));
+	
+	if (vec_dot(adjusted_direction, normal) < 0.0f)
+		return (vec_scale(adjusted_direction, -1.0f));
+	return (adjusted_direction);
+}
+
+static t_vector	get_random_in_unit_sphere(void)
+{
+	t_point	p;
+	do
+	{
+		p = (t_point){rand_float(-1.0f, 1.0f), rand_float(-1.0f, 1.0f), rand_float(-1.0f, 1.0f)};
+	} while (vec_dot(p, p) >= 1.0f);
+	return (p);
+}
+
+static float	rand_float(const float min, const float max);
+{
+	return (min + (max - min) * rand() / (float)RAND_MAX);
+}
+
+static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t depth)
+{
+	t_hit		*hit_info;
+	uint64_t	accumulated_color;
+	float		total_weight;
+	t_ray		*rays;
+	uint16_t	n_rays;
+	
+	if (depth >= MAX_BOUNCE)
+		return (BACKGROUND_COLOR);
+	hit_info = trace_ray(scene, ray);
+	if (!hit_info)
+		return (BACKGROUND_COLOR);
+	rays = get_reflected_rays(ray, hit_info->normal, hit_info->point, &hit_info->material, &n_rays);
+	// if (n_rays == 0 || rays == NULL)
+	// 	return (BACKGROUND_COLOR);
+	accumulated_color = 0;
+	while (n_rays--)
+	{
+		uint32_t	ray_color = ray_bouncing(scene, rays[n_rays], depth + 1);
+		float		weight = compute_ray_weight(rays[n_rays].direction, hit_info->normal, &hit_info->material);
+
+		accumulated_color += (ray_color * weight);
+		total_weight += weight;
+	}
+	free(hit_info);
+	free(rays);
+	return ((total_weight > 0) ? (accumulated_color / total_weight) : BACKGROUND_COLOR);
+}
+
+// Computes the weight of a ray based on the angle of incidence and material reflectivity
+static float	compute_ray_weight(t_vector ray_direction, t_vector normal, const t_material *material)
+{
+	ray_direction = vec_normalize(ray_direction);
+	normal = vec_normalize(normal);
+
+	// compute the cosine of the angle of incidence
+	float cos_theta = fabs(vec_dot(ray_direction, normal));
+	
+	// compute French Schlick approximation
+	float RO = material->reflectivity;
+	float reflectance = RO + (1 - RO) * pow(1 - cos_theta, 5);
+
+	return (reflectance);
+}
+
+static t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
 {
     t_hit		*closest_hit = (t_hit *)malloc(sizeof(t_hit));
 
@@ -137,11 +206,9 @@ static t_hit	*trace_ray(const t_scene scene, const t_ray ray)
 		.normal = {0, 0, 0},
 		.material = {0, 0, 0}
 	};
-    traverse_octree(scene.octree, ray, closest_hit);
+    traverse_octree(scene->octree, ray, closest_hit);
 	if (closest_hit->distance == FLT_MAX)
 		return (NULL);
-    // Calcolare il colore del pixel in base all'intersezione più vicina
-	// Senza considerare le luci e i materiali per ora
     return (closest_hit);
 }
 
@@ -224,40 +291,21 @@ inline static t_point ray_point_at_parameter(const t_ray ray, float t)
 	});
 }
 
-static uint32_t	compute_color_at_intersection(const uint32_t prev_color, const t_material *material, const float attenuation_factor)
-{
-    // // Assuming a white light source for simplicity
-    // const uint32_t light_color = 0xFFFFFF;
-
-    // // Base color affected by material color and light color
-    // uint32_t base_color = blend_colors(prev_color, material->color, 1.0f - material->reflectivity);
-    
-    // // Specular highlight (simplified calculation)
-    // // This would normally depend on the angle between the light source, the normal at the point of intersection, and the view direction
-    // // For this example, assume a fixed specular contribution for demonstration purposes
-    // uint32_t specular_highlight = blend_colors(light_color, 0x000000, 1.0f - material->specular_strength);
-
-    // // Combine base color with specular highlight, assuming the highlight affects the overall color subtly
-    // uint32_t final_color = blend_colors(base_color, specular_highlight, 0.1f); // Specular highlights are usually subtle
-
-    return (blend_colors(prev_color, material->color, attenuation_factor));
-}
-
-static uint32_t blend_colors(uint32_t color1, uint32_t color2, float ratio)
-{
-	uint8_t result_r;
-	uint8_t result_g;
-	uint8_t result_b;
+// static uint32_t blend_colors(uint32_t color1, uint32_t color2, float ratio)
+// {
+// 	uint8_t result_r;
+// 	uint8_t result_g;
+// 	uint8_t result_b;
 	
-    ratio = fclamp(ratio, 0.0f, 1.0f);
-	result_r = (uint8_t)(((color1 >> 16) & 0xFF) * (1.0f - ratio) + ((color2 >> 16) & 0xFF) * ratio);
-	result_g = (uint8_t)(((color1 >> 8) & 0xFF) * (1.0f - ratio) + ((color2 >> 8) & 0xFF) * ratio);
-	result_b = (uint8_t)((color1 & 0xFF) * (1.0f - ratio) + (color2 & 0xFF) * ratio);
+//     ratio = fclamp(ratio, 0.0f, 1.0f);
+// 	result_r = (uint8_t)(((color1 >> 16) & 0xFF) * (1.0f - ratio) + ((color2 >> 16) & 0xFF) * ratio);
+// 	result_g = (uint8_t)(((color1 >> 8) & 0xFF) * (1.0f - ratio) + ((color2 >> 8) & 0xFF) * ratio);
+// 	result_b = (uint8_t)((color1 & 0xFF) * (1.0f - ratio) + (color2 & 0xFF) * ratio);
 
-    return ((result_r << 16) | (result_g << 8) | result_b);
-}
+//     return ((result_r << 16) | (result_g << 8) | result_b);
+// }
 
-inline static float	fclamp(float value, float min, float max)
+inline static float	fclamp(const float value, const float min, const float max);
 {
 	return (value < min ? min : (value > max ? max : value));
 }

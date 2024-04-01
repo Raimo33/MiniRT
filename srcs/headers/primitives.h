@@ -45,6 +45,7 @@ typedef struct s_material
     uint32_t    color; //hex
     float       specular_strength; // Specular highlight strength
     float       reflectivity; // 0 (not reflective) to 1 (perfect mirror)
+	float       roughness; // 0 (perfectly smooth) to 1 (rough)
 }   t_material;
 
 typedef struct s_hit
