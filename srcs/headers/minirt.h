@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/02 01:10:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/02 02:02:57 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define WIN_HEIGHT 720
 # define WORLD_SIZE 100
 # define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 100
+# define MAX_BOUNCE 5
 # define MIN_REFLECTED_RAYS 10
 # define ROUGHNESS_SCALING_FACTOR 50
 # define KEY_ESC 65307

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/02 01:24:40 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/02 01:57:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t dep
 	if (depth >= MAX_BOUNCE)
 		return (BACKGROUND_COLOR);
 	hit_info = trace_ray(scene, ray);
+	printf("hit_info: %p\n", hit_info);
 	if (!hit_info)
 		return (BACKGROUND_COLOR);
 	rays = get_reflected_rays(ray, hit_info->normal, hit_info->point, &hit_info->material, &n_rays);
@@ -172,7 +173,7 @@ static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t dep
 		uint32_t	ray_color = ray_bouncing(scene, rays[n_rays], depth + 1);
 		float		weight = compute_ray_weight(rays[n_rays].direction, hit_info->normal, &hit_info->material);
 
-		accumulated_color += (ray_color * weight);
+		accumulated_color = accumulated_color + (ray_color * weight);
 		total_weight += weight;
 	}
 	free(hit_info);
