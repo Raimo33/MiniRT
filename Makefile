@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/03/30 13:42:31 by craimond         ###   ########.fr        #
+#    Updated: 2024/04/02 11:46:55 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,6 @@ $(LIBFT_DIR):
 		@git clone $(LIBFT_REPO) $(LIBFT_DIR) 2> /dev/null
 		@echo "configuring libft"
 		@make bonus -C $(LIBFT_DIR) > /dev/null
-		@make clean -C $(LIBFT_DIR) > /dev/null
 		@echo "$(GREEN)successfully configured libft$(NC)"
 
 $(NAME): $(OBJS)
@@ -64,6 +63,8 @@ leaks: all
 
 clean:
 		@$(RM) $(OBJS)
+		@make clean -C $(LIBFT_DIR) > /dev/null
+		@echo "$(RED)cleaned libft$(NC)"
 		@echo "$(RED)cleaned $(NAME)$(NC)"
 
 fclean: clean

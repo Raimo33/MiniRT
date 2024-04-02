@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/02 01:57:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:34:02 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,11 @@ static float			rand_float(const float min, const float max);
 
 void render(const t_mlx_data mlx_data, t_scene scene)
 {
-	t_ray	ray;
-	uint32_t	color;
-	int		x;
-	int		y;
+	t_ray		ray;
+	uint64_t	color;
+	uint16_t	y;
+	uint16_t	x;
+	uint16_t	k;
 	
 	setup_camera(&scene.camera);
 	y = 0;
@@ -44,8 +45,15 @@ void render(const t_mlx_data mlx_data, t_scene scene)
 		//implementare threads (ognuno fa un tot di righe)
 		while (x < WIN_WIDTH)
 		{
-			ray = get_ray(&scene.camera, x, y);
-			color = ray_bouncing(&scene, ray, 0);
+			color = 0;
+			k = 0;
+			while (k < RAYS_PER_PIXEL)
+			{
+				ray = get_ray(&scene.camera, x, y);
+				color += ray_bouncing(&scene, ray, 0);
+				k++;
+			}
+			color /= RAYS_PER_PIXEL;
 			my_mlx_pixel_put(mlx_data, x, y, color);
 			x++;
 		}
@@ -95,8 +103,6 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
 	return (ray_direction);
 }
 
-//TODO scattered reflection
-//TODO roughness (random perturbation)
 static t_ray	*get_reflected_rays(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_material *material, uint16_t *n_rays)
 {
 	uint16_t	n = get_ray_count_based_on_roughness(material->roughness);
@@ -160,7 +166,6 @@ static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t dep
 	if (depth >= MAX_BOUNCE)
 		return (BACKGROUND_COLOR);
 	hit_info = trace_ray(scene, ray);
-	printf("hit_info: %p\n", hit_info);
 	if (!hit_info)
 		return (BACKGROUND_COLOR);
 	rays = get_reflected_rays(ray, hit_info->normal, hit_info->point, &hit_info->material, &n_rays);
