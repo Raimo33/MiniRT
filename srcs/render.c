@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/02 11:34:02 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:10:29 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_vector 		get_cylinder_normal(t_shape *shape, t_point point);
 static t_vector			get_random_in_unit_sphere(void);
 static t_vector			generate_random_vector_in_hemisphere(const t_vector normal, const float roughness);
 static uint16_t			get_ray_count_based_on_roughness(const float roughness);
-inline static float		fclamp(const float value, const float min, const float max);
+// inline static float		fclamp(const float value, const float min, const float max);
 static float			rand_float(const float min, const float max);
 
 
@@ -49,6 +49,7 @@ void render(const t_mlx_data mlx_data, t_scene scene)
 			k = 0;
 			while (k < RAYS_PER_PIXEL)
 			{
+				printf("x: %d, y: %d\n", x, y);
 				ray = get_ray(&scene.camera, x, y);
 				color += ray_bouncing(&scene, ray, 0);
 				k++;
@@ -163,8 +164,8 @@ static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t dep
 	t_ray		*rays;
 	uint16_t	n_rays;
 	
-	if (depth >= MAX_BOUNCE)
-		return (BACKGROUND_COLOR);
+	if (depth > MAX_BOUNCE)
+		return ();
 	hit_info = trace_ray(scene, ray);
 	if (!hit_info)
 		return (BACKGROUND_COLOR);
@@ -176,6 +177,7 @@ static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t dep
 	while (n_rays--)
 	{
 		uint32_t	ray_color = ray_bouncing(scene, rays[n_rays], depth + 1);
+		pirntf("ray_color: %d\n", ray_color);
 		float		weight = compute_ray_weight(rays[n_rays].direction, hit_info->normal, &hit_info->material);
 
 		accumulated_color = accumulated_color + (ray_color * weight);
@@ -211,7 +213,7 @@ static t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
 		.distance = FLT_MAX,
 		.point = {0, 0, 0},
 		.normal = {0, 0, 0},
-		.material = {0, 0, 0}
+		.material = {0, 0, 0, 0}
 	};
     traverse_octree(scene->octree, ray, closest_hit);
 	if (closest_hit->distance == FLT_MAX)
@@ -312,7 +314,7 @@ inline static t_point ray_point_at_parameter(const t_ray ray, float t)
 //     return ((result_r << 16) | (result_g << 8) | result_b);
 // }
 
-inline static float	fclamp(const float value, const float min, const float max)
-{
-	return (value < min ? min : (value > max ? max : value));
-}
+// inline static float	fclamp(const float value, const float min, const float max)
+// {
+// 	return (value < min ? min : (value > max ? max : value));
+// }
