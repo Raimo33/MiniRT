@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/04/02 11:46:55 by craimond         ###   ########.fr        #
+#    Updated: 2024/04/03 16:24:55 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,11 +51,11 @@ $(LIBFT_DIR):
 		@echo "$(GREEN)successfully configured libft$(NC)"
 
 $(NAME): $(OBJS)
-		@$(CC) $(CFLAGS) $(OBJS) -L$(MLX_DIR) -L$(LIBFT_DIR) -lft -lmlx_Linux -I$(MLX_DIR) -I$(LIBFT_DIR) -lXext -lX11 -lm -lz -O3 -o $(NAME)
+		@$(CC) $(CFLAGS) $(OBJS) -L$(MLX_DIR) -L$(LIBFT_DIR) -lft -lmlx_Linux -pthread -I$(MLX_DIR) -I$(LIBFT_DIR) -lXext -lX11 -lm -lz -O3 -o $(NAME)
 		@echo "$(GREEN)compiled $(NAME)$(NC)"
 
 leaks: all
-		@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) scenes/scene.rt 2> leaks.log
+		@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) scenes/italian_flag.rt 2> leaks.log
 
 %.o: %.c $(HEADERS)
 		@echo -n "compiling " && echo $< | rev | cut -d'/' -f1 | rev

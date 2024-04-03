@@ -6,15 +6,16 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/03 14:10:29 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:25:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
+static void				*render_segment(void *data);
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
-static uint32_t			ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t depth);
+static uint32_t			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce);
 static float			compute_ray_weight(t_vector ray_direction, t_vector normal, const t_material *material);
 static t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 static t_ray			*get_reflected_rays(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_material *material, uint16_t *n_rays);
@@ -27,40 +28,91 @@ static t_vector			generate_random_vector_in_hemisphere(const t_vector normal, co
 static uint16_t			get_ray_count_based_on_roughness(const float roughness);
 // inline static float		fclamp(const float value, const float min, const float max);
 static float			rand_float(const float min, const float max);
+static uint32_t			merge_colors(uint32_t *colors, const uint16_t n_colors);
 
-
-void render(const t_mlx_data mlx_data, t_scene scene)
+void render(t_mlx_data mlx_data, t_scene scene)
 {
-	t_ray		ray;
-	uint64_t	color;
-	uint16_t	y;
-	uint16_t	x;
-	uint16_t	k;
+	t_thread_data	threads_data[N_THREADS];
+	uint16_t		i;
 	
 	setup_camera(&scene.camera);
-	y = 0;
-	while (y < WIN_HEIGHT)
+	i = 0;
+	while (i < N_THREADS)
+	{
+		threads_data[i].win_data = &mlx_data;
+		threads_data[i].scene = &scene;
+		threads_data[i].start_y = i * (WIN_HEIGHT / N_THREADS);
+		threads_data[i].end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
+		pthread_create(&threads_data[i].id, NULL, &render_segment, &threads_data[i]);
+		i++;
+	}
+	i = 0;
+	while (i < N_THREADS)
+		pthread_join(threads_data[i++].id, NULL);
+	mlx_put_image_to_window(mlx_data.mlx, mlx_data.win, mlx_data.img, 0, 0);
+}
+
+static void		*render_segment(void *data)
+{
+	uint32_t		colors[RAYS_PER_PIXEL];
+	uint32_t		color;
+	uint16_t		x;
+	uint16_t		y;
+	uint16_t		i;
+	t_ray			ray;
+	t_thread_data	*thread_data = (t_thread_data *)data;
+
+	y = thread_data->start_y;
+	while (y < thread_data->end_y)
 	{
 		x = 0;
-		//implementare threads (ognuno fa un tot di righe)
 		while (x < WIN_WIDTH)
 		{
-			color = 0;
-			k = 0;
-			while (k < RAYS_PER_PIXEL)
+			i = 0;
+			while (i < RAYS_PER_PIXEL)
 			{
-				printf("x: %d, y: %d\n", x, y);
-				ray = get_ray(&scene.camera, x, y);
-				color += ray_bouncing(&scene, ray, 0);
-				k++;
+				ray = get_ray(&thread_data->scene->camera, x, y);
+				colors[i] = ray_bouncing(thread_data->scene, ray, 0);
+				i++;
 			}
-			color /= RAYS_PER_PIXEL;
-			my_mlx_pixel_put(mlx_data, x, y, color);
+			color = merge_colors(colors, RAYS_PER_PIXEL);
+			my_mlx_pixel_put(thread_data->win_data, x, y, color);
 			x++;
 		}
 		y++;
 	}
-	mlx_put_image_to_window(mlx_data.mlx, mlx_data.win, mlx_data.img, 0, 0);
+	return (NULL);
+}
+
+static uint32_t	merge_colors(uint32_t *colors, const uint16_t n_colors)
+{
+	uint32_t		merged_color[3];
+	uint16_t		i;
+	float			weight;
+	float			total_weight;
+
+	i = 0;
+	total_weight = 0;
+	merged_color[0] = 0;
+	merged_color[1] = 0;
+	merged_color[2] = 0;
+	//TODO generalizzare con funzione di ray_bounce
+	while (i < n_colors)
+	{
+		weight = 1.0f / n_colors;
+		merged_color[0] += (colors[i] >> 16 & 0xFF) * weight;
+		merged_color[1] += (colors[i] >> 8 & 0xFF) * weight;
+		merged_color[2] += (colors[i] & 0xFF) * weight;
+		total_weight += weight;
+		i++;
+	}
+	if (total_weight > 0)
+	{
+		return ((uint32_t)(((uint8_t)(merged_color[0] / total_weight) << 16)
+				| ((uint8_t)(merged_color[1] / total_weight) << 8)
+				| (uint8_t)(merged_color[2] / total_weight)));
+	}
+	return (BACKGROUND_COLOR);
 }
 
 static void	setup_camera(t_camera *cam)
@@ -115,6 +167,8 @@ static t_ray	*get_reflected_rays(const t_ray incoming_ray, const t_vector normal
 		t_vector	perturbation = generate_random_vector_in_hemisphere(normal, material->roughness);
 		t_vector	scattered_direction = vec_normalize(vec_add(incoming_ray.direction, perturbation));
 
+		if (vec_dot(scattered_direction, normal) < 0) //se il raggio è entrante, inverti la direzione
+    		scattered_direction = vec_negate(scattered_direction);
 		reflected_rays[n] = (t_ray){point, scattered_direction};
 	}
 	return (reflected_rays);
@@ -156,36 +210,52 @@ static float	rand_float(const float min, const float max)
 	return (min + (max - min) * rand() / (float)RAND_MAX);
 }
 
-static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint64_t depth)
+static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce)
 {
 	t_hit		*hit_info;
-	uint64_t	accumulated_color;
+	double		accumulated_color[3];
 	float		total_weight;
 	t_ray		*rays;
 	uint16_t	n_rays;
 	
-	if (depth > MAX_BOUNCE)
-		return ();
+	if (n_bounce > MAX_BOUNCE) //non fa nulla ma meglio lasciare il controllo
+		return (BACKGROUND_COLOR);
 	hit_info = trace_ray(scene, ray);
 	if (!hit_info)
 		return (BACKGROUND_COLOR);
 	rays = get_reflected_rays(ray, hit_info->normal, hit_info->point, &hit_info->material, &n_rays);
-	// if (n_rays == 0 || rays == NULL)
-	// 	return (BACKGROUND_COLOR);
-	accumulated_color = 0;
+	if (n_rays == 0 || rays == NULL)
+		return (BACKGROUND_COLOR);
 	total_weight = 0;
+	accumulated_color[0] = hit_info->material.color >> 16 & 0xFF;
+	accumulated_color[1] = hit_info->material.color >> 8 & 0xFF;
+	accumulated_color[2] = hit_info->material.color & 0xFF;
 	while (n_rays--)
 	{
-		uint32_t	ray_color = ray_bouncing(scene, rays[n_rays], depth + 1);
-		pirntf("ray_color: %d\n", ray_color);
-		float		weight = compute_ray_weight(rays[n_rays].direction, hit_info->normal, &hit_info->material);
+		uint32_t		ray_color = ray_bouncing(scene, rays[n_rays], n_bounce + 1);
+		float			weight = compute_ray_weight(rays[n_rays].direction, hit_info->normal, &hit_info->material);
+		const uint8_t	ray_color_components[3] = 
+		{
+			(uint8_t)((ray_color >> 16) & 0xFF),
+			(uint8_t)((ray_color >> 8) & 0xFF),
+			(uint8_t)(ray_color & 0xFF)
+		};
+		accumulated_color[0] += ray_color_components[0] * weight;
+		accumulated_color[1] += ray_color_components[1] * weight;
+		accumulated_color[2] += ray_color_components[2] * weight;
 
-		accumulated_color = accumulated_color + (ray_color * weight);
 		total_weight += weight;
 	}
 	free(hit_info);
 	free(rays);
-	return ((total_weight > 0) ? (accumulated_color / total_weight) : BACKGROUND_COLOR);
+
+	if (total_weight > 0)
+	{
+		return ((uint32_t)(((uint8_t)(accumulated_color[0] / total_weight) << 16)
+				| ((uint8_t)(accumulated_color[1] / total_weight) << 8)
+				| (uint8_t)(accumulated_color[2] / total_weight)));
+	}
+    return (BACKGROUND_COLOR);
 }
 
 // Computes the weight of a ray based on the angle of incidence and material reflectivity
