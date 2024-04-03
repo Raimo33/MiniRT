@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/03 16:27:33 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:58:18 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 # define ROUGHNESS_SCALING_FACTOR 50
 # define KEY_ESC 65307
 # define OCTREE_DEPTH 4
-# define N_THREADS 100
+# define N_THREADS 50
 
 static const char		spaces[] = " \t\n\v\f\r";
 
@@ -60,14 +60,25 @@ typedef struct s_hook_data
 	t_scene		scene;
 }	t_hook_data;
 
-typedef struct s_thread_data
-{
-	t_mlx_data	*win_data;
-	t_scene		*scene;
-	uint16_t	start_y;
-	uint16_t	end_y;
-	pthread_t	id;
-}	t_thread_data;
+typedef struct {
+    int start_x, end_x;
+    int y;
+} t_work_item;
+
+typedef struct t_work_queue_node {
+    t_work_item item;
+    struct t_work_queue_node *next;
+} t_work_queue_node;
+
+typedef struct {
+    t_work_queue_node *head, *tail;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    int count;
+    bool all_work_submitted;
+	t_mlx_data *win_data;
+	t_scene *scene;
+} t_work_queue;
 
 //TODO aggiustare i const
 void			check_args(const uint16_t argc, char **argv);

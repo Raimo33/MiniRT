@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/03 16:25:55 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/03 18:00:48 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static void				*render_segment(void *data);
+static void 			render_segment(t_work_item item, t_mlx_data *mlx_data, t_scene *scene);
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
 static uint32_t			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce);
@@ -30,58 +30,132 @@ static uint16_t			get_ray_count_based_on_roughness(const float roughness);
 static float			rand_float(const float min, const float max);
 static uint32_t			merge_colors(uint32_t *colors, const uint16_t n_colors);
 
-void render(t_mlx_data mlx_data, t_scene scene)
+
+
+pthread_mutex_t queue_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t work_available_cond = PTHREAD_COND_INITIALIZER;
+bool all_work_submitted = false;
+
+void init_work_queue(t_work_queue *queue)
 {
-	t_thread_data	threads_data[N_THREADS];
-	uint16_t		i;
-	
-	setup_camera(&scene.camera);
-	i = 0;
-	while (i < N_THREADS)
-	{
-		threads_data[i].win_data = &mlx_data;
-		threads_data[i].scene = &scene;
-		threads_data[i].start_y = i * (WIN_HEIGHT / N_THREADS);
-		threads_data[i].end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
-		pthread_create(&threads_data[i].id, NULL, &render_segment, &threads_data[i]);
-		i++;
-	}
-	i = 0;
-	while (i < N_THREADS)
-		pthread_join(threads_data[i++].id, NULL);
-	mlx_put_image_to_window(mlx_data.mlx, mlx_data.win, mlx_data.img, 0, 0);
+    queue->head = queue->tail = NULL;
+    pthread_mutex_init(&queue->mutex, NULL);
+    pthread_cond_init(&queue->cond, NULL);
+    queue->count = 0;
+    queue->all_work_submitted = false;
 }
 
-static void		*render_segment(void *data)
+void add_work_item(t_work_queue *queue, t_work_item item)
 {
-	uint32_t		colors[RAYS_PER_PIXEL];
-	uint32_t		color;
-	uint16_t		x;
-	uint16_t		y;
-	uint16_t		i;
-	t_ray			ray;
-	t_thread_data	*thread_data = (t_thread_data *)data;
+    t_work_queue_node *new_node = (t_work_queue_node *)malloc(sizeof(t_work_queue_node));
+    new_node->item = item;
+    new_node->next = NULL;
 
-	y = thread_data->start_y;
-	while (y < thread_data->end_y)
+    pthread_mutex_lock(&queue->mutex);
+    if (queue->tail != NULL)
+        queue->tail->next = new_node;
+	else
+        queue->head = new_node;
+    queue->tail = new_node;
+    queue->count++;
+    pthread_cond_signal(&queue->cond);
+    pthread_mutex_unlock(&queue->mutex);
+}
+
+bool take_work_item(t_work_queue *queue, t_work_item *item)
+{
+    pthread_mutex_lock(&queue->mutex);
+    while (queue->count == 0 && !queue->all_work_submitted)
+        pthread_cond_wait(&queue->cond, &queue->mutex);
+    if (queue->count == 0 && queue->all_work_submitted)
 	{
-		x = 0;
+        pthread_mutex_unlock(&queue->mutex);
+        return (false);
+	}
+    t_work_queue_node *node = queue->head;
+    *item = node->item;
+    queue->head = node->next;
+    if (queue->head == NULL)
+        queue->tail = NULL;
+    queue->count--;
+    free(node);
+    pthread_mutex_unlock(&queue->mutex);
+    return (true);
+}
+
+void *worker_thread(void *arg)
+{
+    t_work_queue *queue = (t_work_queue *)arg;
+    t_work_item item;
+    while (take_work_item(queue, &item))
+        render_segment(item, queue->win_data, queue->scene);
+    return (NULL);
+}
+
+void render(t_mlx_data mlx_data, t_scene scene)
+{
+    t_work_queue queue;
+    pthread_t threads[N_THREADS];
+	
+	setup_camera(&scene.camera);
+    init_work_queue(&queue);
+    queue.win_data = &mlx_data;
+    queue.scene = &scene;
+	int i = 0;
+	while (i < N_THREADS)
+	{
+		pthread_create(&threads[i], NULL, worker_thread, &queue);
+		i++;
+	}
+
+	const int thread_slice = WIN_WIDTH / N_THREADS;
+	int y = 0;
+	while (y < WIN_HEIGHT)
+	{
+		int x = 0;
 		while (x < WIN_WIDTH)
 		{
-			i = 0;
-			while (i < RAYS_PER_PIXEL)
-			{
-				ray = get_ray(&thread_data->scene->camera, x, y);
-				colors[i] = ray_bouncing(thread_data->scene, ray, 0);
-				i++;
-			}
-			color = merge_colors(colors, RAYS_PER_PIXEL);
-			my_mlx_pixel_put(thread_data->win_data, x, y, color);
-			x++;
+			t_work_item item = {x, x + thread_slice, y};
+			add_work_item(&queue, item);
+			x += thread_slice;
 		}
 		y++;
 	}
-	return (NULL);
+
+    pthread_mutex_lock(&queue.mutex);
+    queue.all_work_submitted = true;
+    pthread_cond_broadcast(&queue.cond);
+    pthread_mutex_unlock(&queue.mutex);
+
+	i = 0;
+	while (i < N_THREADS)
+	{
+		pthread_join(threads[i], NULL);
+		i++;
+	}
+}
+
+static void render_segment(t_work_item item, t_mlx_data *mlx_data, t_scene *scene)
+{
+	uint32_t colors[RAYS_PER_PIXEL];
+    uint32_t color;
+	t_ray ray;
+	
+	int x = item.start_x;
+	int y = item.y;
+	while (x < item.end_x)
+	{
+		int i = 0;
+		while (i < RAYS_PER_PIXEL)
+		{
+			ray = get_ray(&scene->camera, x, y);
+			colors[i] = ray_bouncing(scene, ray, 0);
+			i++;
+		}
+		color = merge_colors(colors, RAYS_PER_PIXEL);
+		my_mlx_pixel_put(mlx_data, x, item.y, color);
+		x++;
+	}
 }
 
 static uint32_t	merge_colors(uint32_t *colors, const uint16_t n_colors)
