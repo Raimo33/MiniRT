@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 18:06:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 18:53:06 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	init_window(t_mlx_data *win_data)
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");
 	win_data->img = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-	win_data->img_addr = mlx_get_data_addr(win_data->img, &win_data->bits_per_pixel,
+	win_data->addr = mlx_get_data_addr(win_data->img, &win_data->bits_per_pixel,
 			&win_data->line_length, &win_data->endian);
 	// win_data->frame = NULL;
 	// win_data->frame_addr = NULL;

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 17:59:08 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 18:53:15 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct s_mlx_data
 	uint8_t			bytes_per_pixel;
 	int				line_length;
 	void			*img;
-	char			*img_addr;
+	char			*addr;
 	// void			*frame;
 	// char			*frame_addr;
 }	t_mlx_data;

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 18:45:25 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 18:59:51 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ void render(t_mlx_data *mlx_data, t_scene *scene)
 			threads_data[i].win_data = mlx_data;
 			threads_data[i].scene = scene;
 			threads_data[i].start_y = i * (WIN_HEIGHT / N_THREADS);
-			threads_data[i].end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
+			if (i == N_THREADS - 1)
+				threads_data[i].end_y = WIN_HEIGHT;
+			else
+				threads_data[i].end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
 			pthread_create(&threads_data[i].id, NULL, &render_segment, &threads_data[i]);
 			i++;
 		}
@@ -61,7 +64,7 @@ void render(t_mlx_data *mlx_data, t_scene *scene)
 		mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img, 0, 0);
 		mlx_destroy_image(mlx_data->mlx, mlx_data->img);
 		mlx_data->img = mlx_new_image(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-		mlx_data->img_addr = mlx_get_data_addr(mlx_data->img, &mlx_data->bits_per_pixel, &mlx_data->line_length, &mlx_data->endian);
+		mlx_data->addr = mlx_get_data_addr(mlx_data->img, &mlx_data->bits_per_pixel, &mlx_data->line_length, &mlx_data->endian);
 	}
 }
 
