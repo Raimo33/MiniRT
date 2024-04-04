@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 12:38:26 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 17:09:15 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void				*render_segment(void *data);
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
-static uint32_t			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce);
+static t_color			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce);
 static float			compute_ray_weight(t_vector ray_direction, t_vector normal, const t_material *material);
 static t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 static t_ray			*get_reflected_rays(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_material *material, uint16_t *n_rays);
@@ -28,7 +28,7 @@ static t_vector			generate_random_vector_in_hemisphere(const t_vector normal, co
 static uint16_t			get_ray_count_based_on_roughness(const float roughness);
 // inline static float		fclamp(const float value, const float min, const float max);
 static float			rand_float(const float min, const float max);
-static uint32_t			merge_colors(uint32_t *colors, const uint16_t n_colors);
+static t_color			merge_colors(t_color *colors, const uint16_t n_colors);
 
 void render(t_mlx_data *mlx_data, t_scene *scene)
 {
@@ -42,10 +42,7 @@ void render(t_mlx_data *mlx_data, t_scene *scene)
 	j = 0;
 	while (j++ < N_FRAMES)
 	{
-		mlx_data->frame = mlx_new_image(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-		mlx_data->frame_addr = my_mlx_get_data_addr(mlx_data->frame, NULL, NULL, NULL);
-		printf("frame number: %d\n", j);
-		gettimeofday(&time, NULL);
+		gettimeofday(&time, NULL); //meglio di srand(TIME(NULL)) perche' si cambia ogni microsecondo non ogni secondo
 		seed = (time.tv_sec * 1000000) + time.tv_usec;
 		srand(seed);
 		i = 0;
@@ -61,21 +58,28 @@ void render(t_mlx_data *mlx_data, t_scene *scene)
 		i = 0;
 		while (i < N_THREADS)
 			pthread_join(threads_data[i++].id, NULL);
-		my_mlx_stack_image(mlx_data);
-		mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->main_img, 0, 0); //TODO per velocizzare si puo mettere questo alla fine del ciclo
-		mlx_destroy_image(mlx_data->mlx, mlx_data->frame);
+		mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img, 0, 0);
+		mlx_destroy_image(mlx_data->mlx, mlx_data->img);
+		mlx_data->img = mlx_new_image(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+		mlx_data->img_addr = mlx_get_data_addr(mlx_data->img, &mlx_data->bits_per_pixel, &mlx_data->line_length, &mlx_data->endian);
 	}
+}
+
+static inline uint32_t rgb_to_hex(t_color color)
+{
+	return ((color.a << 24) | (color.r << 16) | (color.g << 8) | color.b);
 }
 
 static void		*render_segment(void *data)
 {
-	uint32_t		colors[RAYS_PER_PIXEL];
-	uint32_t		color;
-	uint16_t		x;
-	uint16_t		y;
-	uint16_t		i;
-	t_ray			ray;
-	t_thread_data	*thread_data = (t_thread_data *)data;
+	t_color					colors[RAYS_PER_PIXEL];
+	t_color					final_color;
+	uint16_t				x;
+	uint16_t				y;
+	uint16_t				i;
+	t_ray					ray;
+	t_thread_data			*thread_data = (t_thread_data *)data;
+	static const uint8_t	transparency_per_frame = 255 / N_FRAMES;
 
 	y = thread_data->start_y;
 	while (y < thread_data->end_y)
@@ -87,8 +91,9 @@ static void		*render_segment(void *data)
 			ray = get_ray(&thread_data->scene->camera, x, y);
 			while (i < RAYS_PER_PIXEL)
 				colors[i++] = ray_bouncing(thread_data->scene, ray, 0);
-			color = merge_colors(colors, RAYS_PER_PIXEL);
-			my_mlx_pixel_put(thread_data->win_data, x, y, color);
+			final_color = merge_colors(colors, RAYS_PER_PIXEL);
+			final_color.a += transparency_per_frame;
+			my_mlx_pixel_put(thread_data->win_data, x, y, rgb_to_hex(final_color));
 			x++;
 		}
 		y++;
@@ -96,25 +101,24 @@ static void		*render_segment(void *data)
 	return (NULL);
 }
 
-static uint32_t	merge_colors(uint32_t *colors, const uint16_t n_colors)
+static t_color	merge_colors(t_color *colors, const uint16_t n_colors)
 {
-	uint64_t		merged_color[3] = {0, 0, 0};
+	t_color			merged_color = {0, 0, 0, 0};
 	uint16_t		i;
-	float			weight;
+	const float		weight = 1.0f / n_colors;
 
-	if (n_colors <= 1)
+	if (n_colors == 1)
 		return (colors[0]);
 	i = 0;
-	//TODO generalizzare con funzione di ray_bounce
 	while (i < n_colors)
 	{
-		weight = 1.0f / n_colors;
-		merged_color[0] += (colors[i] >> 16 & 0xFF) * weight;
-		merged_color[1] += (colors[i] >> 8 & 0xFF) * weight;
-		merged_color[2] += (colors[i] & 0xFF) * weight;
+		merged_color.r += (colors[i].r * weight);
+		merged_color.g += (colors[i].g * weight);
+		merged_color.b += (colors[i].b * weight);
+		merged_color.a += (colors[i].a * weight);
 		i++;
 	}
-	return ((uint32_t)(((uint8_t)merged_color[0] << 16) | ((uint8_t)merged_color[1] << 8) | (uint8_t)merged_color[2]));
+	return (merged_color);
 }
 
 static void	setup_camera(t_camera *cam)
@@ -213,41 +217,53 @@ static float	rand_float(const float min, const float max)
 	return (min + (max - min) * rand() / (float)RAND_MAX);
 }
 
-static uint32_t	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce)
+static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce)
 {
-	t_hit		*hit_info;
-	double		accumulated_color[3];
-	float		total_weight;
-	t_ray		*rays;
-	uint16_t	n_rays;
-	
+	t_hit					*hit_info;
+	float					total_weight;
+	t_ray					*rays;
+	uint16_t				n_rays;
+	uint16_t				accumulated_r;
+	uint16_t				accumulated_g;
+	uint16_t				accumulated_b;
+	uint16_t				accumulated_a;
+	static const t_color	bg_color = {BACKGROUND_COLOR >> 16 & 0xFF, BACKGROUND_COLOR >> 8 & 0xFF, BACKGROUND_COLOR & 0xFF, 0};
+
 	if (n_bounce > MAX_BOUNCE) //non fa nulla ma meglio lasciare il controllo
-		return (BACKGROUND_COLOR);
+		return (bg_color);
 	hit_info = trace_ray(scene, ray);
 	if (!hit_info)
-		return (BACKGROUND_COLOR);
-	rays = get_reflected_rays(ray, hit_info->normal, hit_info->point, &hit_info->material, &n_rays);
+		return (bg_color);
+	rays = get_reflected_rays(ray, hit_info->normal, hit_info->point, hit_info->material, &n_rays);
 	if (n_rays == 0 || rays == NULL)
-		return (BACKGROUND_COLOR);
+		return (bg_color);
 	total_weight = 0;
-	accumulated_color[0] = hit_info->material.color >> 16 & 0xFF;
-	accumulated_color[1] = hit_info->material.color >> 8 & 0xFF;
-	accumulated_color[2] = hit_info->material.color & 0xFF;
+	accumulated_r = hit_info->material->color.r;
+	accumulated_g = hit_info->material->color.g;
+	accumulated_b = hit_info->material->color.b;
+	accumulated_a = hit_info->material->color.a;
 	while (n_rays--)
 	{
-		uint32_t		ray_color = ray_bouncing(scene, rays[n_rays], n_bounce + 1);
-		float			weight = compute_ray_weight(rays[n_rays].direction, hit_info->normal, &hit_info->material);
+		t_color		ray_color = ray_bouncing(scene, rays[n_rays], n_bounce + 1);
+		float		weight = compute_ray_weight(rays[n_rays].direction, hit_info->normal, hit_info->material);
 
-		accumulated_color[0] += (ray_color >> 16 & 0xFF) * weight;
-		accumulated_color[1] += (ray_color >> 8 & 0xFF) * weight;
-		accumulated_color[2] += (ray_color & 0xFF) * weight;
+		accumulated_r += ray_color.r * weight;
+		accumulated_g += ray_color.g * weight;
+		accumulated_b += ray_color.b * weight;
+		accumulated_a += ray_color.a * weight;
 		total_weight += weight;
 	}
 	free(hit_info);
 	free(rays);
 	if (total_weight <= 0)
-		return (BACKGROUND_COLOR);
-	return ((uint32_t)(((uint8_t)(accumulated_color[0] / total_weight) << 16) | ((uint8_t)(accumulated_color[1] / total_weight) << 8) | (uint8_t)(accumulated_color[2] / total_weight)));
+		return (bg_color);
+	return ((t_color)
+	{
+		.r = accumulated_r / total_weight,
+		.g = accumulated_g / total_weight,
+		.b = accumulated_b / total_weight,
+		.a = accumulated_a / total_weight
+	});
 }
 
 // Computes the weight of a ray based on the angle of incidence and material reflectivity
@@ -276,7 +292,7 @@ static t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
 		.distance = FLT_MAX,
 		.point = {0, 0, 0},
 		.normal = {0, 0, 0},
-		.material = {0, 0, 0, 0}
+		.material = NULL
 	};
     traverse_octree(scene->octree, ray, closest_hit);
 	if (closest_hit->distance == FLT_MAX)

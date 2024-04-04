@@ -6,21 +6,22 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/03 15:08:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 16:37:29 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
 static void		parse_line(char *line, t_scene *scene);
-static void		parse_amblight(char *line, t_scene *scene);
-static void		parse_light(char *line, t_scene *scene);
-static void		parse_camera(char *line, t_scene *scene);
-static void		parse_sphere(char *line, t_scene *scene);
-static void		parse_plane(char *line, t_scene *scene);
-static void		parse_cylinder(char *line, t_scene *scene);
+static void		parse_amblight(t_scene *scene);
+static void		parse_light(t_scene *scene);
+static void		parse_camera(t_scene *scene);
+static void		parse_shape(char *line, t_scene *scene);
+static void		parse_sphere(t_shape *shape);
+static void		parse_plane(t_shape *shape);
+static void		parse_cylinder(t_shape *shape);
 static t_float3	parse_coord(const char *str);
-static uint32_t	parse_color(const char *str);
+static t_color	parse_color(const char *str);
 
 void parse_scene(const int fd, t_scene *scene)
 {
@@ -39,111 +40,105 @@ void parse_scene(const int fd, t_scene *scene)
 
 static void	parse_line(char *line, t_scene *scene)
 {
-	const char		*prefixes[] = {"A", "L", "C", "sp", "pl", "cy"};
-	void (*const	parse_funcs[])(char *, t_scene *) = {&parse_amblight, &parse_light, &parse_camera, &parse_sphere, &parse_plane, &parse_cylinder};
-	uint8_t		i;
-	uint8_t		n_prefixes;
-
-	n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
+	static const char		*prefixes[] = {"A", "L", "C"};
+	void (*const			parse_objects[])(t_scene *) = {&parse_amblight, &parse_light, &parse_camera};
+	static uint8_t			n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
+	uint8_t					i;
+	
 	i = 0;
 	while (i < n_prefixes)
 	{
-		if (ft_strncmp(line, prefixes[i], ft_strlen(prefixes[i])) == 0)
+		if (line[0] == prefixes[i][0])
 		{
-			parse_funcs[i](line, scene);
+			ft_strtok(line, spaces);
+			parse_objects[i](scene);
 			return ;
 		}
 		i++;
 	}
+	parse_shape(line, scene);
 }
 
-static void	parse_amblight(char *line, t_scene *scene)
+static void	parse_shape(char *line, t_scene *scene)
+{
+	static const char		*prefixes[] = {"sp", "pl", "cy"};
+	void (*const			parse_funcs[])(t_shape *) = {&parse_sphere, &parse_plane, &parse_cylinder};
+	static const uint8_t	n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
+	uint8_t		i;
+	t_shape		*shape;
+
+	i = 0;
+	while (i < n_prefixes)
+	{
+		if (ft_strncmp(line, prefixes[i], 2) == 0)
+		{
+			shape = (t_shape *)malloc(sizeof(t_shape));
+			shape->material = (t_material *)malloc(sizeof(t_material));
+			ft_strtok(line, spaces); //per skippare la lettera
+			parse_funcs[i](shape);
+			shape->material->color = parse_color(ft_strtok(NULL, spaces));
+			shape->material->reflectivity = ft_atof(ft_strtok(NULL, spaces));
+			shape->material->specular_strength = ft_atof(ft_strtok(NULL, spaces));
+			shape->material->roughness = ft_atof(ft_strtok(NULL, spaces));
+			ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
+			return ;
+		}
+		i++;
+	}
+	ft_quit(4, "invalid shape prefix");
+}
+
+static void	parse_amblight(t_scene *scene)
 {
 	t_amblight	amblight;
 
-	ft_strtok(line, spaces); //per skippare la lettera
 	amblight.brightness = ft_atof(ft_strtok(NULL, spaces));
 	amblight.color = parse_color(ft_strtok(NULL, spaces));
 	scene->amblight = amblight;
 }
 
-static void	parse_light(char *line, t_scene *scene)
+static void	parse_light(t_scene *scene)
 {
 	t_light		*light;
 
 	light = (t_light *)malloc(sizeof(t_light));
-	ft_strtok(line, spaces); //per skippare la lettera
 	light->center = parse_coord(ft_strtok(NULL, spaces));
 	light->brightness = ft_atof(ft_strtok(NULL, spaces));
 	light->color = parse_color(ft_strtok(NULL, spaces));
 	ft_lstadd_front(&scene->lights, ft_lstnew(light));
 }
 
-static void	parse_camera(char *line, t_scene *scene)
+static void	parse_camera(t_scene *scene)
 {
 	t_camera	camera;
 
-	ft_strtok(line, spaces); //per skippare la lettera
 	camera.center = parse_coord(ft_strtok(NULL, spaces));
 	camera.normal = parse_coord(ft_strtok(NULL, spaces));
 	camera.fov = ft_atoui(ft_strtok(NULL, spaces));
 	scene->camera = camera;
 }
 
-static void	parse_sphere(char *line, t_scene *scene)
+static void	parse_sphere(t_shape *shape)
 {
-	t_sphere	sphere;
-	t_shape		*shape;
-
-	shape = (t_shape *)malloc(sizeof(t_shape));
-	ft_strtok(line, spaces); //per skippare la lettera
-	sphere.center = parse_coord(ft_strtok(NULL, spaces));
-	sphere.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
-	shape->material.color = parse_color(ft_strtok(NULL, spaces));
-	shape->material.reflectivity = ft_atof(ft_strtok(NULL, spaces));
-	shape->material.specular_strength = ft_atof(ft_strtok(NULL, spaces));
-	shape->material.roughness = ft_atof(ft_strtok(NULL, spaces));
+	shape->sphere.center = parse_coord(ft_strtok(NULL, spaces));
+	shape->sphere.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	shape->type = SPHERE;
-	shape->sphere = sphere;
-	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
-static void	parse_plane(char *line, t_scene *scene)
+static void	parse_plane(t_shape *shape)
 {
-	t_plane		plane;
-	t_shape		*shape;
-
-	shape = (t_shape *)malloc(sizeof(t_shape));
-	ft_strtok(line, spaces); //per skippare la lettera
-	plane.center = parse_coord(ft_strtok(NULL, spaces));
-	plane.normal = parse_coord(ft_strtok(NULL, spaces));
-	shape->material.color = parse_color(ft_strtok(NULL, spaces));
-	shape->material.reflectivity = ft_atof(ft_strtok(NULL, spaces));
-	shape->material.specular_strength = ft_atof(ft_strtok(NULL, spaces));
-	shape->material.roughness = ft_atof(ft_strtok(NULL, spaces));
+	shape->plane.center = parse_coord(ft_strtok(NULL, spaces));
+	shape->plane.normal = parse_coord(ft_strtok(NULL, spaces));
 	shape->type = PLANE;
-	shape->plane = plane;
-	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
-static void	parse_cylinder(char *line, t_scene *scene)
+static void	parse_cylinder(t_shape *shape)
 {
-	t_cylinder	cylinder;
-	t_shape		*shape;
-
-	shape = (t_shape *)malloc(sizeof(t_shape));
-	ft_strtok(line, spaces); //per skippare la lettera
-	cylinder.center = parse_coord(ft_strtok(NULL, spaces));
-	cylinder.direction = parse_coord(ft_strtok(NULL, spaces));
-	cylinder.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
-	cylinder.height = ft_atof(ft_strtok(NULL, spaces));
-	shape->material.color = parse_color(ft_strtok(NULL, spaces));
-	shape->material.reflectivity = ft_atof(ft_strtok(NULL, spaces));
-	shape->material.specular_strength = ft_atof(ft_strtok(NULL, spaces));
-	shape->material.roughness = ft_atof(ft_strtok(NULL, spaces));
+	shape->cylinder.center = parse_coord(ft_strtok(NULL, spaces));
+	shape->cylinder.direction = parse_coord(ft_strtok(NULL, spaces));
+	shape->cylinder.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
+	shape->cylinder.height = ft_atof(ft_strtok(NULL, spaces));
 	shape->type = CYLINDER;
-	shape->cylinder = cylinder;
-	ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 }
 
 static t_float3	parse_coord(const char *str)
@@ -159,16 +154,15 @@ static t_float3	parse_coord(const char *str)
 	return (coord);
 }
 
-static uint32_t	parse_color(const char *str)
+static t_color	parse_color(const char *str)
 {
-	uint8_t		r;
-	uint8_t		g;
-	uint8_t		b;
+	t_color	color;
 
-	r = ft_atoui(str);
+	color.r = ft_atoui(str);
 	str = ft_strchr(str, ',') + 1;
-	g = ft_atoui(str);
+	color.g = ft_atoui(str);
 	str = ft_strchr(str, ',') + 1;
-	b = ft_atoui(str);
-	return (r << 16 | g << 8 | b);
+	color.b = ft_atoui(str);
+	color.a = 0;
+	return (color);
 }

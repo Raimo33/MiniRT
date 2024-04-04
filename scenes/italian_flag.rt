@@ -8,7 +8,8 @@ L 0,0,-3 			0.6						10,0,255
 C 0,0,-20			0,0,1				90
 
 #sfera
-	#posizione		#diametro				#colore			#reflectivity	#specular	#roughness
+
+#posizione		diametro				colore			reflectivity	specular	roughness
 sp -7,0,0			10						0,140,69		0.7				0.5			0.6
 sp 0,0,0			10						244,249,255		1				0.5			0.6
 sp 7,0,0			10						205,33,42		0.314			0.5			0.6

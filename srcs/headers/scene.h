@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 17:58:50 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/04 15:33:27 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ typedef struct s_light
 {
 	t_point		center;
 	float		brightness;
-	uint32_t	color;
+	t_color		color;
 }	t_light;
 
 typedef struct s_amblight
 {
 	float		brightness;
-	uint32_t	color;
+	t_color		color;
 }	t_amblight;
 
 typedef	struct s_octree

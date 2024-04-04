@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 12:20:46 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 15:30:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int close_win(t_hook_data *hook_data)
 {
 	destroy_scene(hook_data->scene);
 	mlx_destroy_window(hook_data->win_data->mlx, hook_data->win_data->win);
-	mlx_destroy_image(hook_data->win_data->mlx, hook_data->win_data->main_img);
+	mlx_destroy_image(hook_data->win_data->mlx, hook_data->win_data->img);
 	mlx_destroy_display(hook_data->win_data->mlx);
 	free(hook_data->win_data->mlx);
 	free(hook_data);

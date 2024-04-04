@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 12:17:11 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 15:33:43 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	check_args(const uint16_t argc, char **argv)
 void	init_scene(t_scene *scene)
 {
 	scene->amblight.brightness = 0;
-	scene->amblight.color = 0x000000;
+	scene->amblight.color = (t_color){0, 0, 0, 0};
 	scene->camera.center.x = 0;
 	scene->camera.center.y = 0;
 	scene->camera.center.z = 0;
@@ -46,11 +46,11 @@ void	init_window(t_mlx_data *win_data)
 	win_data->mlx = mlx_init();
 	win_data->win = mlx_new_window(win_data->mlx,
 			WIN_WIDTH, WIN_HEIGHT, "miniRT");
-	win_data->main_img = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-	win_data->main_img_addr = mlx_get_data_addr(win_data->main_img, &win_data->bits_per_pixel,
+	win_data->img = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+	win_data->img_addr = mlx_get_data_addr(win_data->img, &win_data->bits_per_pixel,
 			&win_data->line_length, &win_data->endian);
-	win_data->frame = NULL;
-	win_data->frame_addr = NULL;
+	// win_data->frame = NULL;
+	// win_data->frame_addr = NULL;
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");

@@ -31,6 +31,14 @@ typedef struct s_int3
 	uint16_t	z;
 }	t_uint3;
 
+typedef struct s_color
+{
+	uint8_t		r;
+	uint8_t		g;
+	uint8_t		b;
+	uint8_t		a;
+}	t_color;
+
 typedef t_float3 t_point;
 typedef t_float3 t_vector;
 
@@ -42,7 +50,7 @@ typedef struct s_ray
 
 typedef struct s_material
 {
-    uint32_t    color; //hex
+    t_color    	color; //hex
     float       specular_strength; // Specular highlight strength
     float       reflectivity; // 0 (not reflective) to 1 (perfect mirror)
 	float       roughness; // 0 (perfectly smooth) to 1 (rough)
@@ -53,7 +61,7 @@ typedef struct s_hit
     t_point     point;
     t_vector    normal;
     float       distance;
-    t_material	material;
+    t_material	*material;
 }   t_hit;
 
 t_vector	vec_add(const t_vector a, const t_vector b); //somma di vettori
