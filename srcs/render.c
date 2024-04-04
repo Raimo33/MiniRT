@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 18:08:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 18:45:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ static void		*render_segment(void *data)
 			while (i < RAYS_PER_PIXEL)
 				colors[i++] = ray_bouncing(thread_data->scene, ray, 0);
 			final_color = merge_colors(colors, RAYS_PER_PIXEL);
+			final_color.a = 0;
 			final_color.a += transparency_per_frame;
 			my_mlx_pixel_put(thread_data->win_data, x, y, rgb_to_hex(final_color));
 			x++;
