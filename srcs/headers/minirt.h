@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 15:11:57 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 17:59:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@
 // # define N_THREADS 100
 // # define N_FRAMES 60
 
-# define WIN_WIDTH 500
-# define WIN_HEIGHT 500
+# define WIN_WIDTH 400
+# define WIN_HEIGHT 400
 # define WORLD_SIZE 100
 # define RAYS_PER_PIXEL 1
 # define BACKGROUND_COLOR 0x000000
