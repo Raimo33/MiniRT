@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 02:17:05 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 12:38:26 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,19 @@ void render(t_mlx_data *mlx_data, t_scene *scene)
 	t_thread_data	threads_data[N_THREADS];
 	uint16_t		i;
 	uint16_t		j;
+	struct timeval	time;
+	uint64_t		seed;
 
 	setup_camera(&scene->camera);
 	j = 0;
 	while (j++ < N_FRAMES)
 	{
+		mlx_data->frame = mlx_new_image(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+		mlx_data->frame_addr = my_mlx_get_data_addr(mlx_data->frame, NULL, NULL, NULL);
 		printf("frame number: %d\n", j);
-		srand(time(NULL));
+		gettimeofday(&time, NULL);
+		seed = (time.tv_sec * 1000000) + time.tv_usec;
+		srand(seed);
 		i = 0;
 		while (i < N_THREADS)
 		{
@@ -55,7 +61,9 @@ void render(t_mlx_data *mlx_data, t_scene *scene)
 		i = 0;
 		while (i < N_THREADS)
 			pthread_join(threads_data[i++].id, NULL);
-		mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img, 0, 0);
+		my_mlx_stack_image(mlx_data);
+		mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->main_img, 0, 0); //TODO per velocizzare si puo mettere questo alla fine del ciclo
+		mlx_destroy_image(mlx_data->mlx, mlx_data->frame);
 	}
 }
 
@@ -181,7 +189,7 @@ static t_vector	generate_random_vector_in_hemisphere(const t_vector normal, cons
 {
 	const t_vector	in_unit_sphere = get_random_in_unit_sphere();
     // Scale the vector in the unit sphere by roughness, if roughness is 0, stick with the normal
-	const t_vector	perturbation = vec_scale(in_unit_sphere, roughness);
+	const t_vector	perturbation = vec_scale(in_unit_sphere, fmax(0.1, roughness));
 	const t_vector	adjusted_direction = vec_normalize(vec_add(perturbation, normal));
 	
 	if (vec_dot(adjusted_direction, normal) < 0.0f)

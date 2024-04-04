@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 02:26:52 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 12:36:50 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <stdint.h>
 # include <fcntl.h>
 # include <pthread.h>
+# include <sys/time.h>
 # include "../../minilibx-linux/mlx.h"
 # include "../../libft/libft.h"
 # include "../headers/get_next_line.h"
@@ -47,25 +48,28 @@
 # define WORLD_SIZE 100
 # define RAYS_PER_PIXEL 1
 # define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 1 //TODO con piu' di un bounce si scazza e diventa pixelato
+# define MAX_BOUNCE 2 //TODO con piu' di zero bounce si scazza e diventa pixelato
 # define MIN_REFLECTED_RAYS 4
 # define ROUGHNESS_SCALING_FACTOR 30
 # define KEY_ESC 65307
 # define OCTREE_DEPTH 2
 # define N_THREADS 1
-# define N_FRAMES 60
+# define N_FRAMES 10
 
 static const char		spaces[] = " \t\n\v\f\r";
 
 typedef struct s_mlx_data
 {
 	void			*win;
-	void			*img;
 	void			*mlx;
 	int				endian;
 	int				bits_per_pixel;
+	uint8_t			bytes_per_pixel;
 	int				line_length;
-	char			*addr;
+	void			*main_img;
+	char			*main_img_addr;
+	void			*frame;
+	char			*frame_addr;
 }	t_mlx_data;
 
 typedef struct s_hook_data
@@ -92,7 +96,6 @@ void			parse_scene(int fd, t_scene *scene);
 void			set_bounding_box(t_shape *shape);
 void			setup_scene(t_scene *scene);
 void			render(t_mlx_data *mlx_data, t_scene *scene);
-void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const uint32_t color);
 void 			ft_quit(uint8_t id, char *msg);
 int				close_win(t_hook_data *hook_data);
 bool			is_empty_line(const char *line);
@@ -105,5 +108,8 @@ bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding
 float			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
 float			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 float			intersect_ray_plane(const t_ray ray, const t_shape *shape);
+void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const uint32_t color);
+void			my_mlx_stack_image(t_mlx_data *data);
+char			*my_mlx_get_data_addr(void *img_ptr, int32_t *bits_per_pixel, int32_t *size_line, int32_t *endian);
 
 #endif

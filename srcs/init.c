@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 17:59:16 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/04 12:17:11 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,12 @@ void	init_window(t_mlx_data *win_data)
 	win_data->mlx = mlx_init();
 	win_data->win = mlx_new_window(win_data->mlx,
 			WIN_WIDTH, WIN_HEIGHT, "miniRT");
-	win_data->img = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-	win_data->addr = mlx_get_data_addr(win_data->img, &win_data->bits_per_pixel,
+	win_data->main_img = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+	win_data->main_img_addr = mlx_get_data_addr(win_data->main_img, &win_data->bits_per_pixel,
 			&win_data->line_length, &win_data->endian);
+	win_data->frame = NULL;
+	win_data->frame_addr = NULL;
+	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");
 }
