@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/25 16:19:42 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 02:01:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ int	main(int argc, char **argv)
 	setup_scene(&scene);
 	init_window(&mlx_data);
 	init_hooks(&mlx_data, scene);
-	render(mlx_data, scene);
+	render(&mlx_data, &scene);
 	mlx_loop(mlx_data.mlx);
 }

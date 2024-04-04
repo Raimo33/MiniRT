@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/03 16:27:33 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/04 02:26:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,31 @@
 # include "../headers/get_next_line.h"
 # include "scene.h"
 
-# define WIN_WIDTH 1280
-# define WIN_HEIGHT 720
+// # define WIN_WIDTH 1280
+// # define WIN_HEIGHT 720
+// # define WORLD_SIZE 100
+// # define RAYS_PER_PIXEL 100
+// # define BACKGROUND_COLOR 0x000000
+// # define MAX_BOUNCE 3
+// # define MIN_REFLECTED_RAYS 10
+// # define ROUGHNESS_SCALING_FACTOR 50
+// # define KEY_ESC 65307
+// # define OCTREE_DEPTH 3
+// # define N_THREADS 100
+// # define N_FRAMES 60
+
+# define WIN_WIDTH 500
+# define WIN_HEIGHT 500
 # define WORLD_SIZE 100
-# define RAYS_PER_PIXEL 1 //TODO FIX
+# define RAYS_PER_PIXEL 1
 # define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 1
-# define MIN_REFLECTED_RAYS 10
-# define ROUGHNESS_SCALING_FACTOR 50
+# define MAX_BOUNCE 1 //TODO con piu' di un bounce si scazza e diventa pixelato
+# define MIN_REFLECTED_RAYS 4
+# define ROUGHNESS_SCALING_FACTOR 30
 # define KEY_ESC 65307
-# define OCTREE_DEPTH 4
-# define N_THREADS 100
+# define OCTREE_DEPTH 2
+# define N_THREADS 1
+# define N_FRAMES 60
 
 static const char		spaces[] = " \t\n\v\f\r";
 
@@ -77,7 +91,7 @@ void			init_hooks(t_mlx_data *win_data, t_scene scene);
 void			parse_scene(int fd, t_scene *scene);
 void			set_bounding_box(t_shape *shape);
 void			setup_scene(t_scene *scene);
-void			render(const t_mlx_data mlx_data, t_scene scene);
+void			render(t_mlx_data *mlx_data, t_scene *scene);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const uint32_t color);
 void 			ft_quit(uint8_t id, char *msg);
 int				close_win(t_hook_data *hook_data);
