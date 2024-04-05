@@ -6,17 +6,17 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 15:23:58 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 18:47:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/05 02:21:18 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-void	my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const uint32_t color)
+void	my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const uint32_t color, const uint16_t frame_no)
 {
 	void	*dst;
 
-	dst = data->img + (y * data->line_length + x * data->bytes_per_pixel);
+	dst = data->frames[frame_no] + (y * data->line_length + x * data->bytes_per_pixel);
 	if (data->endian == 0)
 		*(uint32_t *)dst = color;
 	else

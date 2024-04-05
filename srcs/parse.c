@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 16:37:29 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/05 01:25:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,9 @@ static void	parse_light(t_scene *scene)
 
 static void	parse_camera(t_scene *scene)
 {
-	t_camera	camera;
-
-	camera.center = parse_coord(ft_strtok(NULL, spaces));
-	camera.normal = parse_coord(ft_strtok(NULL, spaces));
-	camera.fov = ft_atoui(ft_strtok(NULL, spaces));
-	scene->camera = camera;
+	scene->camera->center = parse_coord(ft_strtok(NULL, spaces));
+	scene->camera->normal = parse_coord(ft_strtok(NULL, spaces));
+	scene->camera->fov = ft_atoui(ft_strtok(NULL, spaces));
 }
 
 static void	parse_sphere(t_shape *shape)

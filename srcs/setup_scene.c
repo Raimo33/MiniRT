@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_scene.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 17:05:27 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/05 01:26:09 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void set_shapes_data(t_scene *scene)
 		}
 		node = node->next;
 	}
-	scene->camera.normal = vec_normalize(scene->camera.normal);
+	scene->camera->normal = vec_normalize(scene->camera->normal);
 }
 
 static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom)

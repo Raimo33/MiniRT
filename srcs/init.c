@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 18:53:06 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/05 02:10:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,32 +27,38 @@ void	init_scene(t_scene *scene)
 {
 	scene->amblight.brightness = 0;
 	scene->amblight.color = (t_color){0, 0, 0, 0};
-	scene->camera.center.x = 0;
-	scene->camera.center.y = 0;
-	scene->camera.center.z = 0;
-	scene->camera.normal.x = 0;
-	scene->camera.normal.y = 0;
-	scene->camera.normal.z = 0;
-	scene->camera.fov = 0;
+	scene->camera = (t_camera *)malloc(sizeof(t_camera));
+	scene->camera->center.x = 0;
+	scene->camera->center.y = 0;
+	scene->camera->center.z = 0;
+	scene->camera->normal.x = 0;
+	scene->camera->normal.y = 0;
+	scene->camera->normal.z = 0;
+	scene->camera->fov = 0;
 	scene->lights = NULL;
 	scene->shapes = NULL;
-	scene->octree = (t_octree *)malloc(sizeof(t_octree));
+	scene->octree = (t_octree *)malloc(sizeof(t_octree));	
 	scene->world_max.x = 0;
 	scene->world_max.y = 0;
 }
 
 void	init_window(t_mlx_data *win_data)
 {
+	uint8_t i;
+	
 	win_data->mlx = mlx_init();
 	win_data->win = mlx_new_window(win_data->mlx,
 			WIN_WIDTH, WIN_HEIGHT, "miniRT");
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");
-	win_data->img = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-	win_data->addr = mlx_get_data_addr(win_data->img, &win_data->bits_per_pixel,
-			&win_data->line_length, &win_data->endian);
-	// win_data->frame = NULL;
-	// win_data->frame_addr = NULL;
+	i = 0;
+	while (i < N_FRAMES)
+	{
+		win_data->frames[i] = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+		win_data->addresses[i] = mlx_get_data_addr(win_data->frames[i], &win_data->bits_per_pixel,
+			&win_data->line_length, &win_data->endian);;
+		i++;
+	}
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 }
 

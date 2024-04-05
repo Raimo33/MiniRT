@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 18:59:51 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/05 02:55:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,43 +29,56 @@ static uint16_t			get_ray_count_based_on_roughness(const float roughness);
 // inline static float		fclamp(const float value, const float min, const float max);
 static float			rand_float(const float min, const float max);
 static t_color			merge_colors(t_color *colors, const uint16_t n_colors);
+static void				set_thread_attr(pthread_attr_t *thread_attr);
 
-void render(t_mlx_data *mlx_data, t_scene *scene)
+//TODO sperimentare con la keyword restrict
+//TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
+
+void render(t_mlx_data *win_data, t_scene *scene)
 {
-	t_thread_data	threads_data[N_THREADS];
+	t_thread_data	thread_data = {win_data, scene, 0, 0, 0, 0};
 	uint16_t		i;
 	uint16_t		j;
 	struct timeval	time;
 	uint64_t		seed;
+	pthread_attr_t	thread_attr;
+	pthread_t		thread_ids[N_THREADS];
 
-	setup_camera(&scene->camera);
+	setup_camera(scene->camera);
+	set_thread_attr(&thread_attr);
+	i = 0;
 	j = 0;
-	while (j++ < N_FRAMES)
+	while (j < N_FRAMES)
 	{
+		printf("Rendering frame %d\n", j);
 		gettimeofday(&time, NULL); //meglio di srand(TIME(NULL)) perche' si cambia ogni microsecondo non ogni secondo
 		seed = (time.tv_sec * 1000000) + time.tv_usec;
 		srand(seed);
-		i = 0;
 		while (i < N_THREADS)
 		{
-			threads_data[i].win_data = mlx_data;
-			threads_data[i].scene = scene;
-			threads_data[i].start_y = i * (WIN_HEIGHT / N_THREADS);
+			thread_data.frame_no = j;
+			thread_data.start_y = i * (WIN_HEIGHT / N_THREADS);
 			if (i == N_THREADS - 1)
-				threads_data[i].end_y = WIN_HEIGHT;
+				thread_data.end_y = WIN_HEIGHT;
 			else
-				threads_data[i].end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
-			pthread_create(&threads_data[i].id, NULL, &render_segment, &threads_data[i]);
+				thread_data.end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
+			pthread_create(&thread_ids[i], &thread_attr, &render_segment, &thread_data);
 			i++;
 		}
-		i = 0;
-		while (i < N_THREADS)
-			pthread_join(threads_data[i++].id, NULL);
-		mlx_put_image_to_window(mlx_data->mlx, mlx_data->win, mlx_data->img, 0, 0);
-		mlx_destroy_image(mlx_data->mlx, mlx_data->img);
-		mlx_data->img = mlx_new_image(mlx_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-		mlx_data->addr = mlx_get_data_addr(mlx_data->img, &mlx_data->bits_per_pixel, &mlx_data->line_length, &mlx_data->endian);
+		while (i--)
+			pthread_join(thread_ids[i], NULL);
+		mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->frames[j], 0, 0);
+		j++;
 	}
+	pthread_attr_destroy(&thread_attr);
+}
+
+static void	set_thread_attr(pthread_attr_t *thread_attr)
+{
+	pthread_attr_init(thread_attr);
+	pthread_attr_setschedpolicy(thread_attr, SCHED_FIFO);
+	pthread_attr_setscope(thread_attr, PTHREAD_SCOPE_PROCESS);
+	pthread_attr_setdetachstate(thread_attr, PTHREAD_CREATE_JOINABLE);
 }
 
 static inline uint32_t rgb_to_hex(t_color color)
@@ -91,13 +104,13 @@ static void		*render_segment(void *data)
 		while (x < WIN_WIDTH)
 		{
 			i = 0;
-			ray = get_ray(&thread_data->scene->camera, x, y);
+			ray = get_ray(thread_data->scene->camera, x, y);
 			while (i < RAYS_PER_PIXEL)
 				colors[i++] = ray_bouncing(thread_data->scene, ray, 0);
 			final_color = merge_colors(colors, RAYS_PER_PIXEL);
 			final_color.a = 0;
 			final_color.a += transparency_per_frame;
-			my_mlx_pixel_put(thread_data->win_data, x, y, rgb_to_hex(final_color));
+			my_mlx_pixel_put(thread_data->win_data, x, y, rgb_to_hex(final_color), thread_data->frame_no);
 			x++;
 		}
 		y++;
@@ -240,7 +253,7 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 		return (bg_color);
 	rays = get_reflected_rays(ray, hit_info->normal, hit_info->point, hit_info->material, &n_rays);
 	if (n_rays == 0 || rays == NULL)
-		return (bg_color);
+		return (free(hit_info), bg_color);
 	total_weight = 0;
 	accumulated_r = hit_info->material->color.r;
 	accumulated_g = hit_info->material->color.g;
