@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 02:55:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:53:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void				set_thread_attr(pthread_attr_t *thread_attr);
 
 void render(t_mlx_data *win_data, t_scene *scene)
 {
-	t_thread_data	thread_data = {win_data, scene, 0, 0, 0, 0};
+	t_thread_data	*thread_data;
 	uint16_t		i;
 	uint16_t		j;
 	struct timeval	time;
@@ -56,17 +56,20 @@ void render(t_mlx_data *win_data, t_scene *scene)
 		srand(seed);
 		while (i < N_THREADS)
 		{
-			thread_data.frame_no = j;
-			thread_data.start_y = i * (WIN_HEIGHT / N_THREADS);
+			thread_data = (t_thread_data *)malloc(sizeof(t_thread_data));
+			thread_data->scene = scene;
+			thread_data->win_data = win_data;
+			thread_data->frame_no = j;
+			thread_data->start_y = i * (WIN_HEIGHT / N_THREADS);
 			if (i == N_THREADS - 1)
-				thread_data.end_y = WIN_HEIGHT;
+				thread_data->end_y = WIN_HEIGHT;
 			else
-				thread_data.end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
-			pthread_create(&thread_ids[i], &thread_attr, &render_segment, &thread_data);
+				thread_data->end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
+			pthread_create(&thread_ids[i], &thread_attr, &render_segment, thread_data);
 			i++;
 		}
-		while (i--)
-			pthread_join(thread_ids[i], NULL);
+		while (i)
+			pthread_join(thread_ids[--i], NULL);
 		mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->frames[j], 0, 0);
 		j++;
 	}
@@ -115,7 +118,7 @@ static void		*render_segment(void *data)
 		}
 		y++;
 	}
-	return (NULL);
+	return (free(data), NULL);
 }
 
 static t_color	merge_colors(t_color *colors, const uint16_t n_colors)

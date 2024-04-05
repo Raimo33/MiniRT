@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 02:25:31 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:34:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@
 # define WORLD_SIZE 100
 # define RAYS_PER_PIXEL 1
 # define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 2 //TODO con piu' di zero bounce si scazza e diventa pixelato
+# define MAX_BOUNCE 1 //TODO con piu' di zero bounce si scazza e diventa pixelato
 # define MIN_REFLECTED_RAYS 4
 # define ROUGHNESS_SCALING_FACTOR 30
 # define KEY_ESC 65307
 # define OCTREE_DEPTH 2
-# define N_THREADS 10
+# define N_THREADS 1
 # define N_FRAMES 10
 
 static const char		spaces[] = " \t\n\v\f\r";
@@ -66,8 +66,8 @@ typedef struct s_mlx_data
 	int				bits_per_pixel;
 	uint8_t			bytes_per_pixel;
 	int				line_length;
-	void			*frames[N_FRAMES];
-	char			*addresses[N_FRAMES];
+	void			**frames;
+	char			**addresses;
 	// void			*frame;
 	// char			*frame_addr;
 }	t_mlx_data;

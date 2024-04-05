@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 02:10:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:48:41 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	init_window(t_mlx_data *win_data)
 			WIN_WIDTH, WIN_HEIGHT, "miniRT");
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");
+	win_data->frames = (void **)malloc(sizeof(void *) * N_FRAMES);
+	win_data->addresses = (char **)malloc(sizeof(char *) * N_FRAMES);
 	i = 0;
 	while (i < N_FRAMES)
 	{

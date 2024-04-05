@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 15:23:58 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 02:21:18 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:48:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,12 @@ void	my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y
 	if (data->endian == 0)
 		*(uint32_t *)dst = color;
 	else
-		*(uint32_t *)dst = color >> 8 | color << 24;
+	{
+		*(uint32_t *)dst = (color & 0x000000FF) << 24
+			| (color & 0x0000FF00) << 8
+			| (color & 0x00FF0000) >> 8
+			| (color & 0xFF000000) >> 24;
+	}
 }
 
 // char	*my_mlx_get_data_addr(void *img_ptr, int32_t *bits_per_pixel, int32_t *size_line, int32_t *endian)
