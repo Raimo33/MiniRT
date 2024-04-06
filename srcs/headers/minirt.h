@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 17:43:12 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 19:34:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@
 # define ROUGHNESS_SCALING_FACTOR 30
 # define OCTREE_DEPTH 3
 # define N_THREADS 32
-# define N_FRAMES 100
+
 # define KEY_ESC 65307
 
 static const char		spaces[] = " \t\n\v\f\r";
@@ -68,10 +68,8 @@ typedef struct s_mlx_data
 	int				bits_per_pixel;
 	uint8_t			bytes_per_pixel;
 	int				line_length;
-	void			**frames;
-	char			**addresses;
-	// void			*frame;
-	// char			*frame_addr;
+	void			*img;
+	char			*addr;
 }	t_mlx_data;
 
 typedef struct s_hook_data
@@ -84,10 +82,10 @@ typedef struct s_thread_data
 {
 	t_mlx_data	*win_data;
 	t_scene		*scene;
-	uint16_t	frame_no;
-	uint16_t	start_y;
-	uint16_t	end_y;
-	pthread_t	id;
+	t_ray		ray;
+	t_color		*colors_array;
+	uint16_t	start_depth;
+	uint16_t	end_depth;
 }	t_thread_data;
 
 //TODO aggiustare i const
@@ -111,7 +109,7 @@ bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding
 float			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
 float			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 float			intersect_ray_plane(const t_ray ray, const t_shape *shape);
-void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const uint32_t color, const uint16_t frame_no);
+void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
 void			my_mlx_stack_image(t_mlx_data *data);
 char			*my_mlx_get_data_addr(void *img_ptr, int32_t *bits_per_pixel, int32_t *size_line, int32_t *endian);
 

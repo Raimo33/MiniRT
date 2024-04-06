@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 14:48:41 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 19:32:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,29 +38,21 @@ void	init_scene(t_scene *scene)
 	scene->lights = NULL;
 	scene->shapes = NULL;
 	scene->octree = (t_octree *)malloc(sizeof(t_octree));	
+	scene->random_bias_vectors = (t_vector *)malloc(sizeof(t_vector) * RAYS_PER_PIXEL);
 	scene->world_max.x = 0;
 	scene->world_max.y = 0;
 }
 
 void	init_window(t_mlx_data *win_data)
-{
-	uint8_t i;
-	
+{	
 	win_data->mlx = mlx_init();
 	win_data->win = mlx_new_window(win_data->mlx,
 			WIN_WIDTH, WIN_HEIGHT, "miniRT");
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");
-	win_data->frames = (void **)malloc(sizeof(void *) * N_FRAMES);
-	win_data->addresses = (char **)malloc(sizeof(char *) * N_FRAMES);
-	i = 0;
-	while (i < N_FRAMES)
-	{
-		win_data->frames[i] = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-		win_data->addresses[i] = mlx_get_data_addr(win_data->frames[i], &win_data->bits_per_pixel,
-			&win_data->line_length, &win_data->endian);;
-		i++;
-	}
+	win_data->img = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+	win_data->addr = mlx_get_data_addr(win_data->img, &win_data->bits_per_pixel,
+		&win_data->line_length, &win_data->endian);
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 }
 

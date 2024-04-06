@@ -6,69 +6,50 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 18:02:12 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 19:36:02 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static void				*render_segment(void *data);
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
-static t_color			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce);
+static t_color			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx);
 static t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 static inline t_point	ray_point_at_parameter(const t_ray ray, float t);
 static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void				traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static t_vector 		get_cylinder_normal(t_shape *shape, t_point point);
-// inline static float		fclamp(const float value, const float min, const float max);
-static t_color			merge_colors(t_color *colors, const uint16_t n_colors);
+static t_color 			blend_colors(const t_color color1, const t_color color2, const float ratio);
+inline static float		fclamp(const float value, const float min, const float max);
+static void				fill_image(t_mlx_data *win_data, t_scene *scene);
+static t_color			merge_colors(t_color *colors, const uint16_t n_colors, const float *ratios);
 static void				set_thread_attr(pthread_attr_t *thread_attr);
-static t_vector			get_random_in_unit_sphere(void);
+static t_vector			get_rand_in_unit_sphere(void);
+static void				*render_pixel(void *data);
 
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
 
 void render_scene(t_mlx_data *win_data, t_scene *scene)
 {
-	t_thread_data	*thread_data;
 	uint16_t		i;
-	uint16_t		j;
 	struct timeval	time;
 	uint64_t		seed;
 	pthread_attr_t	thread_attr;
-	pthread_t		thread_ids[N_THREADS];
 
 	setup_camera(scene->camera);
 	set_thread_attr(&thread_attr);
 	i = 0;
-	j = 0;
-	while (j < N_FRAMES)
+	while (i < RAYS_PER_PIXEL)
 	{
-		printf("Rendering frame %d\n", j);
 		gettimeofday(&time, NULL); //meglio di srand(TIME(NULL)) perche' si cambia ogni microsecondo non ogni secondo
 		seed = (time.tv_sec * 1000000) + time.tv_usec;
 		srand(seed);
-		scene->random_bias_vector = get_random_in_unit_sphere();
-		while (i < N_THREADS)
-		{
-			thread_data = (t_thread_data *)malloc(sizeof(t_thread_data));
-			thread_data->scene = scene;
-			thread_data->win_data = win_data;
-			thread_data->frame_no = j;
-			thread_data->start_y = i * (WIN_HEIGHT / N_THREADS);
-			if (i == N_THREADS - 1)
-				thread_data->end_y = WIN_HEIGHT;
-			else
-				thread_data->end_y = (i + 1) * (WIN_HEIGHT / N_THREADS);
-			pthread_create(&thread_ids[i], &thread_attr, &render_segment, thread_data);
-			i++;
-		}
-		while (i)
-			pthread_join(thread_ids[--i], NULL);
-		mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->frames[j], 0, 0);
-		j++;
+		scene->random_bias_vectors[i++] = get_rand_in_unit_sphere();
 	}
+	fill_image(win_data, scene);
+	mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->img, 0, 0);
 	pthread_attr_destroy(&thread_attr);
 }
 
@@ -80,59 +61,76 @@ static void	set_thread_attr(pthread_attr_t *thread_attr)
 	pthread_attr_setdetachstate(thread_attr, PTHREAD_CREATE_JOINABLE);
 }
 
-static inline uint32_t rgb_to_hex(t_color color)
-{
-	return ((color.a << 24) | (color.r << 16) | (color.g << 8) | color.b);
-}
-
-static void		*render_segment(void *data)
+static void	fill_image(t_mlx_data *win_data, t_scene *scene)
 {
 	t_color					colors[RAYS_PER_PIXEL];
-	t_color					final_color;
+	float					color_ratios[RAYS_PER_PIXEL];
 	uint16_t				x;
 	uint16_t				y;
 	uint16_t				i;
 	t_ray					ray;
-	t_thread_data			*thread_data = (t_thread_data *)data;
-	static const uint8_t	transparency_per_frame = 255 / N_FRAMES;
+	pthread_t 				thread_ids[N_THREADS];
+	t_color					final_color;
+	static const uint16_t	depth_per_thread = RAYS_PER_PIXEL / N_THREADS;
+	t_thread_data			*thread_data;
 
-	y = thread_data->start_y;
-	while (y < thread_data->end_y)
+	i = -1;
+	while (++i < RAYS_PER_PIXEL)
+		color_ratios[i] = 1.0f / (i + 2);
+	y = 0;
+	while (y < WIN_HEIGHT)
 	{
 		x = 0;
 		while (x < WIN_WIDTH)
 		{
-			i = 0;
-			ray = get_ray(thread_data->scene->camera, x, y);
-			while (i < RAYS_PER_PIXEL)
-				colors[i++] = ray_bouncing(thread_data->scene, ray, 0);
-			final_color = merge_colors(colors, RAYS_PER_PIXEL);
-			final_color.a = 0;
-			final_color.a += transparency_per_frame;
-			my_mlx_pixel_put(thread_data->win_data, x, y, rgb_to_hex(final_color), thread_data->frame_no);
-			x++;
+			ray = get_ray(scene->camera, x, y);
+			while (i < N_THREADS)
+			{
+				thread_data = (t_thread_data *)malloc(sizeof(t_thread_data)); //TODO ad ogni depth i thread devono prendere il vector bias corrispondente
+				thread_data->start_depth = i * depth_per_thread;
+				thread_data->end_depth = (i + 1) * depth_per_thread;
+				thread_data->scene = scene;
+				thread_data->ray = ray;
+				thread_data->colors_array = colors;
+				pthread_create(&thread_ids[i], NULL, render_pixel, &thread_data);
+				i++;
+			}
+			while (i)
+				pthread_join(thread_ids[--i], NULL);
+			final_color = merge_colors(colors, RAYS_PER_PIXEL, color_ratios);
+			my_mlx_pixel_put(win_data, x, y, final_color);
 		}
 		y++;
 	}
-	return (free(data), NULL);
 }
 
-static t_color	merge_colors(t_color *colors, const uint16_t n_colors)
+static void	*render_pixel(void *data)
+{
+	t_thread_data	*thread_data = (t_thread_data *)data;
+	t_color			*colors_array = thread_data->colors_array;
+	uint16_t		i;
+		
+	i = thread_data->start_depth;
+	while (i < thread_data->end_depth)
+	{
+		colors_array[i] = ray_bouncing(thread_data->scene, thread_data->ray, 0, i);
+		i++;	
+	}
+	return (NULL);
+}
+
+static t_color	merge_colors(t_color *colors, const uint16_t n_colors, const float *ratios)
 {
 	t_color			merged_color = {0, 0, 0, 0};
 	uint16_t		i;
-	const float		weight = 1.0f / n_colors;
 
 	if (n_colors == 1)
 		return (colors[0]);
 	i = 0;
 	while (i < n_colors)
 	{
-		merged_color.r += (colors[i].r * weight);
-		merged_color.g += (colors[i].g * weight);
-		merged_color.b += (colors[i].b * weight);
-		merged_color.a += (colors[i].a * weight);
-		i++;
+		merged_color = blend_colors(merged_color, colors[i], ratios[i]);
+		i++;	
 	}
 	return (merged_color);
 }
@@ -178,7 +176,7 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
 	return (ray_direction);
 }
 
-static t_vector	get_random_in_unit_sphere(void)
+static t_vector	get_rand_in_unit_sphere(void)
 {
     t_vector	p;
 	float		rand_n;
@@ -212,7 +210,7 @@ static inline uint32_t	min(const uint32_t a, const uint32_t b)
 	return (a < b ? a : b);
 }
 
-static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce)
+static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx)
 {
 	t_hit					*hit_info;
 	t_color					ray_color;
@@ -225,8 +223,8 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	hit_info = trace_ray(scene, ray);
 	if (!hit_info)
 		return (bg_color);
-	ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, scene->random_bias_vector);
-	ray_color = ray_bouncing(scene, ray, n_bounce + 1);
+	ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, scene->random_bias_vectors[idx]);
+	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx);
 	hit_color = hit_info->material->color;
 	ambient_light = (t_color){
 		.r = (uint8_t)(scene->amblight.color.r * scene->amblight.brightness * hit_color.r / 255),
@@ -339,21 +337,18 @@ inline static t_point ray_point_at_parameter(const t_ray ray, float t)
 	});
 }
 
-// static uint32_t blend_colors(uint32_t color1, uint32_t color2, float ratio)
-// {
-// 	uint8_t result_r;
-// 	uint8_t result_g;
-// 	uint8_t result_b;
-	
-//     ratio = fclamp(ratio, 0.0f, 1.0f);
-// 	result_r = (uint8_t)(((color1 >> 16) & 0xFF) * (1.0f - ratio) + ((color2 >> 16) & 0xFF) * ratio);
-// 	result_g = (uint8_t)(((color1 >> 8) & 0xFF) * (1.0f - ratio) + ((color2 >> 8) & 0xFF) * ratio);
-// 	result_b = (uint8_t)((color1 & 0xFF) * (1.0f - ratio) + (color2 & 0xFF) * ratio);
+static t_color blend_colors(const t_color color1, const t_color color2, float ratio)
+{
+	t_color		result;
 
-//     return ((result_r << 16) | (result_g << 8) | result_b);
-// }
+    ratio = fclamp(ratio, 0.0f, 1.0f);
+	result.r = (uint8_t)(color1.r * (1.0f - ratio) + color2.r * ratio);
+	result.g = (uint8_t)(color1.g * (1.0f - ratio) + color2.g * ratio);
+	result.b = (uint8_t)(color1.b * (1.0f - ratio) + color2.b * ratio);
+	return (result);
+}
 
-// inline static float	fclamp(const float value, const float min, const float max)
-// {
-// 	return (value < min ? min : (value > max ? max : value));
-// }
+inline static float	fclamp(const float value, const float min, const float max)
+{
+	return (value < min ? min : (value > max ? max : value));
+}

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 17:22:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 19:31:49 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct	s_scene
 	t_amblight	amblight;
 	t_vector	world_min;
 	t_vector	world_max;
-	t_vector	random_bias_vector;
+	t_vector	*random_bias_vectors;
 }	t_scene;
 
 #endif
