@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 14:53:16 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 17:42:31 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,20 @@ static void				*render_segment(void *data);
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
 static t_color			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce);
-static float			compute_ray_weight(t_vector ray_direction, t_vector normal, const t_material *material);
 static t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
-static t_ray			*get_reflected_rays(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_material *material, uint16_t *n_rays);
 static inline t_point	ray_point_at_parameter(const t_ray ray, float t);
 static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void				traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static t_vector 		get_cylinder_normal(t_shape *shape, t_point point);
-static t_vector			get_random_in_unit_sphere(void);
-static t_vector			generate_random_vector_in_hemisphere(const t_vector normal, const float roughness);
-static uint16_t			get_ray_count_based_on_roughness(const float roughness);
 // inline static float		fclamp(const float value, const float min, const float max);
-static float			rand_float(const float min, const float max);
 static t_color			merge_colors(t_color *colors, const uint16_t n_colors);
 static void				set_thread_attr(pthread_attr_t *thread_attr);
+static t_vector			get_random_in_unit_sphere(void);
 
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
 
-void render(t_mlx_data *win_data, t_scene *scene)
+void render_scene(t_mlx_data *win_data, t_scene *scene)
 {
 	t_thread_data	*thread_data;
 	uint16_t		i;
@@ -54,6 +49,7 @@ void render(t_mlx_data *win_data, t_scene *scene)
 		gettimeofday(&time, NULL); //meglio di srand(TIME(NULL)) perche' si cambia ogni microsecondo non ogni secondo
 		seed = (time.tv_sec * 1000000) + time.tv_usec;
 		srand(seed);
+		scene->random_bias_vector = get_random_in_unit_sphere();
 		while (i < N_THREADS)
 		{
 			thread_data = (t_thread_data *)malloc(sizeof(t_thread_data));
@@ -182,125 +178,69 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
 	return (ray_direction);
 }
 
-static t_ray	*get_reflected_rays(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_material *material, uint16_t *n_rays)
-{
-	uint16_t	n = get_ray_count_based_on_roughness(material->roughness);
-	t_ray		*reflected_rays = (t_ray *)malloc(sizeof(t_ray) * (n));
-
-	*n_rays = n;
-	while (n--)
-	{
-		t_vector	perturbation = generate_random_vector_in_hemisphere(normal, material->roughness);
-		t_vector	scattered_direction = vec_normalize(vec_add(incoming_ray.direction, perturbation));
-
-		if (vec_dot(scattered_direction, normal) < 0) //se il raggio è entrante, inverti la direzione
-    		scattered_direction = vec_negate(scattered_direction);
-		reflected_rays[n] = (t_ray){point, scattered_direction};
-	}
-	return (reflected_rays);
-}
-
-static uint16_t	get_ray_count_based_on_roughness(const float roughness)
-{
-    float base = MIN_REFLECTED_RAYS; // Minimum number of rays for the least rough surfaces
-    float factor = ROUGHNESS_SCALING_FACTOR; // Scaling factor for maximum roughness
-
-    // Non-linear scaling: as roughness increases, the number of rays grows more quickly
-    return (base + pow(roughness, 2) * (factor - base));
-}
-
-static t_vector	generate_random_vector_in_hemisphere(const t_vector normal, const float roughness)
-{
-	const t_vector	in_unit_sphere = get_random_in_unit_sphere();
-    // Scale the vector in the unit sphere by roughness, if roughness is 0, stick with the normal
-	const t_vector	perturbation = vec_scale(in_unit_sphere, fmax(0.1, roughness));
-	const t_vector	adjusted_direction = vec_normalize(vec_add(perturbation, normal));
-	
-	if (vec_dot(adjusted_direction, normal) < 0.0f)
-		return (vec_scale(adjusted_direction, -1.0f));
-	return (adjusted_direction);
-}
-
 static t_vector	get_random_in_unit_sphere(void)
 {
-	t_point	p;
+    t_vector	p;
+	float		rand_n;
 
-	do
-	{
-		p = (t_point){rand_float(-1.0f, 1.0f), rand_float(-1.0f, 1.0f), rand_float(-1.0f, 1.0f)};
-	} while (vec_dot(p, p) >= 1.0f);
-	return (p);
+    do {
+        // Generate a random point in the unit cube by scaling the random values
+        // and then translate them to the range [-1, 1]
+		rand_n = (2.0 * ((double)rand() / RAND_MAX) - 1.0);
+        p.x = rand_n;
+		p.y = rand_n;
+		p.z = rand_n;
+    // Repeat until we get a point inside the unit sphere
+    } while (vec_dot(p, p) >= 1.0);
+    return p;
 }
 
-static float	rand_float(const float min, const float max)
+static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_vector random_component)
 {
-	return (min + (max - min) * rand() / (float)RAND_MAX);
+	t_ray		reflected_ray =
+	{
+		.origin = point,
+		.direction = vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction)
+	};
+	float roughness = 0.1;
+	reflected_ray.direction = vec_add(reflected_ray.direction, vec_scale(roughness, random_component));
+	return (reflected_ray);
+}
+
+static inline uint32_t	min(const uint32_t a, const uint32_t b)
+{
+	return (a < b ? a : b);
 }
 
 static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce)
 {
 	t_hit					*hit_info;
-	float					total_weight;
-	t_ray					*rays;
-	uint16_t				n_rays;
-	uint16_t				accumulated_r;
-	uint16_t				accumulated_g;
-	uint16_t				accumulated_b;
-	uint16_t				accumulated_a;
+	t_color					ray_color;
 	static const t_color	bg_color = {BACKGROUND_COLOR >> 16 & 0xFF, BACKGROUND_COLOR >> 8 & 0xFF, BACKGROUND_COLOR & 0xFF, 0};
+	t_color					hit_color;
+	t_color					ambient_light;
 
 	if (n_bounce > MAX_BOUNCE) //non fa nulla ma meglio lasciare il controllo
 		return (bg_color);
 	hit_info = trace_ray(scene, ray);
 	if (!hit_info)
 		return (bg_color);
-	rays = get_reflected_rays(ray, hit_info->normal, hit_info->point, hit_info->material, &n_rays);
-	if (n_rays == 0 || rays == NULL)
-		return (free(hit_info), bg_color);
-	total_weight = 0;
-	accumulated_r = hit_info->material->color.r;
-	accumulated_g = hit_info->material->color.g;
-	accumulated_b = hit_info->material->color.b;
-	accumulated_a = hit_info->material->color.a;
-	while (n_rays--)
-	{
-		t_color		ray_color = ray_bouncing(scene, rays[n_rays], n_bounce + 1);
-		float		weight = compute_ray_weight(rays[n_rays].direction, hit_info->normal, hit_info->material);
-
-		accumulated_r += ray_color.r * weight;
-		accumulated_g += ray_color.g * weight;
-		accumulated_b += ray_color.b * weight;
-		accumulated_a += ray_color.a * weight;
-		total_weight += weight;
-	}
-	free(hit_info);
-	free(rays);
-	if (total_weight <= 0)
-		return (bg_color);
-	return ((t_color)
-	{
-		.r = accumulated_r / total_weight,
-		.g = accumulated_g / total_weight,
-		.b = accumulated_b / total_weight,
-		.a = accumulated_a / total_weight
-	});
-}
-
-// Computes the weight of a ray based on the angle of incidence and material reflectivity
-static float	compute_ray_weight(t_vector ray_direction, t_vector normal, const t_material *material)
-{
-	ray_direction = vec_normalize(ray_direction);
-	normal = vec_normalize(normal);
-
-	// compute the cosine of the angle of incidence
-	float cos_theta = fabs(vec_dot(ray_direction, normal));
-	
-	// compute French Schlick approximation
-	float RO = material->reflectivity;
-	float x = 1 - cos_theta;
-	float reflectance = RO + (1 - RO) * (x * x * x * x * x);
-
-	return (reflectance);
+	ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, scene->random_bias_vector);
+	ray_color = ray_bouncing(scene, ray, n_bounce + 1);
+	hit_color = hit_info->material->color;
+	ambient_light = (t_color){
+		.r = (uint8_t)(scene->amblight.color.r * scene->amblight.brightness * hit_color.r / 255),
+		.g = (uint8_t)(scene->amblight.color.g * scene->amblight.brightness * hit_color.g / 255),
+		.b = (uint8_t)(scene->amblight.color.b * scene->amblight.brightness * hit_color.b / 255),
+		.a = 255
+	};
+	ray_color = (t_color){
+		.r = (uint8_t)min(255, ambient_light.r + (hit_color.r * ray_color.r / 255)),
+		.g = (uint8_t)min(255, ambient_light.g + (hit_color.g * ray_color.g / 255)),
+		.b = (uint8_t)min(255, ambient_light.b + (hit_color.b * ray_color.b / 255)),
+		.a = 255
+	};
+	return (free(hit_info), ray_color);
 }
 
 static t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
@@ -383,7 +323,7 @@ static t_vector get_cylinder_normal(t_shape *shape, t_point point)
 	const t_cylinder	cylinder = shape->cylinder;
 	const t_vector		vec_from_center_to_point = vec_sub(point, cylinder.center);
 	const float			projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
-	const t_vector		projection = vec_add(cylinder.center, vec_scale(cylinder.direction, projection_lenght));
+	const t_vector		projection = vec_add(cylinder.center, vec_scale(projection_lenght, cylinder.direction));
 	const t_vector		normal = vec_normalize(vec_sub(point, projection));
 
 	return (normal);

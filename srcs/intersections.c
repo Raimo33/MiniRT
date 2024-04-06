@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersections.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 17:10:25 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:29:58 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static float	intersect_cylinder_cap(const t_ray ray, const t_cylinder *cylinder,
     if (fabs(denom) > EPSILON)
 	{
         const float 	t_cap = vec_dot(vec_sub(extreme_center, ray.origin), cylinder->direction) / denom;
-        const t_vector	p_cap = vec_add(ray.origin, vec_scale(ray.direction, t_cap));
+        const t_vector	p_cap = vec_add(ray.origin, vec_scale(t_cap, ray.direction));
         if (vec_dot(vec_sub(p_cap, extreme_center), vec_sub(p_cap, extreme_center)) <= cylinder->radius * cylinder->radius && t_cap > 0)
             t = t_cap;
     }
@@ -127,11 +127,11 @@ static float	intersect_cylinder_side(const t_ray ray, const t_cylinder *cylinder
 	{
 		if (t[i] > 0)
 		{
-			const t_point	point = vec_add(ray.origin, vec_scale(ray.direction, t[i]));
+			const t_point	point = vec_add(ray.origin, vec_scale(t[i], ray.direction));
 			const t_vector	vec_from_center_to_point = vec_sub(point, cylinder->center);
 			const float		projection_lenght = vec_dot(vec_from_center_to_point, cylinder->direction);
 
-			if (fabs(projection_lenght) <= cylinder->height / 2.0f)
+			if (fabs(projection_lenght) <= cylinder->half_height)
 			{
 				valid_t = t[i];
 				break ;

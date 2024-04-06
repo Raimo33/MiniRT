@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_operations.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/01 17:00:29 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:18:26 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ inline t_vector	vec_negate(const t_vector a) //restituisce il vettore opposto
 	return ((t_vector){-a.x, -a.y, -a.z});
 }
 
-inline t_vector 	vec_scale(const t_vector a, const float scale) //moltiplica un vettore per uno scalare
+inline t_vector 	vec_scale(const float scale, const t_vector a) //moltiplica un vettore per uno scalare
 {
 	return ((t_vector){a.x * scale, a.y * scale, a.z * scale});
 }

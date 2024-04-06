@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/04 15:48:50 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:19:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_cylinder
 	t_vector	direction;
 	float		radius;
 	float		sqr_radius;
-	float		height;
+	float		half_height;
 	t_point		top_cap_center;
 	t_point		bottom_cap_center;
 }	t_cylinder;

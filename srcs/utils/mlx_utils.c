@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 15:23:58 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 14:48:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 14:01:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y
 {
 	void	*dst;
 
-	dst = data->frames[frame_no] + (y * data->line_length + x * data->bytes_per_pixel);
+	dst = data->addresses[frame_no] + (y * data->line_length + x * data->bytes_per_pixel);
 	if (data->endian == 0)
 		*(uint32_t *)dst = color;
 	else

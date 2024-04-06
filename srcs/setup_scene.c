@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 01:26:09 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:21:10 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ static void set_shapes_data(t_scene *scene)
 				cylinder = &shape->cylinder;
 				cylinder->sqr_radius = cylinder->radius * cylinder->radius;
 				cylinder->direction = vec_normalize(cylinder->direction);
-				cylinder->top_cap_center = vec_add(cylinder->center, vec_scale(cylinder->direction, cylinder->height / 2.0));
-				cylinder->bottom_cap_center = vec_sub(cylinder->center, vec_scale(cylinder->direction, cylinder->height / 2.0));
+				cylinder->top_cap_center = vec_add(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
+				cylinder->bottom_cap_center = vec_sub(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
 				break ;
 			default:
 				break ;
@@ -230,17 +230,17 @@ static void	set_bb_cylinder(t_shape *shape)
 	const t_vector	center = shape->cylinder.center;
 
 	const float r = shape->cylinder.radius;
-	const float h = shape->cylinder.height;
+	const float half_height = shape->cylinder.half_height;
 
 	t_vector axis_max = (t_vector){
-        center.x + orientation.x * (h / 2),
-        center.y + orientation.y * (h / 2),
-        center.z + orientation.z * (h / 2),
+        center.x + orientation.x * half_height,
+        center.y + orientation.y * half_height,
+        center.z + orientation.z * half_height,
 	};
 	t_vector axis_min = (t_vector){
-        center.x - orientation.x * (h / 2),
-        center.y - orientation.y * (h / 2),
-        center.z - orientation.z * (h / 2),
+        center.x - orientation.x * half_height,
+        center.y - orientation.y * half_height,
+        center.z - orientation.z * half_height,
 	};
 
 	t_point bb_min = (t_point) axis_min;

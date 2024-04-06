@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/05 01:25:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:20:37 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ static void	parse_cylinder(t_shape *shape)
 	shape->cylinder.center = parse_coord(ft_strtok(NULL, spaces));
 	shape->cylinder.direction = parse_coord(ft_strtok(NULL, spaces));
 	shape->cylinder.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
-	shape->cylinder.height = ft_atof(ft_strtok(NULL, spaces));
+	shape->cylinder.half_height = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	shape->type = CYLINDER;
 }
 
