@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 16:18:26 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/08 16:20:39 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,9 @@ inline t_vector 	vec_scale(const float scale, const t_vector a) //moltiplica un 
 inline float	vec_dot(const t_vector a, const t_vector b) //prodotto scalare
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
+}
+
+inline float	vec_length(const t_vector a) //lunghezza di un vettore
+{
+	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
 }

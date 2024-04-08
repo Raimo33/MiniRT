@@ -64,15 +64,16 @@ typedef struct s_hit
     t_material	*material;
 }   t_hit;
 
-t_vector	vec_add(const t_vector a, const t_vector b); //somma di vettori
+t_vector	vec_add(const t_vector a, const t_vector b);
 t_vector	vec_add(const t_vector a, const t_vector b);
 t_vector	vec_sub(const t_vector a, const t_vector b);
 t_vector	vec_scale(const float scalar, const t_vector v);
 t_vector	vec_cross(const t_vector a, const t_vector b);
 t_vector	vec_normalize(const t_vector v);
-t_vector	vec_negate(const t_vector a); //restituisce il vettore opposto
+t_vector	vec_negate(const t_vector a);
 float		vec_dot(const t_vector a, const t_vector b);
-bool 		is_vec_equal(const t_vector a, const t_vector b); //confronto di vettori
+float		vec_length(const t_vector a);
+bool 		is_vec_equal(const t_vector a, const t_vector b);
 
 
 #endif

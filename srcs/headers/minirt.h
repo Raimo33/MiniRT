@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/08 15:31:04 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/08 16:20:04 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include "../../minilibx-linux/mlx.h"
 # include "../../libft/libft.h"
 # include "../headers/get_next_line.h"
+# include "../headers/primitives.h"
 # include "scene.h"
 
 //valori ideali
@@ -46,7 +47,7 @@
 # define WIN_WIDTH 400
 # define WIN_HEIGHT 400
 # define WORLD_SIZE 100
-# define RAYS_PER_PIXEL 10
+# define RAYS_PER_PIXEL 30
 # define BACKGROUND_COLOR 0x000000
 # define MAX_BOUNCE 2
 # define OCTREE_DEPTH 3
