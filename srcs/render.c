@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/08 15:15:24 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/08 15:38:58 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,11 +329,15 @@ static void	update_closest_hit(t_hit *closest_hit, const t_shape *shape, const f
 static t_vector get_cylinder_normal(t_cylinder cylinder, t_point point)
 {
 	const t_vector		vec_from_center_to_point = vec_sub(point, cylinder.center);
-	const float			projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
-	const t_vector		projection = vec_add(cylinder.center, vec_scale(projection_lenght, cylinder.direction));
-	const t_vector		normal = vec_normalize(vec_sub(point, projection));
+	const float			projection_length = vec_dot(vec_from_center_to_point, cylinder.direction);
+	t_vector			projection;
 
-	return (normal);
+	if (fabs(projection_length  + cylinder.half_height) < EPSILON) //bottom cap
+		return (vec_negate(cylinder.direction));
+	if (fabs(projection_length - cylinder.half_height) < EPSILON) //top cap
+		return (cylinder.direction);
+	projection = vec_add(cylinder.center, vec_scale(projection_length, cylinder.direction));
+	return(vec_normalize(vec_sub(point, projection)));
 }
 
 inline static t_point ray_point_at_parameter(const t_ray ray, float t)
