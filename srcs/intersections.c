@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 16:29:58 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/08 14:26:06 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,24 @@ float	intersect_ray_sphere(const t_ray ray, const t_shape *shape)
     const float		b = 2.0 * vec_dot(oc, ray.direction);
     const float		c = vec_dot(oc, oc) - sphere.radius * sphere.radius;
     const float		discriminant = b * b - 4 * a * c;
+	const float		two_times_a = 2 * a;
 
     if (discriminant < 0)
-        return (-1); // No intersection
+        return (-1);
     else
 	{
 		const float sqrt_discriminant = sqrt(discriminant);
-        const float t1 = (-b - sqrt_discriminant) / (2 * a);
-        const float t2 = (-b + sqrt_discriminant) / (2 * a);
+        const float t1 = (-b - sqrt_discriminant) / two_times_a;
+        const float t2 = (-b + sqrt_discriminant) / two_times_a;
         
-        // Both t1 and t2 are behind the ray
-		//TODO t1 e t2 sono negativi per qualche motivo
         if (t1 < 0 && t2 < 0)
             return (-1);
-
-        // Return the smallest positive t (closest intersection)
         if (t1 > 0 && t2 > 0)
-            return (t1 < t2 ? t1 : t2); // Return the smaller of the two
+            return (t1 < t2 ? t1 : t2);
         else if (t1 > 0)
-            return (t1); // Only t1 is positive
+            return (t1);
         else if (t2 > 0)
-            return (t2); // Only t2 is positive (t1 < 0)
-        // This handles an edge case where both t1 and t2 are 0, which is very rare
-        // and would mean the ray origin is on the sphere's surface.
+            return (t2);
         return (0);
     }
 }

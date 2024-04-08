@@ -15,7 +15,7 @@
 
 # include <stdint.h>
 
-# define EPSILON 1e-6
+# define EPSILON 1e-5
 
 typedef struct s_float3
 {

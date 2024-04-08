@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 19:36:02 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/08 15:15:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 static inline t_point	ray_point_at_parameter(const t_ray ray, float t);
 static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void				traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
-static t_vector 		get_cylinder_normal(t_shape *shape, t_point point);
+static t_vector		 	get_cylinder_normal(t_cylinder cylinder, t_point point);
 static t_color 			blend_colors(const t_color color1, const t_color color2, const float ratio);
 inline static float		fclamp(const float value, const float min, const float max);
 static void				fill_image(t_mlx_data *win_data, t_scene *scene);
@@ -27,6 +27,8 @@ static t_color			merge_colors(t_color *colors, const uint16_t n_colors, const fl
 static void				set_thread_attr(pthread_attr_t *thread_attr);
 static t_vector			get_rand_in_unit_sphere(void);
 static void				*render_pixel(void *data);
+static t_thread_data	*set_thread_data(t_scene *scene, t_ray ray, t_color *colors_array, const uint16_t i, const uint16_t depth_per_thread);
+static void				update_closest_hit(t_hit *closest_hit, const t_shape *shape, const float t, const t_ray ray);
 
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
@@ -71,37 +73,51 @@ static void	fill_image(t_mlx_data *win_data, t_scene *scene)
 	t_ray					ray;
 	pthread_t 				thread_ids[N_THREADS];
 	t_color					final_color;
-	static const uint16_t	depth_per_thread = RAYS_PER_PIXEL / N_THREADS;
 	t_thread_data			*thread_data;
+	float					depth_per_thread;
 
+	depth_per_thread = roundf((float)RAYS_PER_PIXEL / (float)N_THREADS);
 	i = -1;
 	while (++i < RAYS_PER_PIXEL)
 		color_ratios[i] = 1.0f / (i + 2);
+	i = 0;
 	y = 0;
 	while (y < WIN_HEIGHT)
 	{
+		printf("Y: %d\n", y);
 		x = 0;
 		while (x < WIN_WIDTH)
 		{
 			ray = get_ray(scene->camera, x, y);
 			while (i < N_THREADS)
 			{
-				thread_data = (t_thread_data *)malloc(sizeof(t_thread_data)); //TODO ad ogni depth i thread devono prendere il vector bias corrispondente
-				thread_data->start_depth = i * depth_per_thread;
-				thread_data->end_depth = (i + 1) * depth_per_thread;
-				thread_data->scene = scene;
-				thread_data->ray = ray;
-				thread_data->colors_array = colors;
-				pthread_create(&thread_ids[i], NULL, render_pixel, &thread_data);
-				i++;
+				thread_data = set_thread_data(scene, ray, colors, i, depth_per_thread);
+				pthread_create(&thread_ids[i++], NULL, render_pixel, thread_data);
 			}
 			while (i)
 				pthread_join(thread_ids[--i], NULL);
 			final_color = merge_colors(colors, RAYS_PER_PIXEL, color_ratios);
 			my_mlx_pixel_put(win_data, x, y, final_color);
+			x++;
 		}
 		y++;
 	}
+}
+
+static t_thread_data	*set_thread_data(t_scene *scene, t_ray ray, t_color *colors_array, const uint16_t i, const uint16_t depth_per_thread)
+{
+	t_thread_data	*thread_data;
+
+	thread_data = (t_thread_data *)malloc(sizeof(t_thread_data));
+	thread_data->scene = scene;
+	thread_data->ray = ray;
+	thread_data->colors_array = colors_array;
+	thread_data->start_depth = i * depth_per_thread;
+	if (i == N_THREADS - 1)
+		thread_data->end_depth = RAYS_PER_PIXEL;
+	else
+		thread_data->end_depth = (i + 1) * depth_per_thread;
+	return (thread_data);
 }
 
 static void	*render_pixel(void *data)
@@ -109,29 +125,25 @@ static void	*render_pixel(void *data)
 	t_thread_data	*thread_data = (t_thread_data *)data;
 	t_color			*colors_array = thread_data->colors_array;
 	uint16_t		i;
-		
+
 	i = thread_data->start_depth;
 	while (i < thread_data->end_depth)
 	{
 		colors_array[i] = ray_bouncing(thread_data->scene, thread_data->ray, 0, i);
-		i++;	
+		i++;
 	}
-	return (NULL);
+	return (free(data), NULL);
 }
 
 static t_color	merge_colors(t_color *colors, const uint16_t n_colors, const float *ratios)
 {
-	t_color			merged_color = {0, 0, 0, 0};
+	t_color			merged_color;
 	uint16_t		i;
 
-	if (n_colors == 1)
-		return (colors[0]);
+	merged_color = colors[0];
 	i = 0;
-	while (i < n_colors)
-	{
+	while (++i < n_colors)
 		merged_color = blend_colors(merged_color, colors[i], ratios[i]);
-		i++;	
-	}
 	return (merged_color);
 }
 
@@ -197,7 +209,7 @@ static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, 
 {
 	t_ray		reflected_ray =
 	{
-		.origin = point,
+		.origin = vec_add(point, vec_scale(EPSILON, normal)),
 		.direction = vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction)
 	};
 	float roughness = 0.1;
@@ -227,7 +239,7 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx);
 	hit_color = hit_info->material->color;
 	ambient_light = (t_color){
-		.r = (uint8_t)(scene->amblight.color.r * scene->amblight.brightness * hit_color.r / 255),
+		.r = (uint8_t)(scene->amblight.color.r * scene->amblight.brightness * hit_color.r / 255), //TODO gestire la posizione della ambient light
 		.g = (uint8_t)(scene->amblight.color.g * scene->amblight.brightness * hit_color.g / 255),
 		.b = (uint8_t)(scene->amblight.color.b * scene->amblight.brightness * hit_color.b / 255),
 		.a = 255
@@ -279,12 +291,7 @@ static void	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closes
 
 static void check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
-	static float (*const intersect[3])(const t_ray, const t_shape *) = //stesso ordine di enum e struct
-	{
-		&intersect_ray_sphere,
-		&intersect_ray_cylinder,
-		&intersect_ray_plane
-	};
+	static float (*const	intersect[3])(const t_ray, const t_shape *) = {&intersect_ray_sphere, &intersect_ray_cylinder, &intersect_ray_plane}; //stesso ordine di enum
 	t_list	*shapes;
 	t_shape	*shape;
 	float	t;
@@ -295,30 +302,32 @@ static void check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *c
 		shape = (t_shape *)shapes->content;
 		t = intersect[shape->type](ray, shape);
 		if (t > 0 && t < closest_hit->distance)
-		{
-			closest_hit->distance = t;
-			closest_hit->point = ray_point_at_parameter(ray, t);
-			closest_hit->material = shape->material;
-			switch (shape->type)
-			{
-				case SPHERE:
-					closest_hit->normal = vec_normalize(vec_sub(closest_hit->point, shape->sphere.center));
-					break;
-				case CYLINDER:
-					closest_hit->normal = get_cylinder_normal(shape, closest_hit->point);
-					break;
-				case PLANE:
-					closest_hit->normal = shape->plane.normal;
-					break;
-			}
-		}
+			update_closest_hit(closest_hit, shape, t, ray);
 		shapes = shapes->next;
 	}
 }
 
-static t_vector get_cylinder_normal(t_shape *shape, t_point point)
+static void	update_closest_hit(t_hit *closest_hit, const t_shape *shape, const float t, const t_ray ray)
 {
-	const t_cylinder	cylinder = shape->cylinder;
+	closest_hit->distance = t;
+	closest_hit->point = ray_point_at_parameter(ray, t);
+	closest_hit->material = shape->material;
+	switch (shape->type)
+	{
+		case SPHERE:
+			closest_hit->normal = vec_normalize(vec_sub(closest_hit->point, shape->sphere.center));
+			break;
+		case CYLINDER:
+			closest_hit->normal = get_cylinder_normal(shape->cylinder, closest_hit->point);
+			break;
+		case PLANE:
+			closest_hit->normal = shape->plane.normal;
+			break;
+	}
+}
+
+static t_vector get_cylinder_normal(t_cylinder cylinder, t_point point)
+{
 	const t_vector		vec_from_center_to_point = vec_sub(point, cylinder.center);
 	const float			projection_lenght = vec_dot(vec_from_center_to_point, cylinder.direction);
 	const t_vector		projection = vec_add(cylinder.center, vec_scale(projection_lenght, cylinder.direction));

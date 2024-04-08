@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 19:34:52 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/08 15:19:28 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,22 @@
 # define WIN_WIDTH 400
 # define WIN_HEIGHT 400
 # define WORLD_SIZE 100
-# define RAYS_PER_PIXEL 100
+# define RAYS_PER_PIXEL 40
 # define BACKGROUND_COLOR 0x000000
 # define MAX_BOUNCE 10
-# define MIN_REFLECTED_RAYS 10
-# define ROUGHNESS_SCALING_FACTOR 30
 # define OCTREE_DEPTH 3
-# define N_THREADS 32
+# ifndef N_THREADS
+#  define N_THREADS 8
+# endif
+
+# if N_THREADS > RAYS_PER_PIXEL / 2
+#  undef N_THREADS
+#  define N_THREADS RAYS_PER_PIXEL / 2
+# endif
+# if N_THREADS < 1
+#  undef N_THREADS
+#  define N_THREADS 1
+# endif
 
 # define KEY_ESC 65307
 
@@ -80,7 +89,6 @@ typedef struct s_hook_data
 
 typedef struct s_thread_data
 {
-	t_mlx_data	*win_data;
 	t_scene		*scene;
 	t_ray		ray;
 	t_color		*colors_array;

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 16:21:10 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/08 15:09:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,6 @@ static void	set_world_extremes(t_scene *scene)
 	t_point		world_max = {0, 0, 0};
 	t_point		world_min = {0, 0, 0};
 
-	//bb min e bb max delle shapes deve partire da 0,0,0
-
 	shapes = scene->shapes;
 	if (!shapes)
 		return ;
@@ -172,24 +170,24 @@ void	set_bounding_box(t_shape *shape)
 	}
 }
 
-//bounding box for sphere
+//axis aligned bounding box for sphere
 static void	set_bb_sphere(t_shape *shape)
 {
 	shape->bb_min = (t_point){shape->sphere.center.x - shape->sphere.radius, shape->sphere.center.y - shape->sphere.radius, shape->sphere.center.z - shape->sphere.radius};
 	shape->bb_max = (t_point){shape->sphere.center.x + shape->sphere.radius, shape->sphere.center.y + shape->sphere.radius, shape->sphere.center.z + shape->sphere.radius};
 }
 
-//bounding box for plane
+//axis aligned bounding box for plane
 static void set_bb_plane(t_shape *shape)
 {
 	t_vector 			u;
 	t_vector 			v;
 	t_vector 			r;
 	static const float	size = WORLD_SIZE / 2;
-	static const float  thickness = EPSILON; // Define a small thickness
+	static const float  thickness = EPSILON;
 	
 	r = (t_vector){1, 0, 0};
-	if (fabs(vec_dot(r, shape->plane.normal)) > 0.999)
+	if (fabs(vec_dot(r, shape->plane.normal)) > 0.99f)
     	r = (t_vector){0, 1, 0};
 	
 	u = vec_cross(r, shape->plane.normal);
@@ -198,26 +196,46 @@ static void set_bb_plane(t_shape *shape)
 	u = vec_normalize(u);
 	v = vec_normalize(v);
 
-	t_point bb_min = {
-    	-(size * fabs(u.x)) - (size * fabs(v.x)),
-    	-(size * fabs(u.y)) - (size * fabs(v.y)),
-    	-(size * fabs(u.z)) - (size * fabs(v.z))
+	const t_vector size_by_v = 
+	{
+		size * fabs(v.x),
+		size * fabs(v.y),
+		size * fabs(v.z)
+	};
+	const t_point size_by_u = 
+	{
+		size * fabs(u.x),
+		size * fabs(u.y),
+		size * fabs(u.z)
 	};
 
-	t_point bb_max = {
-		size * fabs(u.x) + (size * fabs(v.x)),
-	 	size * fabs(u.y) + (size * fabs(v.y)),
-		size * fabs(u.z) + (size * fabs(v.z))
+	t_point bb_min = {
+    	-size_by_u.x - size_by_v.x,
+    	-size_by_u.y - size_by_v.y,
+		-size_by_u.z - size_by_v.z
+	};
+
+	t_point	bb_max = {
+		size_by_u.x + size_by_v.x,
+		size_by_u.y + size_by_v.y,
+		size_by_u.z + size_by_v.z
 	};
 
 	// Add a small thickness to the bounding box
-	bb_min.x -= shape->plane.normal.x * thickness;
-	bb_min.y -= shape->plane.normal.y * thickness;
-	bb_min.z -= shape->plane.normal.z * thickness;
+	const t_vector	normal_by_thickness = 
+	{
+		shape->plane.normal.x * thickness,
+		shape->plane.normal.y * thickness,
+		shape->plane.normal.z * thickness
+	};
+	
+	bb_min.x -= normal_by_thickness.x;
+	bb_min.y -= normal_by_thickness.y;
+	bb_min.z -= normal_by_thickness.z;
 
-	bb_max.x += shape->plane.normal.x * thickness;
-	bb_max.y += shape->plane.normal.y * thickness;
-	bb_max.z += shape->plane.normal.z * thickness;
+	bb_max.x += normal_by_thickness.x;
+	bb_max.y += normal_by_thickness.y;
+	bb_max.z += normal_by_thickness.z;
 
 	shape->bb_max = bb_max;
 	shape->bb_min = bb_min;
