@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 22:42:57 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 00:10:17 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,15 @@ static t_color			compute_lights_contribution(const t_scene *scene, t_point surfa
 
 void render_scene(t_mlx_data *win_data, t_scene *scene)
 {
-	uint16_t		i;
-	struct timeval	time;
-	uint64_t		seed;
 	pthread_attr_t	thread_attr;
+	uint16_t		i;
 
 	setup_camera(scene->camera);
 	set_thread_attr(&thread_attr);
+	srand(time(NULL));
 	i = 0;
 	while (i < RAYS_PER_PIXEL)
-	{
-		gettimeofday(&time, NULL); //meglio di srand(TIME(NULL)) perche' si cambia ogni microsecondo non ogni secondo
-		seed = (time.tv_sec * 1000000) + time.tv_usec;
-		srand(seed);
 		scene->random_bias_vectors[i++] = get_rand_in_unit_sphere();
-	}
 	fill_image(win_data, scene);
 	mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->img, 0, 0);
 	pthread_attr_destroy(&thread_attr);
@@ -204,20 +198,23 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
 	return ((t_ray){cam->center, vec_normalize(direction)});
 }
 
-static t_vector	get_rand_in_unit_sphere(void)
+static t_vector get_rand_in_unit_sphere(void) //metodo di Marsaglia's
 {
+    double		u;
+	double		v;
+	double		s;
     t_vector	p;
-	float		rand_n;
 
     do {
-        // Generate a random point in the unit cube by scaling the random values
-        // and then translate them to the range [-1, 1]
-		rand_n = (2.0 * ((double)rand() / RAND_MAX) - 1.0);
-        p.x = rand_n;
-		p.y = rand_n;
-		p.z = rand_n;
-    // Repeat until we get a point inside the unit sphere
-    } while (vec_dot(p, p) >= 1.0);
+        u = 2.0 * ((double)rand() / RAND_MAX) - 1.0;
+        v = 2.0 * ((double)rand() / RAND_MAX) - 1.0;
+        s = u*u + v*v;
+    } while (s >= 1 || s == 0);
+
+    double multiplier = 2 * sqrt(1 - s);
+    p.x = u * multiplier;
+    p.y = v * multiplier;
+    p.z = 1 - 2 * s;
     return (p);
 }
 
@@ -228,7 +225,7 @@ static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, 
 		.origin = vec_add(point, vec_scale(EPSILON, normal)),
 		.direction = vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction)
 	};
-	float roughness = 0.1;
+	float roughness = 0.1; //TODO implementare la roughness prendendo quella degli oggetti
 	reflected_ray.direction = vec_add(reflected_ray.direction, vec_scale(roughness, random_component));
 	return (reflected_ray);
 }
