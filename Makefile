@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
+#    By: egualand <egualand@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/04/08 15:21:13 by craimond         ###   ########.fr        #
+#    Updated: 2024/04/09 14:43:28 by egualand         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-//TODO fixare errori quando si fa fclean 2 volte di fila
+# TODO fixare errori quando si fa fclean 2 volte di fila
 
 MLX_DIR = minilibx-linux
 MLX_REPO = https://github.com/42Paris/minilibx-linux.git
