@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 18:24:05 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:17:32 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,12 @@ static void	parse_amblight(t_scene *scene)
 
 	amblight.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	amblight.color = parse_color(ft_strtok(NULL, spaces));
+	amblight.ambient = (t_color){
+        .r = (uint8_t)(amblight.color.r * amblight.brightness),
+        .g = (uint8_t)(amblight.color.g * amblight.brightness),
+        .b = (uint8_t)(amblight.color.b * amblight.brightness),
+        .a = 0
+    };
 	scene->amblight = amblight;
 }
 

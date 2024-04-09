@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 18:10:55 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:16:29 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_amblight
 {
 	float		brightness;
 	t_color		color;
+	t_color		ambient;
 }	t_amblight;
 
 typedef	struct s_octree

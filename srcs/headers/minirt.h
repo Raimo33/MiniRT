@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 18:34:02 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:31:10 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,25 +32,24 @@
 # include "scene.h"
 
 //valori ideali
-// # define WIN_WIDTH 1280
-// # define WIN_HEIGHT 720
-// # define PLANE_SIZE 100
-// # define RAYS_PER_PIXEL 100
-// # define BACKGROUND_COLOR 0x000000
-// # define MAX_BOUNCE 3
-// # define OCTREE_DEPTH 3
-// # define N_THREADS 6
-// # define N_FRAMES 60
-// # define KEY_ESC 65307
+# define WIN_WIDTH 680
+# define WIN_HEIGHT 400
+# define PLANE_SIZE 100
+# define RAYS_PER_PIXEL 300
+# define BACKGROUND_COLOR 0x000000
+# define MAX_BOUNCE 20
+# define OCTREE_DEPTH 3
+# define N_THREADS 8
 
 //valori di test
-# define WIN_WIDTH 300
-# define WIN_HEIGHT 300
-# define PLANE_SIZE 100
-# define RAYS_PER_PIXEL 50
-# define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 3
-# define OCTREE_DEPTH 3
+// # define WIN_WIDTH 300
+// # define WIN_HEIGHT 300
+// # define PLANE_SIZE 100
+// # define RAYS_PER_PIXEL 3
+// # define BACKGROUND_COLOR 0x000000
+// # define MAX_BOUNCE 2
+// # define OCTREE_DEPTH 3
+
 # ifndef N_THREADS
 #  define N_THREADS 8
 # endif

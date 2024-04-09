@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 18:43:54 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 19:18:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ static void				*render_pixel(void *data);
 static t_thread_data	*set_thread_data(t_scene *scene, t_ray ray, t_color *colors_array, const uint16_t i, const uint16_t depth_per_thread);
 static void				update_closest_hit(t_hit *closest_hit, const t_shape *shape, const float t, const t_ray ray);
 static t_color			compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal);
-static t_color			add_amblight(t_color light_component, t_amblight ambient_light);
 
 //TODO implementare un blending tra i pixel vicini per velocizzare il rendering e aumentare la smoothness
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
+//TODO con le normali negative non funziona ne i cilindri ne i piani
 
 void render_scene(t_mlx_data *win_data, t_scene *scene)
 {
@@ -241,9 +241,7 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx);
 	hit_color = hit_info->material->color;
 	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal);
-	// printf("before light: %d %d %d\n", light_component.r, light_component.g, light_component.b);
-	light_component = add_amblight(light_component, scene->amblight);
-	// printf("after light: %d %d %d\n", light_component.r, light_component.g, light_component.b);
+	light_component = blend_colors(light_component, scene->amblight.ambient, 0.2f); //ratio 80/20 tra luce e ambient
 	ray_color = (t_color){
         .r = (uint8_t)min(255, (int)(hit_color.r * light_component.r / 255 + ray_color.r)),
         .g = (uint8_t)min(255, (int)(hit_color.g * light_component.g / 255 + ray_color.g)),
@@ -251,19 +249,6 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
         .a = 255
     };
 	return (free(hit_info), ray_color);
-}
-
-static t_color	add_amblight(t_color light_component, t_amblight ambient_light)
-{
-    // Scale ambient color by its brightness
-    t_color ambient_contribution = {
-        .r = (uint8_t)(ambient_light.color.r * ambient_light.brightness),
-        .g = (uint8_t)(ambient_light.color.g * ambient_light.brightness),
-        .b = (uint8_t)(ambient_light.color.b * ambient_light.brightness),
-        .a = 0  // Assuming ambient light doesn't affect opacity
-    };
-
-	return (blend_colors(light_component, ambient_contribution, 0.2f)); //ratio 80/20 tra luce e ambient
 }
 
 static t_color weigh_color(const t_color color, float brightness, float distance)
@@ -281,6 +266,7 @@ static t_color weigh_color(const t_color color, float brightness, float distance
 	});
 }
 
+//TODO la somma di luci non funge
 static t_color	compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal)
 {
 	t_color			*light_components;
@@ -291,6 +277,7 @@ static t_color	compute_lights_contribution(const t_scene *scene, t_point surface
 	float			light_distance;
 	const uint16_t	n_lights = ft_lstsize(scene->lights);
 	const float		light_weight = 1.0f / (n_lights + 1);
+	t_hit			*hit_info;
 	uint16_t		i;
 
 	light_components = (t_color *)malloc(n_lights * sizeof(t_color));
@@ -301,14 +288,16 @@ static t_color	compute_lights_contribution(const t_scene *scene, t_point surface
 	{
 		light = (t_light *)lights->content;
 		light_dir = vec_normalize(vec_sub(light->center, surface_point));
-		 //se la luce non e' dietro l'oggetto e se tra l'oggetto e la luce c'e' un altro oggetto
-		if (vec_dot(surface_normal, light_dir) > 0 && trace_ray(scene, (t_ray){surface_point, light_dir}) == NULL)
+		hit_info = trace_ray(scene, (t_ray){surface_point, light_dir});
+		//se la luce non e' dietro l'oggetto e se tra l'oggetto e la luce c'e' un altro oggetto
+		if (vec_dot(surface_normal, light_dir) > 0 && !hit_info)
 		{
 			light_distance = vec_length(vec_sub(light->center, surface_point));
 			light_components[i++] = weigh_color(light->color, light->brightness, light_distance);
 		}
 		else
 			light_components[i++] = (t_color){0, 0, 0, 0};
+		free(hit_info);
 		lights = lights->next;
 	}
 	while (i--)
