@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 16:02:48 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:43:54 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit
 static void				traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static t_vector		 	get_cylinder_normal(t_cylinder cylinder, t_point point);
 static t_color 			blend_colors(const t_color color1, const t_color color2, const float ratio);
-inline static float		fclamp(const float value, const float min, const float max);
 static void				fill_image(t_mlx_data *win_data, t_scene *scene);
 static t_color			merge_colors(t_color *colors, const uint16_t n_colors, const float *ratios);
 static void				set_thread_attr(pthread_attr_t *thread_attr);
@@ -29,8 +28,10 @@ static t_vector			get_rand_in_unit_sphere(void);
 static void				*render_pixel(void *data);
 static t_thread_data	*set_thread_data(t_scene *scene, t_ray ray, t_color *colors_array, const uint16_t i, const uint16_t depth_per_thread);
 static void				update_closest_hit(t_hit *closest_hit, const t_shape *shape, const float t, const t_ray ray);
-static t_color			compute_lights_contribution(const t_scene *scene, const t_point point, const t_vector normal);
+static t_color			compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal);
+static t_color			add_amblight(t_color light_component, t_amblight ambient_light);
 
+//TODO implementare un blending tra i pixel vicini per velocizzare il rendering e aumentare la smoothness
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
 
@@ -240,56 +241,74 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx);
 	hit_color = hit_info->material->color;
 	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal);
-	//compute ambient light
+	// printf("before light: %d %d %d\n", light_component.r, light_component.g, light_component.b);
+	light_component = add_amblight(light_component, scene->amblight);
+	// printf("after light: %d %d %d\n", light_component.r, light_component.g, light_component.b);
 	ray_color = (t_color){
-		.r = (uint8_t)min(255, light_component.r + (hit_color.r * ray_color.r / 255)),
-		.g = (uint8_t)min(255, light_component.g + (hit_color.g * ray_color.g / 255)),
-		.b = (uint8_t)min(255, light_component.b + (hit_color.b * ray_color.b / 255)),
-		.a = 255
-	};
+        .r = (uint8_t)min(255, (int)(hit_color.r * light_component.r / 255 + ray_color.r)),
+        .g = (uint8_t)min(255, (int)(hit_color.g * light_component.g / 255 + ray_color.g)),
+        .b = (uint8_t)min(255, (int)(hit_color.b * light_component.b / 255 + ray_color.b)),
+        .a = 255
+    };
 	return (free(hit_info), ray_color);
 }
 
-static t_color weigh_color(const t_color color, const float brightness, const float distance)
+static t_color	add_amblight(t_color light_component, t_amblight ambient_light)
 {
-	const float	square_distance = distance * distance;
-	const float brightness_by_distance = fclamp(brightness / square_distance, 0, 1);
+    // Scale ambient color by its brightness
+    t_color ambient_contribution = {
+        .r = (uint8_t)(ambient_light.color.r * ambient_light.brightness),
+        .g = (uint8_t)(ambient_light.color.g * ambient_light.brightness),
+        .b = (uint8_t)(ambient_light.color.b * ambient_light.brightness),
+        .a = 0  // Assuming ambient light doesn't affect opacity
+    };
+
+	return (blend_colors(light_component, ambient_contribution, 0.2f)); //ratio 80/20 tra luce e ambient
+}
+
+static t_color weigh_color(const t_color color, float brightness, float distance)
+{
+	distance = fmax(distance, EPSILON); //per evitare divisioni per zero
+	const float attenuation = 1.0f / (1.0f + log1p(distance - 1));
+	const float adjusted_brightness = fclamp(brightness * attenuation, 0.0f, 1.0f);
 
 	return ((t_color)
 	{
-		.r = (uint8_t)(color.r * brightness_by_distance),
-		.g = (uint8_t)(color.g * brightness_by_distance),
-		.b = (uint8_t)(color.b * brightness_by_distance),
-		.a = 255
+		.r = (uint8_t)(color.r * adjusted_brightness),
+		.g = (uint8_t)(color.g * adjusted_brightness),
+		.b = (uint8_t)(color.b * adjusted_brightness),
+		.a = 0
 	});
 }
 
-static t_color	compute_lights_contribution(const t_scene *scene, t_point point, const t_vector normal)
+static t_color	compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal)
 {
 	t_color			*light_components;
 	t_color			light_contribution = {0, 0, 0, 0};
 	t_list			*lights;
 	t_light			*light;
 	t_vector		light_dir;
-	t_hit			*hit_info;
+	float			light_distance;
 	const uint16_t	n_lights = ft_lstsize(scene->lights);
-	const float		light_weight = 1.0f / n_lights;
+	const float		light_weight = 1.0f / (n_lights + 1);
 	uint16_t		i;
 
 	light_components = (t_color *)malloc(n_lights * sizeof(t_color));
 	lights = scene->lights;
+	surface_point = vec_add(surface_point, vec_scale(EPSILON, surface_normal));
 	i = 0;
 	while (lights)
 	{
 		light = (t_light *)lights->content;
-		light_dir = vec_normalize(vec_sub(light->center, point));
-		point = vec_add(point, vec_scale(EPSILON, normal));
-		hit_info = trace_ray(scene, (t_ray){point, light_dir});
-		if (hit_info) //se il raggio dal punto alla luce non interseca nulla oppure interseca oltre la lucegit 
-			light_components[i++] = weigh_color(light->color, light->brightness, hit_info->distance);
+		light_dir = vec_normalize(vec_sub(light->center, surface_point));
+		 //se la luce non e' dietro l'oggetto e se tra l'oggetto e la luce c'e' un altro oggetto
+		if (vec_dot(surface_normal, light_dir) > 0 && trace_ray(scene, (t_ray){surface_point, light_dir}) == NULL)
+		{
+			light_distance = vec_length(vec_sub(light->center, surface_point));
+			light_components[i++] = weigh_color(light->color, light->brightness, light_distance);
+		}
 		else
-			light_components[i++] = (t_color){0,0,0,0};
-		free(hit_info);
+			light_components[i++] = (t_color){0, 0, 0, 0};
 		lights = lights->next;
 	}
 	while (i--)
@@ -405,7 +424,7 @@ static t_color blend_colors(const t_color color1, const t_color color2, float ra
 	return (result);
 }
 
-inline static float	fclamp(const float value, const float min, const float max)
+inline float	fclamp(const float value, const float min, const float max)
 {
 	return (value < min ? min : (value > max ? max : value));
 }

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 16:20:37 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:24:05 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void	parse_amblight(t_scene *scene)
 {
 	t_amblight	amblight;
 
-	amblight.brightness = ft_atof(ft_strtok(NULL, spaces));
+	amblight.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	amblight.color = parse_color(ft_strtok(NULL, spaces));
 	scene->amblight = amblight;
 }
@@ -103,7 +103,7 @@ static void	parse_light(t_scene *scene)
 
 	light = (t_light *)malloc(sizeof(t_light));
 	light->center = parse_coord(ft_strtok(NULL, spaces));
-	light->brightness = ft_atof(ft_strtok(NULL, spaces));
+	light->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	light->color = parse_color(ft_strtok(NULL, spaces));
 	ft_lstadd_front(&scene->lights, ft_lstnew(light));
 }

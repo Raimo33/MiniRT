@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 15:59:10 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/09 18:34:02 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@
 // # define KEY_ESC 65307
 
 //valori di test
-# define WIN_WIDTH 400
-# define WIN_HEIGHT 400
+# define WIN_WIDTH 300
+# define WIN_HEIGHT 300
 # define PLANE_SIZE 100
-# define RAYS_PER_PIXEL 200
+# define RAYS_PER_PIXEL 50
 # define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 20
+# define MAX_BOUNCE 3
 # define OCTREE_DEPTH 3
 # ifndef N_THREADS
 #  define N_THREADS 8
@@ -119,5 +119,6 @@ float			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
 void			my_mlx_stack_image(t_mlx_data *data);
 char			*my_mlx_get_data_addr(void *img_ptr, int32_t *bits_per_pixel, int32_t *size_line, int32_t *endian);
+float			fclamp(const float value, const float min, const float max);
 
 #endif
