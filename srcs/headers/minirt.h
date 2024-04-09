@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/08 16:20:04 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 15:59:10 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 //valori ideali
 // # define WIN_WIDTH 1280
 // # define WIN_HEIGHT 720
-// # define WORLD_SIZE 100
+// # define PLANE_SIZE 100
 // # define RAYS_PER_PIXEL 100
 // # define BACKGROUND_COLOR 0x000000
 // # define MAX_BOUNCE 3
@@ -46,10 +46,10 @@
 //valori di test
 # define WIN_WIDTH 400
 # define WIN_HEIGHT 400
-# define WORLD_SIZE 100
-# define RAYS_PER_PIXEL 30
+# define PLANE_SIZE 100
+# define RAYS_PER_PIXEL 200
 # define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 2
+# define MAX_BOUNCE 20
 # define OCTREE_DEPTH 3
 # ifndef N_THREADS
 #  define N_THREADS 8

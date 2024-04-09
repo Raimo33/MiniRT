@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/08 17:09:27 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 16:02:48 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static t_vector			get_rand_in_unit_sphere(void);
 static void				*render_pixel(void *data);
 static t_thread_data	*set_thread_data(t_scene *scene, t_ray ray, t_color *colors_array, const uint16_t i, const uint16_t depth_per_thread);
 static void				update_closest_hit(t_hit *closest_hit, const t_shape *shape, const float t, const t_ray ray);
-static t_color			compute_light_contribution(const t_scene *scene, const t_point point);
+static t_color			compute_lights_contribution(const t_scene *scene, const t_point point, const t_vector normal);
 
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
@@ -239,7 +239,8 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, scene->random_bias_vectors[idx]);
 	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx);
 	hit_color = hit_info->material->color;
-	light_component = compute_light_contribution(scene, hit_info->point);
+	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal);
+	//compute ambient light
 	ray_color = (t_color){
 		.r = (uint8_t)min(255, light_component.r + (hit_color.r * ray_color.r / 255)),
 		.g = (uint8_t)min(255, light_component.g + (hit_color.g * ray_color.g / 255)),
@@ -249,36 +250,51 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	return (free(hit_info), ray_color);
 }
 
-static t_color	compute_light_contribution(const t_scene *scene, const t_point point)
+static t_color weigh_color(const t_color color, const float brightness, const float distance)
 {
-	t_color		light_component;
-	t_list		*lights;
-	t_light		*light;
-	t_vector	light_dir;
-	t_hit		*hit_info;
-	float		light_distance;
-	float		light_intensity;
-	float		shadow_intensity;
+	const float	square_distance = distance * distance;
+	const float brightness_by_distance = fclamp(brightness / square_distance, 0, 1);
 
-	light_component = (t_color){0, 0, 0, 0};
+	return ((t_color)
+	{
+		.r = (uint8_t)(color.r * brightness_by_distance),
+		.g = (uint8_t)(color.g * brightness_by_distance),
+		.b = (uint8_t)(color.b * brightness_by_distance),
+		.a = 255
+	});
+}
+
+static t_color	compute_lights_contribution(const t_scene *scene, t_point point, const t_vector normal)
+{
+	t_color			*light_components;
+	t_color			light_contribution = {0, 0, 0, 0};
+	t_list			*lights;
+	t_light			*light;
+	t_vector		light_dir;
+	t_hit			*hit_info;
+	const uint16_t	n_lights = ft_lstsize(scene->lights);
+	const float		light_weight = 1.0f / n_lights;
+	uint16_t		i;
+
+	light_components = (t_color *)malloc(n_lights * sizeof(t_color));
 	lights = scene->lights;
+	i = 0;
 	while (lights)
 	{
 		light = (t_light *)lights->content;
 		light_dir = vec_normalize(vec_sub(light->center, point));
-		light_distance = vec_length(light_dir);
+		point = vec_add(point, vec_scale(EPSILON, normal));
 		hit_info = trace_ray(scene, (t_ray){point, light_dir});
-		if (!hit_info || hit_info->distance > light_distance) //se il raggio dal punto alla luce non interseca nulla oppure interseca oltre la lucegit 
-		{
-			//light
-		}
+		if (hit_info) //se il raggio dal punto alla luce non interseca nulla oppure interseca oltre la lucegit 
+			light_components[i++] = weigh_color(light->color, light->brightness, hit_info->distance);
 		else
-		{
-			// compute shadow
-		}
+			light_components[i++] = (t_color){0,0,0,0};
+		free(hit_info);
 		lights = lights->next;
 	}
-	return (light_component);
+	while (i--)
+		light_contribution = blend_colors(light_contribution, light_components[i], light_weight);
+	return (free(light_components), light_contribution);
 }
 
 static t_hit	*trace_ray(const t_scene *scene, const t_ray ray)

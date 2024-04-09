@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_scene.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/08 15:09:52 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 15:11:31 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ static void set_bb_plane(t_shape *shape)
 	t_vector 			u;
 	t_vector 			v;
 	t_vector 			r;
-	static const float	size = WORLD_SIZE / 2;
+	static const float	size = PLANE_SIZE / 2;
 	static const float  thickness = EPSILON;
 	
 	r = (t_vector){1, 0, 0};
