@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 18:11:05 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 23:39:05 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ static t_list *get_shapes_inside_box(t_list *shapes, t_point box_top, t_point bo
 
     while (shapes)
     {
-        current_shape = (t_shape*)shapes->content;
+        current_shape = (t_shape *)shapes->content;
         if (boxes_overlap(box_top, box_bottom, current_shape->bb_max, current_shape->bb_min))
 			ft_lstadd_front(&inside_shapes, ft_lstnew(current_shape));
         shapes = shapes->next;

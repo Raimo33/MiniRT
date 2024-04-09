@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 19:31:10 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 23:24:42 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@
 # include "scene.h"
 
 //valori ideali
-# define WIN_WIDTH 680
-# define WIN_HEIGHT 400
+# define WIN_WIDTH 50
+# define WIN_HEIGHT 50
 # define PLANE_SIZE 100
-# define RAYS_PER_PIXEL 300
+# define RAYS_PER_PIXEL 1
 # define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 20
+# define MAX_BOUNCE 1
 # define OCTREE_DEPTH 3
-# define N_THREADS 8
+# define N_THREADS 4
 
 //valori di test
 // # define WIN_WIDTH 300
@@ -82,7 +82,7 @@ typedef struct s_mlx_data
 typedef struct s_hook_data
 {
 	t_mlx_data	*win_data;
-	t_scene		scene;
+	t_scene		*scene;
 }	t_hook_data;
 
 typedef struct s_thread_data
@@ -98,7 +98,7 @@ typedef struct s_thread_data
 void			check_args(const uint16_t argc, char **argv);
 void			init_scene(t_scene *scene);
 void			init_window(t_mlx_data *win_data);
-void			init_hooks(t_mlx_data *win_data, t_scene scene);
+void			init_hooks(t_mlx_data *win_data, t_scene *scene);
 void			parse_scene(int fd, t_scene *scene);
 void			set_bounding_box(t_shape *shape);
 void			setup_scene(t_scene *scene);

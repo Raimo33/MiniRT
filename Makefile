@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/04/08 15:26:58 by craimond         ###   ########.fr        #
+#    Updated: 2024/04/09 22:11:19 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ $(LIBFT_DIR):
 		@make bonus -C $(LIBFT_DIR) > /dev/null
 		@echo "$(GREEN)successfully configured libft$(NC)"
 
-$(NAME): $(OBJS)
+$(NAME): $(MLX_DIR) $(LIBFT_DIR) $(OBJS)
 		@$(CC) $(CFLAGS) $(OBJS) -L$(MLX_DIR) -L$(LIBFT_DIR) -lft -lmlx_Linux -pthread -I$(MLX_DIR) -I$(LIBFT_DIR) -lXext -lX11 -lm -lz -O3 -o $(NAME)
 		@echo "$(GREEN)compiled $(NAME)$(NC)"
 

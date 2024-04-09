@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 19:18:24 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 22:42:57 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void				traverse_octree(const t_octree *node, const t_ray ray, t_hit *clo
 static t_vector		 	get_cylinder_normal(t_cylinder cylinder, t_point point);
 static t_color 			blend_colors(const t_color color1, const t_color color2, const float ratio);
 static void				fill_image(t_mlx_data *win_data, t_scene *scene);
+static float 			*get_ratios(uint16_t n_elems);
 static t_color			merge_colors(t_color *colors, const uint16_t n_colors, const float *ratios);
 static void				set_thread_attr(pthread_attr_t *thread_attr);
 static t_vector			get_rand_in_unit_sphere(void);
@@ -68,7 +69,7 @@ static void	set_thread_attr(pthread_attr_t *thread_attr)
 static void	fill_image(t_mlx_data *win_data, t_scene *scene)
 {
 	t_color					colors[RAYS_PER_PIXEL];
-	float					color_ratios[RAYS_PER_PIXEL];
+	float					*color_ratios;
 	uint16_t				x;
 	uint16_t				y;
 	uint16_t				i;
@@ -79,9 +80,7 @@ static void	fill_image(t_mlx_data *win_data, t_scene *scene)
 	float					depth_per_thread;
 
 	depth_per_thread = roundf((float)RAYS_PER_PIXEL / (float)N_THREADS);
-	i = -1;
-	while (++i < RAYS_PER_PIXEL)
-		color_ratios[i] = 1.0f / (i + 2);
+	color_ratios = get_ratios(RAYS_PER_PIXEL);
 	i = 0;
 	y = 0;
 	while (y < WIN_HEIGHT)
@@ -104,6 +103,7 @@ static void	fill_image(t_mlx_data *win_data, t_scene *scene)
 		}
 		y++;
 	}
+	free(color_ratios);
 }
 
 static t_thread_data	*set_thread_data(t_scene *scene, t_ray ray, t_color *colors_array, const uint16_t i, const uint16_t depth_per_thread)
@@ -135,6 +135,21 @@ static void	*render_pixel(void *data)
 		i++;
 	}
 	return (free(data), NULL);
+}
+
+static float *get_ratios(uint16_t n_elems)
+{
+	uint16_t	i;
+	float 		*ratios;
+	
+	ratios = (float *)malloc(n_elems * sizeof(float));
+	i = 0;
+	while (i < n_elems)
+	{
+		ratios[i] = 1.0f / (i + 2);
+		i++;
+	}
+	return (ratios);
 }
 
 static t_color	merge_colors(t_color *colors, const uint16_t n_colors, const float *ratios)
@@ -175,19 +190,18 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
 	//coordinate sul piano cartesiano vero [-1, 1]
 	const float		real_viewport_x = screen_viewport_x * 2 - 1;
 	const float		real_viewport_y = 1 - screen_viewport_y * 2;
+
+	const float		half_viewport_width = cam->viewport_width / 2;
+	const float		half_viewport_height = cam->viewport_height / 2;
+	
 	//calcolo del vettore che parte dalla camera verso il pixel (sul piano immaginario viewport)
 	const t_vector direction = //vettore direzione
 	{
-		.x = cam->forward.x + (real_viewport_x * cam->right.x * cam->viewport_width / 2) + (real_viewport_y * cam->up.x * cam->viewport_height / 2),
-		.y = cam->forward.y + (real_viewport_x * cam->right.y * cam->viewport_width / 2) + (real_viewport_y * cam->up.y * cam->viewport_height / 2),
-		.z = cam->forward.z + (real_viewport_x * cam->right.z * cam->viewport_width / 2) + (real_viewport_y * cam->up.z * cam->viewport_height / 2)
+		.x = cam->forward.x + (real_viewport_x * cam->right.x * half_viewport_width) + (real_viewport_y * cam->up.x * half_viewport_height),
+		.y = cam->forward.y + (real_viewport_x * cam->right.y * half_viewport_width) + (real_viewport_y * cam->up.y * half_viewport_height),
+		.z = cam->forward.z + (real_viewport_x * cam->right.z * half_viewport_width) + (real_viewport_y * cam->up.z * half_viewport_height)
 	};
-	const t_ray	ray_direction = //raggio (vettore direzione spostato per partire dalla camera)
-	{
-		.origin = cam->center,
-		.direction = vec_normalize(direction)
-	};
-	return (ray_direction);
+	return ((t_ray){cam->center, vec_normalize(direction)});
 }
 
 static t_vector	get_rand_in_unit_sphere(void)
@@ -204,7 +218,7 @@ static t_vector	get_rand_in_unit_sphere(void)
 		p.z = rand_n;
     // Repeat until we get a point inside the unit sphere
     } while (vec_dot(p, p) >= 1.0);
-    return p;
+    return (p);
 }
 
 static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, const t_point point, const t_vector random_component)
@@ -275,11 +289,12 @@ static t_color	compute_lights_contribution(const t_scene *scene, t_point surface
 	t_light			*light;
 	t_vector		light_dir;
 	float			light_distance;
-	const uint16_t	n_lights = ft_lstsize(scene->lights);
-	const float		light_weight = 1.0f / (n_lights + 1);
 	t_hit			*hit_info;
 	uint16_t		i;
-
+	float			*light_ratios;
+	const uint16_t	n_lights = ft_lstsize(scene->lights);
+	
+	light_ratios = get_ratios(n_lights);
 	light_components = (t_color *)malloc(n_lights * sizeof(t_color));
 	lights = scene->lights;
 	surface_point = vec_add(surface_point, vec_scale(EPSILON, surface_normal));
@@ -301,8 +316,8 @@ static t_color	compute_lights_contribution(const t_scene *scene, t_point surface
 		lights = lights->next;
 	}
 	while (i--)
-		light_contribution = blend_colors(light_contribution, light_components[i], light_weight);
-	return (free(light_components), light_contribution);
+		light_contribution = merge_colors(light_components, n_lights, light_ratios);
+	return (free(light_components), free(light_ratios), light_contribution);
 }
 
 static t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
@@ -318,7 +333,7 @@ static t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
 	};
     traverse_octree(scene->octree, ray, closest_hit);
 	if (closest_hit->distance == FLT_MAX)
-		return (NULL);
+		return (free(closest_hit), NULL);
     return (closest_hit);
 }
 

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/06 19:32:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/09 23:22:50 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	init_window(t_mlx_data *win_data)
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 }
 
-void init_hooks(t_mlx_data *win_data, const t_scene scene)
+void init_hooks(t_mlx_data *win_data, t_scene *scene)
 {
 	t_hook_data *hook_data;
 	
