@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 23:22:50 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 13:33:29 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	init_scene(t_scene *scene)
 	scene->lights = NULL;
 	scene->shapes = NULL;
 	scene->octree = (t_octree *)malloc(sizeof(t_octree));	
-	scene->random_bias_vectors = (t_vector *)malloc(sizeof(t_vector) * RAYS_PER_PIXEL);
 	scene->world_max.x = 0;
 	scene->world_max.y = 0;
 }

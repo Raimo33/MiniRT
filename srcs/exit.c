@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 23:48:48 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 13:33:37 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ static void destroy_scene(t_scene *scene)
 	ft_lstclear(&scene->shapes, &free_shape);
 	ft_lstclear(&scene->lights, &free);
 	octree_clear(scene->octree);
-	free(scene->random_bias_vectors);
 	free(scene->camera);
 }
 

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 23:59:50 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 14:14:52 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,21 @@
 // # define WIN_HEIGHT 720
 // # define PLANE_SIZE 100
 // # define RAYS_PER_PIXEL 300
-// # define BACKGROUND_COLOR 0x000000
 // # define MAX_BOUNCE 50
 // # define OCTREE_DEPTH 3
 // # define N_THREADS 8
+// # define BACKGROUND_COLOR 0x000000
+// # define ATTENUATION_FACTOR 0.8
 
-//TODO fix, il max bounce cambia il colore (testare 200)
 //valori di test
-# define WIN_WIDTH 300
-# define WIN_HEIGHT 300
-# define PLANE_SIZE 100
-# define RAYS_PER_PIXEL 3000
+# define WIN_WIDTH 720
+# define WIN_HEIGHT 480
+# define PLANE_SIZE 1000
+# define RAYS_PER_PIXEL 10
 # define BACKGROUND_COLOR 0x000000
 # define MAX_BOUNCE 2
 # define OCTREE_DEPTH 3
+# define ATTENUATION_FACTOR 0.8
 
 # ifndef N_THREADS
 #  define N_THREADS 8
@@ -91,6 +92,9 @@ typedef struct s_thread_data
 	t_scene		*scene;
 	t_ray		ray;
 	t_color		*colors_array;
+	float		*light_ratios;
+	float		*attenuation_factors;
+	t_vector	*random_bias_vectors;
 	uint16_t	start_depth;
 	uint16_t	end_depth;
 }	t_thread_data;
