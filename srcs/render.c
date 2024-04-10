@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 00:50:08 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 01:01:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,7 +277,7 @@ static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, 
 		.direction = vec_normalize(vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction))
 	};
 	static const double roughness = 0.1f;
-	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(roughness, random_component))); //TODO random component influenza troppo i layer, che una volta uniti si scazzano
+	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(roughness, random_component)));
 	return (reflected_ray);
 }
 
