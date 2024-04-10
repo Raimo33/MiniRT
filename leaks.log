@@ -1,624 +1,626 @@
-==3896== Memcheck, a memory error detector
-==3896== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==3896== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==3896== Command: ./minirt scenes/italian_flag.rt
-==3896== 
-==3896== 
-==3896== Process terminating with default action of signal 2 (SIGINT)
-==3896==    at 0x4B39117: __futex_abstimed_wait_common64 (futex-internal.c:57)
-==3896==    by 0x4B39117: __futex_abstimed_wait_common (futex-internal.c:87)
-==3896==    by 0x4B39117: __futex_abstimed_wait_cancelable64 (futex-internal.c:139)
-==3896==    by 0x4B3E623: __pthread_clockjoin_ex (pthread_join_common.c:105)
-==3896==    by 0x10D19D: fill_image (render.c:98)
-==3896==    by 0x10CF36: render_scene (render.c:48)
-==3896==    by 0x10AB96: main (minirt.c:34)
-==3896== 
-==3896== HEAP SUMMARY:
-==3896==     in use at exit: 116,089 bytes in 385 blocks
-==3896==   total heap usage: 394,499 allocs, 394,114 frees, 17,791,512 bytes allocated
-==3896== 
-==3896== 3 bytes in 1 blocks are still reachable in loss record 1 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4B5058E: strdup (strdup.c:42)
-==3896==    by 0x48B0B45: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 8 bytes in 1 blocks are still reachable in loss record 2 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4B5058E: strdup (strdup.c:42)
-==3896==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 8 bytes in 1 blocks are still reachable in loss record 3 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4870B34: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48729DF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 8 bytes in 1 blocks are still reachable in loss record 4 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10D450: precompute_ratios (render.c:151)
-==3896==    by 0x10D03F: fill_image (render.c:80)
-==3896==    by 0x10CF36: render_scene (render.c:48)
-==3896==    by 0x10AB96: main (minirt.c:34)
-==3896== 
-==3896== 10 bytes in 1 blocks are still reachable in loss record 5 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4B5058E: strdup (strdup.c:42)
-==3896==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x4917213: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 16 bytes in 1 blocks are still reachable in loss record 6 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x11089A: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10B718: parse_light (parse.c:114)
-==3896==    by 0x10B2FE: parse_line (parse.c:54)
-==3896==    by 0x10B235: parse_scene (parse.c:34)
-==3896==    by 0x10AB3B: main (minirt.c:29)
-==3896== 
-==3896== 16 bytes in 1 blocks are still reachable in loss record 7 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4CE22EE: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 16 bytes in 1 blocks are still reachable in loss record 8 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10AEFA: init_hooks (init.c:63)
-==3896==    by 0x10AB6C: main (minirt.c:32)
-==3896== 
-==3896== 21 bytes in 1 blocks are still reachable in loss record 9 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B103E: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 24 bytes in 1 blocks are still reachable in loss record 10 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4872041: XextCreateExtension (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48724CC: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 24 bytes in 1 blocks are still reachable in loss record 11 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4B5058E: strdup (strdup.c:42)
-==3896==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 24 bytes in 1 blocks are still reachable in loss record 12 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48729F5: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 24 bytes in 1 blocks are still reachable in loss record 13 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48BEA65: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C72C6: _XReply (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C777E: XSync (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x111720: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111952: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE86: init_window (init.c:53)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 29 bytes in 1 blocks are still reachable in loss record 14 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48AA0CD: _XUpdateAtomCache (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48AC929: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x111042: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 32 bytes in 1 blocks are still reachable in loss record 15 of 70
-==3896==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4CE615E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE6237: xcb_get_extension_data (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE62EE: xcb_prefetch_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE6364: xcb_get_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x48B152B: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 32 bytes in 1 blocks are still reachable in loss record 16 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4CDF1B7: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CDFA08: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CDFEB0: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE0E44: xcb_wait_for_reply (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE6292: xcb_get_extension_data (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE62EE: xcb_prefetch_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE6364: xcb_get_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x48B152B: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 32 bytes in 1 blocks are still reachable in loss record 17 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48727FF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 32 bytes in 1 blocks are still reachable in loss record 18 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48727FF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 33 bytes in 1 blocks are still reachable in loss record 19 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48AA0CD: _XUpdateAtomCache (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48AC929: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x11102B: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 40 bytes in 1 blocks are still reachable in loss record 20 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10B65C: parse_light (parse.c:110)
-==3896==    by 0x10B2FE: parse_line (parse.c:54)
-==3896==    by 0x10B235: parse_scene (parse.c:34)
-==3896==    by 0x10AB3B: main (minirt.c:29)
-==3896== 
-==3896== 40 bytes in 1 blocks are still reachable in loss record 21 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C11F1: _XPollfdCacheInit (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B0E71: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 48 bytes in 1 blocks are still reachable in loss record 22 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C0E71: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 48 bytes in 1 blocks are still reachable in loss record 23 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C0E87: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 64 bytes in 1 blocks are still reachable in loss record 24 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10C064: fill_octree (setup_scene.c:86)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 64 bytes in 1 blocks are still reachable in loss record 25 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10D450: precompute_ratios (render.c:151)
-==3896==    by 0x10D01B: fill_image (render.c:79)
-==3896==    by 0x10CF36: render_scene (render.c:48)
-==3896==    by 0x10AB96: main (minirt.c:34)
-==3896== 
-==3896== 72 bytes in 1 blocks are still reachable in loss record 26 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10ADD8: init_scene (init.c:41)
-==3896==    by 0x10AB27: main (minirt.c:28)
-==3896== 
-==3896== 72 bytes in 1 blocks are still reachable in loss record 27 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B0F20: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 80 bytes in 5 blocks are still reachable in loss record 28 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x11089A: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10B4E3: parse_shape (parse.c:83)
-==3896==    by 0x10B329: parse_line (parse.c:59)
-==3896==    by 0x10B235: parse_scene (parse.c:34)
-==3896==    by 0x10AB3B: main (minirt.c:29)
-==3896== 
-==3896== 88 bytes in 1 blocks are still reachable in loss record 29 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x11162B: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111952: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE86: init_window (init.c:53)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 88 bytes in 1 blocks are still reachable in loss record 30 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10D4C3: precoumpute_attenuation_factors (render.c:166)
-==3896==    by 0x10D04B: fill_image (render.c:81)
-==3896==    by 0x10CF36: render_scene (render.c:48)
-==3896==    by 0x10AB96: main (minirt.c:34)
-==3896== 
-==3896== 109 bytes in 1 blocks are still reachable in loss record 31 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B1710: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 112 bytes in 1 blocks are still reachable in loss record 32 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C0D72: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 112 bytes in 1 blocks are still reachable in loss record 33 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B1200: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 128 bytes in 1 blocks are still reachable in loss record 34 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B112E: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 128 bytes in 1 blocks are still reachable in loss record 35 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x4917213: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 128 bytes in 1 blocks are still reachable in loss record 36 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 128 bytes in 1 blocks are still reachable in loss record 37 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 136 bytes in 1 blocks are still reachable in loss record 38 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x110F7F: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 136 bytes in 1 blocks are still reachable in loss record 39 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48710C3: XShmCreateImage (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x111656: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111952: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE86: init_window (init.c:53)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 144 bytes in 1 blocks are still reachable in loss record 40 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10AD30: init_scene (init.c:30)
-==3896==    by 0x10AB27: main (minirt.c:28)
-==3896== 
-==3896== 152 bytes in 1 blocks are still reachable in loss record 41 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x491740E: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 160 bytes in 1 blocks are still reachable in loss record 42 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x489F9EF: XCreateGC (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B15A4: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 160 bytes in 1 blocks are still reachable in loss record 43 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x489F9EF: XCreateGC (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x1111CE: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE45: init_window (init.c:49)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 160 bytes in 5 blocks are still reachable in loss record 44 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10B3DA: parse_shape (parse.c:76)
-==3896==    by 0x10B329: parse_line (parse.c:59)
-==3896==    by 0x10B235: parse_scene (parse.c:34)
-==3896==    by 0x10AB3B: main (minirt.c:29)
-==3896== 
-==3896== 168 bytes in 1 blocks are still reachable in loss record 45 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B10B2: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 192 bytes in 1 blocks are still reachable in loss record 46 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10D557: precompute_random_bias_vectors (render.c:182)
-==3896==    by 0x10D057: fill_image (render.c:82)
-==3896==    by 0x10CF36: render_scene (render.c:48)
-==3896==    by 0x10AB96: main (minirt.c:34)
-==3896== 
-==3896== 208 bytes in 1 blocks are still reachable in loss record 47 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4870AE9: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48729DF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
-==3896==    by 0x110DC3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111051: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 208 bytes in 1 blocks are still reachable in loss record 48 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C6EC0: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C7205: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x1114C5: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x11120E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE45: init_window (init.c:49)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 224 bytes in 14 blocks are still reachable in loss record 49 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x11089A: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10C47F: get_shapes_inside_box (setup_scene.c:127)
-==3896==    by 0x10C30A: fill_octree (setup_scene.c:106)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 320 bytes in 5 blocks are still reachable in loss record 50 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10C064: fill_octree (setup_scene.c:86)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 360 bytes in 5 blocks are still reachable in loss record 51 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10C366: fill_octree (setup_scene.c:112)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 512 bytes in 1 blocks are still reachable in loss record 52 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48AC46A: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48AC84E: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x11102B: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 560 bytes in 35 blocks are still reachable in loss record 53 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x11089A: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10C47F: get_shapes_inside_box (setup_scene.c:127)
-==3896==    by 0x10C30A: fill_octree (setup_scene.c:106)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 832 bytes in 4 blocks are still reachable in loss record 54 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C6F01: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C7205: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x1114C5: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x11120E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE45: init_window (init.c:49)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 832 bytes in 4 blocks are still reachable in loss record 55 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C740C: _XReply (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C777E: XSync (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x111720: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x111952: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE86: init_window (init.c:53)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 936 bytes in 1 blocks are still reachable in loss record 56 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x111130: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE45: init_window (init.c:49)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 1,024 bytes in 1 blocks are still reachable in loss record 57 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4B26BA3: _IO_file_doallocate (filedoalloc.c:101)
-==3896==    by 0x4B35CDF: _IO_doallocbuf (genops.c:347)
-==3896==    by 0x4B34F5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
-==3896==    by 0x4B336D4: _IO_new_file_xsputn (fileops.c:1243)
-==3896==    by 0x4B336D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
-==3896==    by 0x4B1D14C: outstring_func (vfprintf-internal.c:239)
-==3896==    by 0x4B1D14C: __vfprintf_internal (vfprintf-internal.c:1263)
-==3896==    by 0x4B0879E: printf (printf.c:33)
-==3896==    by 0x10D092: fill_image (render.c:87)
-==3896==    by 0x10CF36: render_scene (render.c:48)
-==3896==    by 0x10AB96: main (minirt.c:34)
-==3896== 
-==3896== 1,040 bytes in 5 blocks are still reachable in loss record 58 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10B3CC: parse_shape (parse.c:75)
-==3896==    by 0x10B329: parse_line (parse.c:59)
-==3896==    by 0x10B235: parse_scene (parse.c:34)
-==3896==    by 0x10AB3B: main (minirt.c:29)
-==3896== 
-==3896== 1,088 bytes in 4 blocks are possibly lost in loss record 59 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x40147D9: calloc (rtld-malloc.h:44)
-==3896==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
-==3896==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
-==3896==    by 0x4B3D7B4: allocate_stack (allocatestack.c:430)
-==3896==    by 0x4B3D7B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
-==3896==    by 0x10D16A: fill_image (render.c:95)
-==3896==    by 0x10CF36: render_scene (render.c:48)
-==3896==    by 0x10AB96: main (minirt.c:34)
-==3896== 
-==3896== 1,408 bytes in 22 blocks are still reachable in loss record 60 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10C064: fill_octree (setup_scene.c:86)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 1,456 bytes in 7 blocks are still reachable in loss record 61 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C6EC0: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C71D0: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x1114C5: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x11120E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE45: init_window (init.c:49)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 1,584 bytes in 22 blocks are still reachable in loss record 62 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10C366: fill_octree (setup_scene.c:112)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 1,632 bytes in 102 blocks are still reachable in loss record 63 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x11089A: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10C47F: get_shapes_inside_box (setup_scene.c:127)
-==3896==    by 0x10C30A: fill_octree (setup_scene.c:106)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 2,288 bytes in 11 blocks are still reachable in loss record 64 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C6F01: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48C71D0: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x1114C5: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x11120E: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE45: init_window (init.c:49)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 4,704 bytes in 1 blocks are still reachable in loss record 65 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B0B31: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 5,760 bytes in 80 blocks are still reachable in loss record 66 of 70
-==3896==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x10C366: fill_octree (setup_scene.c:112)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10C3D1: fill_octree (setup_scene.c:114)
-==3896==    by 0x10BD08: setup_scene (setup_scene.c:34)
-==3896==    by 0x10AB47: main (minirt.c:30)
-==3896== 
-==3896== 14,612 bytes in 1 blocks are still reachable in loss record 67 of 70
-==3896==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4CE24FB: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 16,384 bytes in 1 blocks are still reachable in loss record 68 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B0EBE: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 21,168 bytes in 1 blocks are still reachable in loss record 69 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x4CE2204: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==3896==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== 33,600 bytes in 2 blocks are still reachable in loss record 70 of 70
-==3896==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==3896==    by 0x48B1290: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==3896==    by 0x110F97: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
-==3896==    by 0x10AE19: init_window (init.c:48)
-==3896==    by 0x10AB56: main (minirt.c:31)
-==3896== 
-==3896== LEAK SUMMARY:
-==3896==    definitely lost: 0 bytes in 0 blocks
-==3896==    indirectly lost: 0 bytes in 0 blocks
-==3896==      possibly lost: 1,088 bytes in 4 blocks
-==3896==    still reachable: 115,001 bytes in 381 blocks
-==3896==         suppressed: 0 bytes in 0 blocks
-==3896== 
-==3896== For lists of detected and suppressed errors, rerun with: -s
-==3896== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 1 from 1)
+==2594225== Memcheck, a memory error detector
+==2594225== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2594225== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==2594225== Command: ./minirt scenes/italian_flag.rt
+==2594225== 
+==2594225== 
+==2594225== Process terminating with default action of signal 2 (SIGINT)
+==2594225==    at 0x4B3C91A: start_thread (pthread_create.c:428)
+==2594225==    by 0x4BCDA03: clone (clone.S:100)
+==2594225== 
+==2594225== HEAP SUMMARY:
+==2594225==     in use at exit: 116,185 bytes in 386 blocks
+==2594225==   total heap usage: 215,060 allocs, 214,674 frees, 12,687,823 bytes allocated
+==2594225== 
+==2594225== 3 bytes in 1 blocks are still reachable in loss record 1 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4B5058E: strdup (strdup.c:42)
+==2594225==    by 0x48B0B45: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 8 bytes in 1 blocks are still reachable in loss record 2 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4B5058E: strdup (strdup.c:42)
+==2594225==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 8 bytes in 1 blocks are still reachable in loss record 3 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4870B34: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48729DF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 8 bytes in 1 blocks are still reachable in loss record 4 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10D4BD: precompute_ratios (render.c:154)
+==2594225==    by 0x10D03F: fill_image (render.c:81)
+==2594225==    by 0x10CF36: render_scene (render.c:49)
+==2594225==    by 0x10AB96: main (minirt.c:34)
+==2594225== 
+==2594225== 10 bytes in 1 blocks are still reachable in loss record 5 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4B5058E: strdup (strdup.c:42)
+==2594225==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x4917213: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 16 bytes in 1 blocks are still reachable in loss record 6 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x110988: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10B718: parse_light (parse.c:114)
+==2594225==    by 0x10B2FE: parse_line (parse.c:54)
+==2594225==    by 0x10B235: parse_scene (parse.c:34)
+==2594225==    by 0x10AB3B: main (minirt.c:29)
+==2594225== 
+==2594225== 16 bytes in 1 blocks are still reachable in loss record 7 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4CE22EE: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 16 bytes in 1 blocks are still reachable in loss record 8 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10AEFA: init_hooks (init.c:63)
+==2594225==    by 0x10AB6C: main (minirt.c:32)
+==2594225== 
+==2594225== 21 bytes in 1 blocks are still reachable in loss record 9 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B103E: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 24 bytes in 1 blocks are still reachable in loss record 10 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4872041: XextCreateExtension (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48724CC: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 24 bytes in 1 blocks are still reachable in loss record 11 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4B5058E: strdup (strdup.c:42)
+==2594225==    by 0x48AD9AE: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 24 bytes in 1 blocks are still reachable in loss record 12 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48729F5: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 24 bytes in 1 blocks are still reachable in loss record 13 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48BEA65: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C72C6: _XReply (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C777E: XSync (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111810: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111A42: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE86: init_window (init.c:53)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 29 bytes in 1 blocks are still reachable in loss record 14 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48AA0CD: _XUpdateAtomCache (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48AC929: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111132: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 32 bytes in 1 blocks are still reachable in loss record 15 of 71
+==2594225==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4CE615E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE6237: xcb_get_extension_data (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE62EE: xcb_prefetch_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE6364: xcb_get_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x48B152B: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 32 bytes in 1 blocks are still reachable in loss record 16 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4CDF1B7: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CDFA08: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CDFEB0: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE0E44: xcb_wait_for_reply (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE6292: xcb_get_extension_data (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE62EE: xcb_prefetch_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE6364: xcb_get_maximum_request_length (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x48B152B: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 32 bytes in 1 blocks are still reachable in loss record 17 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48727FF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 32 bytes in 1 blocks are still reachable in loss record 18 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48727FF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 33 bytes in 1 blocks are still reachable in loss record 19 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48AA0CD: _XUpdateAtomCache (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48AC929: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x11111B: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 40 bytes in 1 blocks are still reachable in loss record 20 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10B65C: parse_light (parse.c:110)
+==2594225==    by 0x10B2FE: parse_line (parse.c:54)
+==2594225==    by 0x10B235: parse_scene (parse.c:34)
+==2594225==    by 0x10AB3B: main (minirt.c:29)
+==2594225== 
+==2594225== 40 bytes in 1 blocks are still reachable in loss record 21 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C11F1: _XPollfdCacheInit (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B0E71: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 48 bytes in 1 blocks are still reachable in loss record 22 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C0E71: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 48 bytes in 1 blocks are still reachable in loss record 23 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C0E87: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 64 bytes in 1 blocks are still reachable in loss record 24 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10C064: fill_octree (setup_scene.c:86)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 64 bytes in 1 blocks are still reachable in loss record 25 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10D4BD: precompute_ratios (render.c:154)
+==2594225==    by 0x10D01B: fill_image (render.c:80)
+==2594225==    by 0x10CF36: render_scene (render.c:49)
+==2594225==    by 0x10AB96: main (minirt.c:34)
+==2594225== 
+==2594225== 72 bytes in 1 blocks are still reachable in loss record 26 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10ADD8: init_scene (init.c:41)
+==2594225==    by 0x10AB27: main (minirt.c:28)
+==2594225== 
+==2594225== 72 bytes in 1 blocks are still reachable in loss record 27 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B0F20: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 80 bytes in 5 blocks are still reachable in loss record 28 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x110988: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10B4E3: parse_shape (parse.c:83)
+==2594225==    by 0x10B329: parse_line (parse.c:59)
+==2594225==    by 0x10B235: parse_scene (parse.c:34)
+==2594225==    by 0x10AB3B: main (minirt.c:29)
+==2594225== 
+==2594225== 88 bytes in 1 blocks are still reachable in loss record 29 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x11171B: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111A42: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE86: init_window (init.c:53)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 88 bytes in 1 blocks are still reachable in loss record 30 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10D53D: precoumpute_attenuation_factors (render.c:170)
+==2594225==    by 0x10D04B: fill_image (render.c:82)
+==2594225==    by 0x10CF36: render_scene (render.c:49)
+==2594225==    by 0x10AB96: main (minirt.c:34)
+==2594225== 
+==2594225== 96 bytes in 1 blocks are still reachable in loss record 31 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10D27F: set_thread_data (render.c:113)
+==2594225==    by 0x10D11F: fill_image (render.c:95)
+==2594225==    by 0x10CF36: render_scene (render.c:49)
+==2594225==    by 0x10AB96: main (minirt.c:34)
+==2594225== 
+==2594225== 109 bytes in 1 blocks are still reachable in loss record 32 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B1710: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 112 bytes in 1 blocks are still reachable in loss record 33 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C0D72: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 112 bytes in 1 blocks are still reachable in loss record 34 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B1200: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 128 bytes in 1 blocks are still reachable in loss record 35 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B112E: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 128 bytes in 1 blocks are still reachable in loss record 36 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x4917213: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 128 bytes in 1 blocks are still reachable in loss record 37 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 128 bytes in 1 blocks are still reachable in loss record 38 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48AD99E: XInitExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x4872820: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x487250A: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48729C8: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 136 bytes in 1 blocks are still reachable in loss record 39 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x11106F: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 136 bytes in 1 blocks are still reachable in loss record 40 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48710C3: XShmCreateImage (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x111746: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111A42: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE86: init_window (init.c:53)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 144 bytes in 1 blocks are still reachable in loss record 41 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10AD30: init_scene (init.c:30)
+==2594225==    by 0x10AB27: main (minirt.c:28)
+==2594225== 
+==2594225== 152 bytes in 1 blocks are still reachable in loss record 42 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x491740E: XkbUseExtension (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B16A8: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 160 bytes in 1 blocks are still reachable in loss record 43 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x489F9EF: XCreateGC (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B15A4: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 160 bytes in 1 blocks are still reachable in loss record 44 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x489F9EF: XCreateGC (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x1112BE: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE45: init_window (init.c:49)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 160 bytes in 5 blocks are still reachable in loss record 45 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10B3DA: parse_shape (parse.c:76)
+==2594225==    by 0x10B329: parse_line (parse.c:59)
+==2594225==    by 0x10B235: parse_scene (parse.c:34)
+==2594225==    by 0x10AB3B: main (minirt.c:29)
+==2594225== 
+==2594225== 168 bytes in 1 blocks are still reachable in loss record 46 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B10B2: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 192 bytes in 1 blocks are still reachable in loss record 47 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10D62B: precompute_random_bias_vectors (render.c:192)
+==2594225==    by 0x10D057: fill_image (render.c:83)
+==2594225==    by 0x10CF36: render_scene (render.c:49)
+==2594225==    by 0x10AB96: main (minirt.c:34)
+==2594225== 
+==2594225== 208 bytes in 1 blocks are still reachable in loss record 48 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4870AE9: ??? (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48729DF: XextAddDisplay (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x48779E2: XShmQueryVersion (in /usr/lib/x86_64-linux-gnu/libXext.so.6.4.0)
+==2594225==    by 0x110EB3: mlx_int_deal_shm (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111141: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 208 bytes in 1 blocks are still reachable in loss record 49 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C6EC0: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C7205: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x1115B5: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x1112FE: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE45: init_window (init.c:49)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 224 bytes in 14 blocks are still reachable in loss record 50 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x110988: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10C47F: get_shapes_inside_box (setup_scene.c:127)
+==2594225==    by 0x10C30A: fill_octree (setup_scene.c:106)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 320 bytes in 5 blocks are still reachable in loss record 51 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10C064: fill_octree (setup_scene.c:86)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 360 bytes in 5 blocks are still reachable in loss record 52 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10C366: fill_octree (setup_scene.c:112)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 512 bytes in 1 blocks are still reachable in loss record 53 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48AC46A: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48AC84E: XInternAtom (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x11111B: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 560 bytes in 35 blocks are still reachable in loss record 54 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x110988: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10C47F: get_shapes_inside_box (setup_scene.c:127)
+==2594225==    by 0x10C30A: fill_octree (setup_scene.c:106)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 832 bytes in 4 blocks are still reachable in loss record 55 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C6EC0: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C71D0: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x1115B5: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x1112FE: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE45: init_window (init.c:49)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 832 bytes in 4 blocks are still reachable in loss record 56 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C740C: _XReply (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C777E: XSync (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111810: mlx_int_new_xshm_image (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x111A42: mlx_new_image (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE86: init_window (init.c:53)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 936 bytes in 1 blocks are still reachable in loss record 57 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x111220: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE45: init_window (init.c:49)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 1,024 bytes in 1 blocks are still reachable in loss record 58 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4B26BA3: _IO_file_doallocate (filedoalloc.c:101)
+==2594225==    by 0x4B35CDF: _IO_doallocbuf (genops.c:347)
+==2594225==    by 0x4B34F5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==2594225==    by 0x4B336D4: _IO_new_file_xsputn (fileops.c:1243)
+==2594225==    by 0x4B336D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==2594225==    by 0x4B1D14C: outstring_func (vfprintf-internal.c:239)
+==2594225==    by 0x4B1D14C: __vfprintf_internal (vfprintf-internal.c:1263)
+==2594225==    by 0x4B0879E: printf (printf.c:33)
+==2594225==    by 0x10D092: fill_image (render.c:88)
+==2594225==    by 0x10CF36: render_scene (render.c:49)
+==2594225==    by 0x10AB96: main (minirt.c:34)
+==2594225== 
+==2594225== 1,040 bytes in 5 blocks are still reachable in loss record 59 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10B3CC: parse_shape (parse.c:75)
+==2594225==    by 0x10B329: parse_line (parse.c:59)
+==2594225==    by 0x10B235: parse_scene (parse.c:34)
+==2594225==    by 0x10AB3B: main (minirt.c:29)
+==2594225== 
+==2594225== 1,088 bytes in 4 blocks are possibly lost in loss record 60 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2594225==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2594225==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2594225==    by 0x4B3D7B4: allocate_stack (allocatestack.c:430)
+==2594225==    by 0x4B3D7B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2594225==    by 0x10D16A: fill_image (render.c:96)
+==2594225==    by 0x10CF36: render_scene (render.c:49)
+==2594225==    by 0x10AB96: main (minirt.c:34)
+==2594225== 
+==2594225== 1,408 bytes in 22 blocks are still reachable in loss record 61 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10C064: fill_octree (setup_scene.c:86)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 1,584 bytes in 22 blocks are still reachable in loss record 62 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10C366: fill_octree (setup_scene.c:112)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 1,632 bytes in 102 blocks are still reachable in loss record 63 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x110988: ft_lstnew (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10C47F: get_shapes_inside_box (setup_scene.c:127)
+==2594225==    by 0x10C30A: fill_octree (setup_scene.c:106)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 1,664 bytes in 8 blocks are still reachable in loss record 64 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C6F01: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C7205: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x1115B5: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x1112FE: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE45: init_window (init.c:49)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 2,080 bytes in 10 blocks are still reachable in loss record 65 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48C2FAE: _XEnq (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C5BB6: ??? (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C6F01: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48C71D0: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x1115B5: mlx_int_wait_first_expose (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x1112FE: mlx_new_window (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE45: init_window (init.c:49)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 4,704 bytes in 1 blocks are still reachable in loss record 66 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B0B31: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 5,760 bytes in 80 blocks are still reachable in loss record 67 of 71
+==2594225==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x10C366: fill_octree (setup_scene.c:112)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10C3D1: fill_octree (setup_scene.c:114)
+==2594225==    by 0x10BD08: setup_scene (setup_scene.c:34)
+==2594225==    by 0x10AB47: main (minirt.c:30)
+==2594225== 
+==2594225== 14,612 bytes in 1 blocks are still reachable in loss record 68 of 71
+==2594225==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4CE24FB: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 16,384 bytes in 1 blocks are still reachable in loss record 69 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B0EBE: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 21,168 bytes in 1 blocks are still reachable in loss record 70 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x4CE2204: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x4CE2E6B: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==2594225==    by 0x48C0EE9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x48B0B68: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== 33,600 bytes in 2 blocks are still reachable in loss record 71 of 71
+==2594225==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2594225==    by 0x48B1290: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==2594225==    by 0x111087: mlx_init (in /home/claudio/Desktop/MiniRT/minirt)
+==2594225==    by 0x10AE19: init_window (init.c:48)
+==2594225==    by 0x10AB56: main (minirt.c:31)
+==2594225== 
+==2594225== LEAK SUMMARY:
+==2594225==    definitely lost: 0 bytes in 0 blocks
+==2594225==    indirectly lost: 0 bytes in 0 blocks
+==2594225==      possibly lost: 1,088 bytes in 4 blocks
+==2594225==    still reachable: 115,097 bytes in 382 blocks
+==2594225==         suppressed: 0 bytes in 0 blocks
+==2594225== 
+==2594225== For lists of detected and suppressed errors, rerun with: -s
+==2594225== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 1 from 1)

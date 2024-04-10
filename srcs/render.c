@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 22:50:15 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 00:18:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
-static t_color			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx, const double *attenuation_factors, const double *light_ratios, const t_vector *random_bias_vectors, const uint16_t n_lights);
+static t_color			ray_bouncing(const t_scene *scene, t_ray ray, t_hit *hit_info, const uint16_t n_bounce, const uint16_t idx, const double *attenuation_factors, const t_vector *random_bias_vectors);
+static	t_color			add_lighting(const t_scene *scene, const t_color hit_color, const t_hit *hit_info, const double *light_ratios);
 static t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 static inline t_point	ray_point_at_parameter(const t_ray ray, double t);
 static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
@@ -131,16 +132,18 @@ static void	*render_pixel(void *data)
 	double			*attenuation_factors = thread_data->attenuation_factors;
 	double			*light_ratios = thread_data->light_ratios;
 	t_vector		*random_bias_vectors = thread_data->random_bias_vectors;
-	t_scene			*scene = thread_data->scene;
 	uint16_t		i;
+	t_hit			*first_hit;
 
+	first_hit = trace_ray(thread_data->scene, thread_data->ray);
 	i = thread_data->start_depth;
 	while (i < thread_data->end_depth)
 	{
-		colors_array[i] = ray_bouncing(scene, thread_data->ray, 0, i, attenuation_factors, light_ratios, random_bias_vectors, scene->n_lights);
+		colors_array[i] = ray_bouncing(thread_data->scene, thread_data->ray, first_hit, 1, i, attenuation_factors, random_bias_vectors);
+		colors_array[i] = add_lighting(thread_data->scene, colors_array[i], first_hit, light_ratios);
 		i++;
 	}
-	return (free(data), NULL);
+	return (free(first_hit), free(data), NULL);
 }
 
 static double *precompute_ratios(uint16_t n_elems)
@@ -272,43 +275,47 @@ static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, 
 		.origin = vec_add(point, vec_scale(EPSILON, normal)),
 		.direction = vec_normalize(vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction))
 	};
-	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(0.1, random_component))); //TODO random component influenza troppo i layer, che una volta uniti si scazzano
+	static const double roughness = 0.1f;
+	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(roughness, random_component))); //TODO random component influenza troppo i layer, che una volta uniti si scazzano
 	return (reflected_ray);
 }
 
-//TODO aggiungere il calcolo della luce solo sul primo oggetto colpito, non su tutti gli oggetti piu' avanti nella ricorsione
-static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx, const double *attenuation_factors, const double *light_ratios, const t_vector *random_bias_vectors, const uint16_t n_lights)
+static t_color	ray_bouncing(const t_scene *scene, t_ray ray, t_hit *hit_info, const uint16_t n_bounce, const uint16_t idx, const double *attenuation_factors, const t_vector *random_bias_vectors)
 {
-	t_hit					*hit_info;
-	t_color					ray_color;
 	static const t_color	bg_color = {BACKGROUND_COLOR >> 16 & 0xFF, BACKGROUND_COLOR >> 8 & 0xFF, BACKGROUND_COLOR & 0xFF, 0};
-	t_color					light_component;
-	static const double		reciproca1255 = 1.0f / 255.0f;
+	t_color					ray_color;
+	t_color					hit_color;
+	t_hit					*new_hit;
 
-	if (n_bounce > MAX_BOUNCE)
+	if (n_bounce > MAX_BOUNCE || !hit_info)
 		return (bg_color);
-	hit_info = trace_ray(scene, ray);
-	if (!hit_info)
-		return (bg_color);
+	hit_color = hit_info->material->color;
 	ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, random_bias_vectors[idx]);
-	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx, attenuation_factors, light_ratios, random_bias_vectors, n_lights);
-	const t_color	hit_color = hit_info->material->color;
-	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal, light_ratios, n_lights);
-	light_component = blend_colors(light_component, scene->amblight.ambient, 0.2f); //ratio 80/20 tra luce e ambient
-	const double 	attenuation = attenuation_factors[n_bounce];
-	const t_color	attenuated_light = {
-        .r = light_component.r * attenuation,
-        .g = light_component.g * attenuation,
-        .b = light_component.b * attenuation,
+	new_hit = trace_ray(scene, ray);
+	ray_color = ray_bouncing(scene, ray, new_hit, n_bounce + 1, idx, attenuation_factors, random_bias_vectors);
+	ray_color.r = (ray_color.r * attenuation_factors[n_bounce]);
+	ray_color.g = (ray_color.g * attenuation_factors[n_bounce]);
+	ray_color.b = (ray_color.b * attenuation_factors[n_bounce]);
+	ray_color.a = 0;
+	return(free(new_hit), blend_colors(hit_color, ray_color, 0.5));
+}
+
+//il calcolo della luce solo sul primo oggetto colpito, non su tutti gli oggetti piu' avanti nella ricorsione
+static t_color	add_lighting(const t_scene *scene, const t_color color, const t_hit *hit_info, const double *light_ratios)
+{
+	t_color				light_component;
+	static const double	reciproca1255 = 1.0f / 255.0f;
+
+	if (!hit_info)
+		return (color);
+	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal, light_ratios, scene->n_lights);
+	light_component = blend_colors(light_component, scene->amblight.ambient, 0.2f); //ratio 60/40 tra luce e ambient
+	return ((t_color){
+        .r = color.r * light_component.r * reciproca1255,
+        .g = color.g * light_component.g * reciproca1255,
+        .b = color.b * light_component.b * reciproca1255,
         .a = 0
-    };
-    ray_color = (t_color) {
-        .r = fmin(255.0f, (hit_color.r * attenuated_light.r * reciproca1255 + ray_color.r)),
-        .g = fmin(255.0f, (hit_color.g * attenuated_light.g * reciproca1255 + ray_color.g)),
-        .b = fmin(255.0f, (hit_color.b * attenuated_light.b * reciproca1255 + ray_color.b)),
-        .a = 0
-    };
-	return (free(hit_info), ray_color);
+	});
 }
 
 static t_color weigh_color(const t_color color, double brightness, double distance, const double angle_of_incidence_cosine)
