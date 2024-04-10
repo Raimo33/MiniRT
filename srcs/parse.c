@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 19:17:32 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 16:29:39 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ static void	parse_light(t_scene *scene)
 	light->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	light->color = parse_color(ft_strtok(NULL, spaces));
 	ft_lstadd_front(&scene->lights, ft_lstnew(light));
+	scene->n_lights++;
 }
 
 static void	parse_camera(t_scene *scene)

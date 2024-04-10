@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 13:33:19 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 16:29:47 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct	s_scene
 	t_amblight	amblight;
 	t_vector	world_min;
 	t_vector	world_max;
+	uint16_t	n_lights;
 }	t_scene;
 
 #endif

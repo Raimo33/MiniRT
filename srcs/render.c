@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 14:32:03 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 16:30:17 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void				setup_camera(t_camera *cam);
 static t_ray			get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
-static t_color			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx, const float *attenuation_factors, const float *light_ratios, const t_vector *random_bias_vectors);
+static t_color			ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx, const float *attenuation_factors, const float *light_ratios, const t_vector *random_bias_vectors, const uint16_t n_lights);
 static t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 static inline t_point	ray_point_at_parameter(const t_ray ray, float t);
 static void				check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
@@ -29,7 +29,7 @@ static t_vector			get_rand_in_unit_sphere(void);
 static void				*render_pixel(void *data);
 static t_thread_data	*set_thread_data(t_scene *scene, t_ray ray, t_color *colors_array, const uint16_t i, const uint16_t depth_per_thread, float *light_ratios, float *attenuation_factors, t_vector *random_bias_vectors);
 static void				update_closest_hit(t_hit *closest_hit, const t_shape *shape, const float t, const t_ray ray);
-static t_color			compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal, const float *light_ratios);
+static t_color			compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal, const float *light_ratios, const uint16_t n_lights);
 static float			*precoumpute_attenuation_factors(void);
 static t_vector			*precompute_random_bias_vectors(void);
 
@@ -131,12 +131,13 @@ static void	*render_pixel(void *data)
 	float			*attenuation_factors = thread_data->attenuation_factors;
 	float			*light_ratios = thread_data->light_ratios;
 	t_vector		*random_bias_vectors = thread_data->random_bias_vectors;
+	t_scene			*scene = thread_data->scene;
 	uint16_t		i;
 
 	i = thread_data->start_depth;
 	while (i < thread_data->end_depth)
 	{
-		colors_array[i] = ray_bouncing(thread_data->scene, thread_data->ray, 0, i, attenuation_factors, light_ratios, random_bias_vectors);
+		colors_array[i] = ray_bouncing(scene, thread_data->ray, 0, i, attenuation_factors, light_ratios, random_bias_vectors, scene->n_lights);
 		i++;
 	}
 	return (free(data), NULL);
@@ -264,17 +265,18 @@ static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, 
 		.origin = vec_add(point, vec_scale(EPSILON, normal)),
 		.direction = vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction)
 	};
-	float roughness = 0.1; //TODO implementare la roughness prendendo quella degli oggetti
+	float roughness = 0; //TODO implementare la roughness prendendo quella degli oggetti
 	reflected_ray.direction = vec_add(reflected_ray.direction, vec_scale(roughness, random_component));
 	return (reflected_ray);
 }
 
-static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx, const float *attenuation_factors, const float *light_ratios, const t_vector *random_bias_vectors)
+static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx, const float *attenuation_factors, const float *light_ratios, const t_vector *random_bias_vectors, const uint16_t n_lights)
 {
 	t_hit					*hit_info;
 	t_color					ray_color;
 	static const t_color	bg_color = {BACKGROUND_COLOR >> 16 & 0xFF, BACKGROUND_COLOR >> 8 & 0xFF, BACKGROUND_COLOR & 0xFF, 0};
 	t_color					light_component;
+	static const float		reciproca1255 = 1.0f / 255.0f;
 
 	if (n_bounce > MAX_BOUNCE)
 		return (bg_color);
@@ -282,12 +284,12 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	if (!hit_info)
 		return (bg_color);
 	ray = get_reflected_ray(ray, hit_info->normal, hit_info->point, random_bias_vectors[idx]);
-	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx, attenuation_factors, light_ratios, random_bias_vectors);
+	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx, attenuation_factors, light_ratios, random_bias_vectors, n_lights);
 	const t_color	hit_color = hit_info->material->color;
-	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal, light_ratios);
+	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal, light_ratios, n_lights);
+	// printf("Light component: %d %d %d\n", light_component.r, light_component.g, light_component.b);
 	light_component = blend_colors(light_component, scene->amblight.ambient, 0.2f); //ratio 80/20 tra luce e ambient
 	const float 	attenuation = attenuation_factors[n_bounce];
-	const float		reciproca1255 = 1.0f / 255.0f;
 	const t_color	attenuated_light = {
         .r = (uint8_t)fmin(255.0f, (light_component.r * attenuation)),
         .g = (uint8_t)fmin(255.0f, (light_component.g * attenuation)),
@@ -295,7 +297,7 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
         .a = 0
     };
     // Combine attenuated_light with hit_color, then blend with ray_color from further bounces
-    ray_color = (t_color){
+    ray_color = (t_color) {
         .r = (uint8_t)fmin(255.0f, (hit_color.r * attenuated_light.r * reciproca1255 + ray_color.r)),
         .g = (uint8_t)fmin(255.0f, (hit_color.g * attenuated_light.g * reciproca1255 + ray_color.g)),
         .b = (uint8_t)fmin(255.0f, (hit_color.b * attenuated_light.b * reciproca1255 + ray_color.b)),
@@ -319,7 +321,7 @@ static t_color weigh_color(const t_color color, float brightness, float distance
 	});
 }
 
-static t_color	compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal, const float *light_ratios)
+static t_color	compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal, const float *light_ratios, const uint16_t n_lights)
 {
 	t_color			*light_components;
 	t_color			light_contribution = {0, 0, 0, 0};
@@ -330,7 +332,6 @@ static t_color	compute_lights_contribution(const t_scene *scene, t_point surface
 	t_hit			*hit_info;
 	uint16_t		i;
 	float			angle_of_incidence_cosine;
-	const uint16_t	n_lights = ft_lstsize(scene->lights);
 	
 	light_components = (t_color *)malloc(n_lights * sizeof(t_color));
 	lights = scene->lights;
