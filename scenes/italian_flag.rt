@@ -1,12 +1,12 @@
 #ambient light
-A 					0.2						255,255,255
+A 					0.1						255,255,255
 
 #light
 L 0,50,0 			0.8						249,217,4
 # L 0,50,-30 			0.8						249,217,4
 
 #camera
-C 0,30,-20			0,-3,1				90
+C 0,20,-10			0,-1,1			90
 
 
 #posizione		diametro				colore			reflectivity	specular	roughness

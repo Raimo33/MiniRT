@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/10 22:26:34 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@
 // # define ATTENUATION_FACTOR 0.8
 
 //valori di test
-# define WIN_WIDTH 720
-# define WIN_HEIGHT 480
+# define WIN_WIDTH 1080
+# define WIN_HEIGHT 720
 # define PLANE_SIZE 1000
 # define RAYS_PER_PIXEL 8
 # define BACKGROUND_COLOR 0x000000

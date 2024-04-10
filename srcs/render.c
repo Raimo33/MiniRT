@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/10 22:50:15 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ static double	*precoumpute_attenuation_factors(void)
 {
 	uint16_t	i;
 	double		*attenuation_factors;
+	double		safety_limit = EPSILON * 5;
 
 	attenuation_factors = (double *)malloc((MAX_BOUNCE + 1) * sizeof(double));
 	attenuation_factors[0] = 1.0f;
@@ -169,6 +170,12 @@ static double	*precoumpute_attenuation_factors(void)
 	while (i <= MAX_BOUNCE)
 	{
 		attenuation_factors[i] = attenuation_factors[i - 1] * ATTENUATION_FACTOR;
+		if (attenuation_factors[i] <= safety_limit) //safety measure to avoid division by zero and floating point issues
+		{
+			while (i <= MAX_BOUNCE)
+				attenuation_factors[i++] = safety_limit;
+			break ;
+		}
 		i++;
 	}
 	return (attenuation_factors);
@@ -238,7 +245,7 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
 	return ((t_ray){cam->center, vec_normalize(direction)});
 }
 
-static t_vector get_rand_in_unit_sphere(void) //metodo di Marsaglia's
+static t_vector get_rand_in_unit_sphere(void) //metodo di Marsaglia
 {
     double		u;
 	double		v;
@@ -263,13 +270,13 @@ static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, 
 	t_ray		reflected_ray =
 	{
 		.origin = vec_add(point, vec_scale(EPSILON, normal)),
-		.direction = vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction)
+		.direction = vec_normalize(vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction))
 	};
-	double roughness = 0; //TODO implementare la roughness prendendo quella degli oggetti
-	reflected_ray.direction = vec_add(reflected_ray.direction, vec_scale(roughness, random_component));
+	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(0.1, random_component))); //TODO random component influenza troppo i layer, che una volta uniti si scazzano
 	return (reflected_ray);
 }
 
+//TODO aggiungere il calcolo della luce solo sul primo oggetto colpito, non su tutti gli oggetti piu' avanti nella ricorsione
 static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bounce, const uint16_t idx, const double *attenuation_factors, const double *light_ratios, const t_vector *random_bias_vectors, const uint16_t n_lights)
 {
 	t_hit					*hit_info;
@@ -287,21 +294,18 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	ray_color = ray_bouncing(scene, ray, n_bounce + 1, idx, attenuation_factors, light_ratios, random_bias_vectors, n_lights);
 	const t_color	hit_color = hit_info->material->color;
 	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal, light_ratios, n_lights);
-	// printf("Light component: %d %d %d\n", light_component.r, light_component.g, light_component.b);
 	light_component = blend_colors(light_component, scene->amblight.ambient, 0.2f); //ratio 80/20 tra luce e ambient
 	const double 	attenuation = attenuation_factors[n_bounce];
-	// printf("n_bounce: %d attenuation: %f\n", n_bounce, attenuation);
 	const t_color	attenuated_light = {
-        .r = (uint8_t)((double)light_component.r * attenuation),
-        .g = (uint8_t)((double)light_component.g * attenuation),
-        .b = (uint8_t)((double)light_component.b * attenuation),
+        .r = light_component.r * attenuation,
+        .g = light_component.g * attenuation,
+        .b = light_component.b * attenuation,
         .a = 0
     };
-    // Combine attenuated_light with hit_color, then blend with ray_color from further bounces
     ray_color = (t_color) {
-        .r = (uint8_t)fmin(255.0f, (hit_color.r * attenuated_light.r * reciproca1255 + ray_color.r)),
-        .g = (uint8_t)fmin(255.0f, (hit_color.g * attenuated_light.g * reciproca1255 + ray_color.g)),
-        .b = (uint8_t)fmin(255.0f, (hit_color.b * attenuated_light.b * reciproca1255 + ray_color.b)),
+        .r = fmin(255.0f, (hit_color.r * attenuated_light.r * reciproca1255 + ray_color.r)),
+        .g = fmin(255.0f, (hit_color.g * attenuated_light.g * reciproca1255 + ray_color.g)),
+        .b = fmin(255.0f, (hit_color.b * attenuated_light.b * reciproca1255 + ray_color.b)),
         .a = 0
     };
 	return (free(hit_info), ray_color);
