@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 15:58:02 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ typedef struct s_thread_data
 	t_scene		*scene;
 	t_ray		ray;
 	t_color		*colors_array;
-	float		*light_ratios;
-	float		*attenuation_factors;
+	double		*light_ratios;
+	double		*attenuation_factors;
 	t_vector	*random_bias_vectors;
 	uint16_t	start_depth;
 	uint16_t	end_depth;
@@ -113,16 +113,16 @@ int				close_win(t_hook_data *hook_data);
 bool			is_empty_line(const char *line);
 bool			is_comment(const char *line);
 bool			is_space(char c);
-float 			ft_atof(const char *str);
+double 			ft_atof(const char *str);
 uint8_t 		ft_atoui(const char *str);
 char 			*ft_strtok(char *const str, const char *const sep);
 bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
-float			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
-float			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
-float			intersect_ray_plane(const t_ray ray, const t_shape *shape);
+double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
+double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
+double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
 void			my_mlx_stack_image(t_mlx_data *data);
 char			*my_mlx_get_data_addr(void *img_ptr, int32_t *bits_per_pixel, int32_t *size_line, int32_t *endian);
-float			fclamp(const float value, const float min, const float max);
+double			fclamp(const double value, const double min, const double max);
 
 #endif

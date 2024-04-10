@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 16:29:47 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ typedef struct s_camera
 	t_point		center;
 	t_vector	normal;
 	uint8_t		fov;
-	float		viewport_height;
-	float		viewport_width;
+	double		viewport_height;
+	double		viewport_width;
 	t_vector	forward;
 	t_vector	right;
 	t_vector	up;
@@ -31,13 +31,13 @@ typedef struct s_camera
 typedef struct s_light
 {
 	t_point		center;
-	float		brightness;
+	double		brightness;
 	t_color		color;
 }	t_light;
 
 typedef struct s_amblight
 {
-	float		brightness;
+	double		brightness;
 	t_color		color;
 	t_color		ambient;
 }	t_amblight;

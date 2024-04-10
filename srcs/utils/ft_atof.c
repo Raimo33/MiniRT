@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atof.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:09:28 by egualand          #+#    #+#             */
-/*   Updated: 2024/04/01 23:06:49 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-float	ft_atof(const char *str)
+double	ft_atof(const char *str)
 {
-	float		result;
-	float		sign;
-	float		divisor;
-	float		dec;
+	double		result;
+	double		sign;
+	double		divisor;
+	double		dec;
 	uint16_t	i;
 
 	if (!str)

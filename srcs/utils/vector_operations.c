@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_operations.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/08 16:20:39 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ inline t_vector	vec_cross(const t_vector a, t_vector b) //restituisce un vettore
 
 t_vector	vec_normalize(const t_vector a) //rende un vettore lungo 1
 {
-	float		len;
+	double		len;
 
 	len = sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 	return ((t_vector){a.x / len, a.y / len, a.z / len});
@@ -59,17 +59,17 @@ inline t_vector	vec_negate(const t_vector a) //restituisce il vettore opposto
 	return ((t_vector){-a.x, -a.y, -a.z});
 }
 
-inline t_vector 	vec_scale(const float scale, const t_vector a) //moltiplica un vettore per uno scalare
+inline t_vector 	vec_scale(const double scale, const t_vector a) //moltiplica un vettore per uno scalare
 {
 	return ((t_vector){a.x * scale, a.y * scale, a.z * scale});
 }
 
-inline float	vec_dot(const t_vector a, const t_vector b) //prodotto scalare
+inline double	vec_dot(const t_vector a, const t_vector b) //prodotto scalare
 {
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
-inline float	vec_length(const t_vector a) //lunghezza di un vettore
+inline double	vec_length(const t_vector a) //lunghezza di un vettore
 {
 	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
 }

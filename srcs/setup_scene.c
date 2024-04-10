@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_scene.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 23:39:05 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,8 +183,8 @@ static void set_bb_plane(t_shape *shape)
 	t_vector 			u;
 	t_vector 			v;
 	t_vector 			r;
-	static const float	size = PLANE_SIZE / 2;
-	static const float  thickness = EPSILON;
+	static const double	size = PLANE_SIZE / 2;
+	static const double  thickness = EPSILON;
 	
 	r = (t_vector){1, 0, 0};
 	if (fabs(vec_dot(r, shape->plane.normal)) > 0.99f)
@@ -247,8 +247,8 @@ static void	set_bb_cylinder(t_shape *shape)
 	const t_vector	orientation = shape->cylinder.direction;
 	const t_vector	center = shape->cylinder.center;
 
-	const float r = shape->cylinder.radius;
-	const float half_height = shape->cylinder.half_height;
+	const double r = shape->cylinder.radius;
+	const double half_height = shape->cylinder.half_height;
 
 	t_vector axis_max = (t_vector){
         center.x + orientation.x * half_height,
