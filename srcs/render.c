@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 16:30:17 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/10 17:33:10 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,10 +290,11 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, const uint16_t n_bo
 	// printf("Light component: %d %d %d\n", light_component.r, light_component.g, light_component.b);
 	light_component = blend_colors(light_component, scene->amblight.ambient, 0.2f); //ratio 80/20 tra luce e ambient
 	const float 	attenuation = attenuation_factors[n_bounce];
+	// printf("n_bounce: %d attenuation: %f\n", n_bounce, attenuation);
 	const t_color	attenuated_light = {
-        .r = (uint8_t)fmin(255.0f, (light_component.r * attenuation)),
-        .g = (uint8_t)fmin(255.0f, (light_component.g * attenuation)),
-        .b = (uint8_t)fmin(255.0f, (light_component.b * attenuation)),
+        .r = (uint8_t)((float)light_component.r * attenuation),
+        .g = (uint8_t)((float)light_component.g * attenuation),
+        .b = (uint8_t)((float)light_component.b * attenuation),
         .a = 0
     };
     // Combine attenuated_light with hit_color, then blend with ray_color from further bounces
