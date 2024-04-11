@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 16:29:13 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:06:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,8 @@ void	init_scene(t_scene *scene)
 {
 	scene->amblight.brightness = 0;
 	scene->amblight.color = (t_color){0, 0, 0, 0};
-	scene->camera = (t_camera *)malloc(sizeof(t_camera));
-	scene->camera->center.x = 0;
-	scene->camera->center.y = 0;
-	scene->camera->center.z = 0;
-	scene->camera->normal.x = 0;
-	scene->camera->normal.y = 0;
-	scene->camera->normal.z = 0;
-	scene->camera->fov = 0;
+	scene->current_camera = NULL;
+	scene->cameras = NULL;
 	scene->lights = NULL;
 	scene->n_lights = 0;
 	scene->shapes = NULL;
@@ -43,16 +37,29 @@ void	init_scene(t_scene *scene)
 	scene->world_max.y = 0;
 }
 
-void	init_window(t_mlx_data *win_data)
-{	
+void	init_window(t_mlx_data *win_data, t_scene *scene)
+{
+	uint16_t	i;
+	
 	win_data->mlx = mlx_init();
 	win_data->win = mlx_new_window(win_data->mlx,
 			WIN_WIDTH, WIN_HEIGHT, "miniRT");
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");
-	win_data->img = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
-	win_data->addr = mlx_get_data_addr(win_data->img, &win_data->bits_per_pixel,
-		&win_data->line_length, &win_data->endian);
+	win_data->n_images = ft_lstsize(scene->cameras);
+	win_data->images = (void **)malloc(sizeof(void *) * win_data->n_images);
+	win_data->addrresses = (char **)malloc(sizeof(char *) * win_data->n_images);
+	i = 0;
+	while (i < win_data->n_images)
+	{
+		win_data->images[i] = mlx_new_image(win_data->mlx, WIN_WIDTH, WIN_HEIGHT);
+		if (!win_data->images[i])
+			ft_quit(3, "image initialization failed");
+		win_data->addrresses[i] = mlx_get_data_addr(win_data->images[i],
+				&win_data->bits_per_pixel, &win_data->line_length, &win_data->endian);
+		i++;
+	}
+	win_data->current_img = 0;
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 }
 
@@ -71,7 +78,18 @@ void init_hooks(t_mlx_data *win_data, t_scene *scene)
 
 static int key_hook(const int keycode, t_hook_data *hook_data)
 {
+	t_mlx_data *win_data;
+	uint16_t	idx;
+
+	win_data = hook_data->win_data;
 	if (keycode == KEY_ESC)
 		close_win(hook_data);
+	else if (keycode == KEY_SPACE && win_data->n_images > 1)
+	{
+		win_data->current_img++;
+		idx = win_data->current_img % win_data->n_images;
+		mlx_clear_window(hook_data->win_data->mlx, hook_data->win_data->win);
+		mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->images[idx], 0, 0);
+	}
 	return (0);
 }

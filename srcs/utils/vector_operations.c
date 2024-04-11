@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_operations.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:22:59 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,14 @@ inline t_vector	vec_div(const t_vector a, const t_vector b) //divisione di vetto
 	return ((t_vector){a.x / b.x, a.y / b.y, a.z / b.z});
 }
 
-inline bool is_vec_equal(const t_vector a, const t_vector b) //confronto di vettori
+bool	are_vectors_parallel(t_vector v1, t_vector v2)
 {
-	return (a.x == b.x && a.y == b.y && a.z == b.z);
+	double dot;
+	
+    v1 = vec_normalize(v1);
+    v2 = vec_normalize(v2);
+    dot = vec_dot(v1, v2);
+    return (fabs(dot - 1.0) < EPSILON) || (fabs(dot + 1.0) < EPSILON);
 }
 
 inline t_vector	vec_cross(const t_vector a, t_vector b) //restituisce un vettore perpendicolare ad entrambi i vettori dati

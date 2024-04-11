@@ -73,7 +73,7 @@ t_vector	vec_normalize(const t_vector v);
 t_vector	vec_negate(const t_vector a);
 double		vec_dot(const t_vector a, const t_vector b);
 double		vec_length(const t_vector a);
-bool 		is_vec_equal(const t_vector a, const t_vector b);
+bool		are_vectors_parallel(t_vector v1, t_vector v2);
 
 
 #endif

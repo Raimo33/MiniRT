@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:32:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,11 @@ typedef struct	s_scene
 	t_octree	*octree;
 	t_list		*shapes;
 	t_list		*lights;
-	t_camera	*camera;
-	t_amblight	amblight;
+	t_list		*cameras;
+	t_camera	*current_camera;
 	t_vector	world_min;
 	t_vector	world_max;
+	t_amblight	amblight;
 	uint16_t	n_lights;
 }	t_scene;
 

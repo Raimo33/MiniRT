@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/09 23:22:19 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:59:15 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv)
 	init_scene(&scene);
 	parse_scene(fd, &scene);
 	setup_scene(&scene);
-	init_window(&mlx_data);
+	init_window(&mlx_data, &scene);
 	init_hooks(&mlx_data, &scene);
 	gettimeofday(&start_time, NULL);
 	render_scene(&mlx_data, &scene);

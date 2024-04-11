@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 23:09:01 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:53:26 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,10 @@ static void	parse_amblight(t_scene *scene)
 
 	amblight.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	amblight.color = parse_color(ft_strtok(NULL, spaces));
-	amblight.ambient = (t_color){
-        .r = (amblight.color.r * amblight.brightness),
-        .g = (amblight.color.g * amblight.brightness),
-        .b = (amblight.color.b * amblight.brightness),
-        .a = 0
-    };
+	amblight.ambient.r = amblight.color.r * amblight.brightness;
+	amblight.ambient.g = amblight.color.g * amblight.brightness;
+	amblight.ambient.b = amblight.color.b * amblight.brightness;
+	amblight.ambient.a = 0;
 	scene->amblight = amblight;
 }
 
@@ -117,9 +115,13 @@ static void	parse_light(t_scene *scene)
 
 static void	parse_camera(t_scene *scene)
 {
-	scene->camera->center = parse_coord(ft_strtok(NULL, spaces));
-	scene->camera->normal = parse_coord(ft_strtok(NULL, spaces));
-	scene->camera->fov = ft_atoui(ft_strtok(NULL, spaces));
+	t_camera	*camera;
+	
+	camera = (t_camera *)malloc(sizeof(t_camera));
+	camera->center = parse_coord(ft_strtok(NULL, spaces));
+	camera->normal = parse_coord(ft_strtok(NULL, spaces));
+	camera->fov = ft_atoui(ft_strtok(NULL, spaces));
+	ft_lstadd_front(&scene->cameras, ft_lstnew(camera));
 }
 
 static void	parse_sphere(t_shape *shape)

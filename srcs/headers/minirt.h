@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 13:34:53 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:13:57 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,18 @@
 # define WIN_WIDTH 1080
 # define WIN_HEIGHT 720
 # define WORLD_SIZE 1000
-# define RAYS_PER_PIXEL 8 //TODO togliere rays per pixel, tracciare 1 raggio per pixel. la randomness continua ad esserci ma e' sempre lo stesso vettore che viene scalato in base alla roughness
 # define BACKGROUND_COLOR 0x000000
-# define MAX_BOUNCE 10
+# define MAX_BOUNCE 3
 # define OCTREE_DEPTH 3
 # define ATTENUATION_FACTOR 0.8
 
 # ifndef N_THREADS
-#  define N_THREADS 8
+#  define N_THREADS 2
 # endif
 
-# if N_THREADS > RAYS_PER_PIXEL / 2
+# if N_THREADS > WIN_HEIGHT / 2
 #  undef N_THREADS
-#  define N_THREADS RAYS_PER_PIXEL / 2
+#  define N_THREADS WIN_HEIGHT / 2
 # endif
 # if N_THREADS < 1
 #  undef N_THREADS
@@ -66,6 +65,7 @@
 # endif
 
 # define KEY_ESC 65307
+# define KEY_SPACE 32
 
 static const char		spaces[] = " \t\n\v\f\r";
 
@@ -73,12 +73,14 @@ typedef struct s_mlx_data
 {
 	void			*win;
 	void			*mlx;
-	int				endian;
-	int				bits_per_pixel;
+	void			**images;
+	char			**addrresses;
+	int32_t			endian;
+	int32_t			bits_per_pixel;
+	int32_t			line_length;
+	uint16_t		current_img;
+	uint16_t		n_images;
 	uint8_t			bytes_per_pixel;
-	int				line_length;
-	void			*img;
-	char			*addr;
 }	t_mlx_data;
 
 typedef struct s_hook_data
@@ -89,20 +91,19 @@ typedef struct s_hook_data
 
 typedef struct s_thread_data
 {
+	t_mlx_data	*win_data;
 	t_scene		*scene;
-	t_ray		ray;
-	t_color		*colors_array;
 	double		*light_ratios;
 	double		*attenuation_factors;
-	t_vector	*random_bias_vectors;
-	uint16_t	start_depth;
-	uint16_t	end_depth;
+	uint16_t	img_idx;
+	uint16_t	start_y;
+	uint16_t	end_y;
 }	t_thread_data;
 
 //TODO aggiustare i const
 void			check_args(const uint16_t argc, char **argv);
 void			init_scene(t_scene *scene);
-void			init_window(t_mlx_data *win_data);
+void			init_window(t_mlx_data *win_data, t_scene *scene);
 void			init_hooks(t_mlx_data *win_data, t_scene *scene);
 void			parse_scene(int fd, t_scene *scene);
 void			set_bounding_box(t_shape *shape);
@@ -120,7 +121,7 @@ bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding
 double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
 double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
-void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
+void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t img_idx, const uint16_t x, const uint16_t y, const t_color color);
 void			my_mlx_stack_image(t_mlx_data *data);
 char			*my_mlx_get_data_addr(void *img_ptr, int32_t *bits_per_pixel, int32_t *size_line, int32_t *endian);
 double			fclamp(const double value, const double min, const double max);

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 13:34:53 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:55:46 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ static void set_shapes_data(t_scene *scene)
 		}
 		node = node->next;
 	}
-	scene->camera->normal = vec_normalize(scene->camera->normal);
 }
 
 static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom)
