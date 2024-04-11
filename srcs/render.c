@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 01:01:16 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 14:19:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,7 +301,7 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, t_hit *hit_info, co
 	return(free(new_hit), blend_colors(hit_color, ray_color, 0.5));
 }
 
-static t_color	add_lighting(const t_scene *scene, const t_color color, const t_hit *hit_info, const double *light_ratios)
+static t_color	add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratios)
 {
 	t_color				light_component;
 	static const double	reciproca1255 = 1.0f / 255.0f;
@@ -309,28 +309,30 @@ static t_color	add_lighting(const t_scene *scene, const t_color color, const t_h
 	if (!hit_info)
 		return (color);
 	light_component = compute_lights_contribution(scene, hit_info->point, hit_info->normal, light_ratios);
-	light_component = blend_colors(light_component, scene->amblight.ambient, 0.2f); //ratio 60/40 tra luce e ambient
-	return ((t_color){
-        .r = color.r * light_component.r * reciproca1255,
-        .g = color.g * light_component.g * reciproca1255,
-        .b = color.b * light_component.b * reciproca1255,
-        .a = 0
-	});
+	light_component = blend_colors(light_component, scene->amblight.ambient, 0.2f); //ratio 80/20 tra luce e ambient
+	//TODO la divisione per 255 abbassa troppo la luminosita'
+	color.r *= (double)light_component.r * reciproca1255;
+	color.g *= (double)light_component.g * reciproca1255;
+	color.b *= (double)light_component.b * reciproca1255;
+	return (color);
 }
 
-static t_color weigh_color(const t_color color, double brightness, double distance, const double angle_of_incidence_cosine)
+static t_color weigh_color(t_color color, const double brightness, double distance, const double angle_of_incidence_cosine)
 {
 	distance = fmax(distance, EPSILON); //per evitare divisioni per zero
-	const double attenuation = 1.0f / (1.0f + log1p(distance - 1));
-	const double adjusted_brightness = fclamp(brightness * attenuation * angle_of_incidence_cosine, 0.0f, 1.0f);
+	double attenuation = 1.0f - log(distance) / log(WORLD_SIZE);
+	attenuation = fclamp(attenuation, EPSILON, 1.0f);
+	const double diffuse = fmax(angle_of_incidence_cosine, 0.0f);
+	const double variation = brightness * diffuse * attenuation;
 
-	return ((t_color)
-	{
-		.r = (uint8_t)(color.r * adjusted_brightness),
-		.g = (uint8_t)(color.g * adjusted_brightness),
-		.b = (uint8_t)(color.b * adjusted_brightness),
-		.a = 0
-	});
+	// printf("diffuse: %f\n", diffuse);
+	// printf("attenuation: %f\n", attenuation);
+
+	// printf("variation: %f\n", variation);
+	color.r *= variation;
+	color.g *= variation;
+	color.b *= variation;
+	return (color);
 }
 
 static t_color	compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal, const double *light_ratios)
@@ -365,9 +367,8 @@ static t_color	compute_lights_contribution(const t_scene *scene, t_point surface
 			light_components[i++] = (t_color){0, 0, 0, 0};
 		free(hit_info);
 		lights = lights->next;
-	}
-	while (i--)
-		light_contribution = merge_colors(light_components, scene->n_lights, light_ratios);
+	}	
+	light_contribution = merge_colors(light_components, scene->n_lights, light_ratios);
 	return (free(light_components), light_contribution);
 }
 
@@ -471,11 +472,13 @@ inline static t_point ray_point_at_parameter(const t_ray ray, double t)
 static t_color blend_colors(const t_color color1, const t_color color2, double ratio)
 {
 	t_color		result;
+	double		negative_ratio;
 
     ratio = fclamp(ratio, 0.0f, 1.0f);
-	result.r = (uint8_t)(color1.r * (1.0f - ratio) + color2.r * ratio);
-	result.g = (uint8_t)(color1.g * (1.0f - ratio) + color2.g * ratio);
-	result.b = (uint8_t)(color1.b * (1.0f - ratio) + color2.b * ratio);
+	negative_ratio = 1.0f - ratio;
+	result.r = (color1.r * negative_ratio + color2.r * ratio);
+	result.g = (color1.g * negative_ratio + color2.g * ratio);
+	result.b = (color1.b * negative_ratio + color2.b * ratio);
 	return (result);
 }
 

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 01:02:33 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 13:34:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 //valori ideali
 // # define WIN_WIDTH 1280
 // # define WIN_HEIGHT 720
-// # define PLANE_SIZE 100
+// # define WORLD_SIZE 100
 // # define RAYS_PER_PIXEL 300
 // # define MAX_BOUNCE 50
 // # define OCTREE_DEPTH 3
@@ -45,7 +45,7 @@
 //valori di test
 # define WIN_WIDTH 1080
 # define WIN_HEIGHT 720
-# define PLANE_SIZE 1000
+# define WORLD_SIZE 1000
 # define RAYS_PER_PIXEL 8 //TODO togliere rays per pixel, tracciare 1 raggio per pixel. la randomness continua ad esserci ma e' sempre lo stesso vettore che viene scalato in base alla roughness
 # define BACKGROUND_COLOR 0x000000
 # define MAX_BOUNCE 10
