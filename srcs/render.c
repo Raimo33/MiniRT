@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 14:19:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/11 15:52:09 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,10 +153,11 @@ static double *precompute_ratios(uint16_t n_elems)
 	double 		*ratios;
 	
 	ratios = (double *)malloc(n_elems * sizeof(double));
-	i = 0;
+	ratios[0] = 1.0f;
+	i = 1;
 	while (i < n_elems)
 	{
-		ratios[i] = 1.0f / (i + 2);
+		ratios[i] = 1.0f / (i + 1);
 		i++;
 	}
 	return (ratios);
@@ -202,10 +203,13 @@ static t_color	merge_colors(t_color *colors, const uint16_t n_colors, const doub
 	t_color			merged_color;
 	uint16_t		i;
 
-	merged_color = colors[0];
+	merged_color = (t_color){0, 0, 0, 0};
 	i = 0;
-	while (++i < n_colors)
+	while (i < n_colors)
+	{
 		merged_color = blend_colors(merged_color, colors[i], ratios[i]);
+		i++;	
+	}
 	return (merged_color);
 }
 
@@ -317,7 +321,7 @@ static t_color	add_lighting(const t_scene *scene, t_color color, const t_hit *hi
 	return (color);
 }
 
-static t_color weigh_color(t_color color, const double brightness, double distance, const double angle_of_incidence_cosine)
+static t_color get_light_component(t_color color, const double brightness, double distance, const double angle_of_incidence_cosine)
 {
 	distance = fmax(distance, EPSILON); //per evitare divisioni per zero
 	double attenuation = 1.0f - log(distance) / log(WORLD_SIZE);
@@ -337,8 +341,8 @@ static t_color weigh_color(t_color color, const double brightness, double distan
 
 static t_color	compute_lights_contribution(const t_scene *scene, t_point surface_point, const t_vector surface_normal, const double *light_ratios)
 {
-	t_color			*light_components;
-	t_color			light_contribution = {0, 0, 0, 0};
+	t_color			light_component;
+	t_color			light_contribution;
 	t_list			*lights;
 	t_light			*light;
 	t_vector		light_dir;
@@ -347,7 +351,8 @@ static t_color	compute_lights_contribution(const t_scene *scene, t_point surface
 	uint16_t		i;
 	double			angle_of_incidence_cosine;
 	
-	light_components = (t_color *)malloc(scene->n_lights * sizeof(t_color));
+	light_contribution = (t_color){0, 0, 0, 0};
+	light_component = (t_color){0, 0, 0, 0};
 	lights = scene->lights;
 	surface_point = vec_add(surface_point, vec_scale(EPSILON, surface_normal));
 	i = 0;
@@ -361,15 +366,15 @@ static t_color	compute_lights_contribution(const t_scene *scene, t_point surface
 		{
 			light_distance = vec_length(vec_sub(light->center, surface_point));
 			angle_of_incidence_cosine = vec_dot(surface_normal, light_dir);			
-			light_components[i++] = weigh_color(light->color, light->brightness, light_distance, angle_of_incidence_cosine);
+			light_component = get_light_component(light->color, light->brightness, light_distance, angle_of_incidence_cosine);
 		}
 		else
-			light_components[i++] = (t_color){0, 0, 0, 0};
+			light_component = (t_color){0, 0, 0, 0};
+		light_contribution = blend_colors(light_contribution, light_component, light_ratios[i++]);
 		free(hit_info);
 		lights = lights->next;
-	}	
-	light_contribution = merge_colors(light_components, scene->n_lights, light_ratios);
-	return (free(light_components), light_contribution);
+	}
+	return (light_contribution);
 }
 
 static t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
