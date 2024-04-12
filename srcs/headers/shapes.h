@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 17:35:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 23:36:27 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_cylinder
 	t_point		center;
 	t_vector	direction;
 	double		radius;
-	double		sqr_radius;
+	double		squared_radius;
 	double		half_height;
 	t_point		top_cap_center;
 	t_point		bottom_cap_center;

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 17:46:46 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 23:41:12 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void set_shapes_data(t_scene *scene)
 				break ;
 			case CYLINDER:
 				cylinder = &shape->cylinder;
-				cylinder->sqr_radius = cylinder->radius * cylinder->radius;
+				cylinder->squared_radius = cylinder->radius * cylinder->radius;
 				cylinder->direction = vec_normalize(cylinder->direction);
 				cylinder->top_cap_center = vec_add(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
 				cylinder->bottom_cap_center = vec_sub(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
