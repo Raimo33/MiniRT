@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 18:59:15 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 23:23:18 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	main(int argc, char **argv)
 	if (fd < 0)
 		ft_quit(4, NULL);
 	init_scene(&scene);
+	ft_putstr_fd("Parsing scene...\n", 1);
 	parse_scene(fd, &scene);
 	setup_scene(&scene);
 	init_window(&mlx_data, &scene);
@@ -35,7 +36,7 @@ int	main(int argc, char **argv)
 	gettimeofday(&end_time, NULL);
 	rendering_time = (end_time.tv_sec - start_time.tv_sec) * 1000.0;
 	rendering_time += (end_time.tv_usec - start_time.tv_usec) / 1000.0;
-	printf("Rendering time: %.2f ms\n", rendering_time);
+	printf("Rendered scene in %.2f s\n", rendering_time / 1000.0);
 	mlx_loop(mlx_data.mlx);
-	//free everything
+	ft_quit(0, "Minilibx loop ended abruptly\n");
 }

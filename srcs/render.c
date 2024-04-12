@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 23:17:19 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 23:24:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void render_scene(t_mlx_data *win_data, t_scene *scene)
 	threads_data = set_threads_data(scene, win_data, light_ratios, attenuation_factors, lines_per_thread, &thread_attr);
 	while (cameras)
 	{
+		printf("Rendering camera %d\n", win_data->current_img);
 		scene->current_camera = cameras->content;
 		setup_camera(scene->current_camera, win_data);
 		fill_image(threads_data, &thread_attr);
