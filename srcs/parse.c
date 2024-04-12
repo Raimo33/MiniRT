@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 15:55:25 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:33:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void		parse_shape(char *line, t_scene *scene);
 static void		parse_sphere(t_shape *shape);
 static void		parse_plane(t_shape *shape);
 static void		parse_cylinder(t_shape *shape);
+static void		parse_triangle(t_shape *shape);
 static t_float3	parse_coord(const char *str);
 static t_color	parse_color(const char *str);
 
@@ -61,8 +62,8 @@ static void	parse_line(char *line, t_scene *scene)
 
 static void	parse_shape(char *line, t_scene *scene)
 {
-	static const char		*prefixes[] = {"sp", "pl", "cy"};
-	void (*const			parse_funcs[])(t_shape *) = {&parse_sphere, &parse_plane, &parse_cylinder};
+	static const char		*prefixes[] = {"sp", "cy", "tr", "pl"};
+	void (*const			parse_funcs[])(t_shape *) = {&parse_sphere, &parse_cylinder, &parse_triangle, &parse_plane};
 	static const uint8_t	n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
 	uint8_t		i;
 	t_shape		*shape;
@@ -143,6 +144,14 @@ static void	parse_cylinder(t_shape *shape)
 	shape->cylinder.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	shape->cylinder.half_height = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	shape->type = CYLINDER;
+}
+
+static void	parse_triangle(t_shape *shape)
+{
+	shape->triangle.vertices[0] = parse_coord(ft_strtok(NULL, spaces));
+	shape->triangle.vertices[1] = parse_coord(ft_strtok(NULL, spaces));
+	shape->triangle.vertices[2] = parse_coord(ft_strtok(NULL, spaces));
+	shape->type = TRIANGLE;
 }
 
 static t_float3	parse_coord(const char *str)

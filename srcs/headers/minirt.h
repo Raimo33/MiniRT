@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 16:20:39 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:06:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_inf
 double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
+double			intersect_ray_triangle(const t_ray, const t_shape *shape);
 // double			intersect_ray_triangle(const t_ray ray, const t_shape *shape);
 bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
 t_point			ray_point_at_parameter(const t_ray ray, double t);

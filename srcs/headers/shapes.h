@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shapes.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:35:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,20 @@ typedef struct s_cylinder
 	t_point		bottom_cap_center;
 }	t_cylinder;
 
+typedef struct s_triangle
+{
+	t_point		vertices[3];
+	t_vector	normal;
+}	t_triangle;
+
 typedef struct s_shape
 {
-	enum {SPHERE, CYLINDER, PLANE}	type; //PLANE DEVE ESSERE L'ULTIMO DELLA SERIE
+	enum {SPHERE, CYLINDER, TRIANGLE, PLANE}	type; //PLANE DEVE ESSERE L'ULTIMO DELLA SERIE
 	union
 	{
 		t_sphere	sphere;
 		t_cylinder	cylinder;
+		t_triangle	triangle;
 		t_plane		plane;
 	};
 	t_material	*material;

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 15:52:27 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:45:41 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ static void	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closes
 
 static void	check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
-	static double (*const	intersect[3])(const t_ray, const t_shape *) = {&intersect_ray_sphere, &intersect_ray_cylinder, &intersect_ray_plane}; //stesso ordine di enum
+	static double (*const	intersect[])(const t_ray, const t_shape *) = {&intersect_ray_sphere, &intersect_ray_cylinder, &intersect_ray_triangle ,&intersect_ray_plane}; //stesso ordine di enum
 	t_list	*shapes;
 	t_shape	*shape;
 	double	t;
@@ -177,6 +177,9 @@ static void	update_closest_hit(t_hit *closest_hit, const t_shape *shape, const d
 	closest_hit->material = shape->material;
 	switch (shape->type)
 	{
+		case TRIANGLE:
+			closest_hit->normal = shape->triangle.normal;
+			break;
 		case SPHERE:
 			closest_hit->normal = vec_normalize(vec_sub(closest_hit->point, shape->sphere.center));
 			break;
@@ -189,7 +192,7 @@ static void	update_closest_hit(t_hit *closest_hit, const t_shape *shape, const d
 	}
 }
 
-static t_vector get_cylinder_normal(t_cylinder cylinder, t_point point)
+static t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point)
 {
 	const t_vector		vec_from_center_to_point = vec_sub(point, cylinder.center);
 	const double		projection_length = vec_dot(vec_from_center_to_point, cylinder.direction);

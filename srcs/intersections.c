@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 15:07:24 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:09:47 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,30 @@ static double	intersect_cylinder_side(const t_ray ray, const t_cylinder *cylinde
 		i++;
 	}
 	return (valid_t);
+}
+
+double	intersect_ray_triangle(const t_ray ray, const t_shape *shape)
+{
+	const t_vector	edge1 = vec_sub(shape->triangle.vertices[1], shape->triangle.vertices[0]);
+	const t_vector	edge2 = vec_sub(shape->triangle.vertices[2], shape->triangle.vertices[0]);
+	const t_vector 	h = vec_cross(ray.direction, edge2);
+	const double 	a = vec_dot(edge1, h);
+
+	if (a > -EPSILON && a < EPSILON)
+		return (-1);
+	const double 	f = 1.0 / a;
+	const t_vector	s = vec_sub(ray.origin, shape->triangle.vertices[0]);
+	const double 	u = f * vec_dot(s, h);
+	if (u < 0.0 || u > 1.0)
+		return (-1);
+    const t_vector	q = vec_cross(s, edge1);
+    const double	v = f * vec_dot(ray.direction, q);
+    if (v < 0.0 || u + v > 1.0)
+		return (-1);
+    const double	t = f * vec_dot(edge2, q);
+    if (t > EPSILON)
+        return (t);
+    return (-1);
 }
 
 bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min)

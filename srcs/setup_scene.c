@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 14:53:44 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 17:46:46 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void		set_bounding_box(t_shape *shape);
 static void		set_bb_sphere(t_shape *shape);
 static void		set_bb_cylinder(t_shape *shape);
 static void		set_bb_plane(t_shape *shape);
+static void		set_bb_triangle(t_shape *shape);
 static t_list	*get_shapes_inside_box(t_list *shapes, t_vector box_top, t_vector box_bottom);
 static void 	set_shapes_data(t_scene *scene);
 
@@ -48,6 +49,9 @@ static void set_shapes_data(t_scene *scene)
 		set_bounding_box(shape);
 		switch (shape->type)
 		{
+			case TRIANGLE:
+				shape->triangle.normal = vec_normalize(vec_cross(vec_sub(shape->triangle.vertices[1], shape->triangle.vertices[0]), vec_sub(shape->triangle.vertices[2], shape->triangle.vertices[0])));
+				break ;
 			case PLANE:
 				shape->plane.normal = vec_normalize(shape->plane.normal);
 				break ;
@@ -154,7 +158,7 @@ static void	set_world_extremes(t_scene *scene)
 
 static void	set_bounding_box(t_shape *shape)
 {
-	void (*const	get_bb_funcs[])(t_shape *) = {&set_bb_sphere, &set_bb_cylinder, &set_bb_plane}; //deve essere lo stesso ordine dell enum type
+	void (*const	get_bb_funcs[])(t_shape *) = {&set_bb_sphere, &set_bb_cylinder, &set_bb_triangle, &set_bb_plane}; //deve essere lo stesso ordine dell enum type
 	const uint8_t	n_shapes = sizeof(get_bb_funcs) / sizeof(get_bb_funcs[0]);
 	uint8_t			i;
 
@@ -250,29 +254,61 @@ static void	set_bb_cylinder(t_shape *shape)
 	const double r = shape->cylinder.radius;
 	const double half_height = shape->cylinder.half_height;
 
+	t_vector	orientation_by_height;
+
+	orientation_by_height.x = orientation.x * half_height;
+	orientation_by_height.y = orientation.y * half_height;
+	orientation_by_height.z = orientation.z * half_height;
+
 	t_vector axis_max = (t_vector){
-        center.x + orientation.x * half_height,
-        center.y + orientation.y * half_height,
-        center.z + orientation.z * half_height,
+        center.x + orientation_by_height.x,
+        center.y + orientation_by_height.y,
+        center.z + orientation_by_height.z,
 	};
 	t_vector axis_min = (t_vector){
-        center.x - orientation.x * half_height,
-        center.y - orientation.y * half_height,
-        center.z - orientation.z * half_height,
+        center.x - orientation_by_height.x,
+        center.y - orientation_by_height.y,
+        center.z - orientation_by_height.z,
 	};
 
-	t_point bb_min = (t_point) axis_min;
-	t_point bb_max = (t_point) axis_max;
+   	axis_min.x = fmin(axis_min.x, center.x) - r;
+	axis_min.y = fmin(axis_min.y, center.y) - r;
+	axis_min.z = fmin(axis_min.z, center.z) - r;
 
-   	bb_min.x -= r;
-	bb_min.y -= r;
-	bb_min.z -= r;
+	axis_max.x = fmax(axis_max.x, center.x) + r;
+	axis_max.y = fmax(axis_max.y, center.y) + r;
+	axis_max.z = fmax(axis_max.z, center.z) + r;
 
-	bb_max.x += r;
-	bb_max.y += r;
-	bb_max.z += r;
+	shape->bb_min = (t_point)axis_min;
+	shape->bb_max = (t_point)axis_max;
+}
 
-	shape->bb_min = bb_min;
-	shape->bb_max = bb_max;
+static void	set_bb_triangle(t_shape *shape)
+{
+	const t_vector v0 = shape->triangle.vertices[0];
+    const t_vector v1 = shape->triangle.vertices[1];
+    const t_vector v2 = shape->triangle.vertices[2];
+
+    t_vector min = v0;
+    t_vector max = v0;
+
+    min.x = fmin(min.x, v1.x);
+    min.y = fmin(min.y, v1.y);
+    min.z = fmin(min.z, v1.z);
+
+    max.x = fmax(max.x, v1.x);
+    max.y = fmax(max.y, v1.y);
+    max.z = fmax(max.z, v1.z);
+
+    min.x = fmin(min.x, v2.x);
+    min.y = fmin(min.y, v2.y);
+    min.z = fmin(min.z, v2.z);
+
+    max.x = fmax(max.x, v2.x);
+    max.y = fmax(max.y, v2.y);
+    max.z = fmax(max.z, v2.z);
+
+    shape->bb_min = (t_point)min;
+    shape->bb_max = (t_point)max;
 }
 
