@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 20:31:13 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 22:24:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	precompute_viewports(double *viewport_x, double *viewport_y)
 	}
 }
 
-t_color	blend_colors(const t_color color1, const t_color color2, double ratio)
+inline t_color	blend_colors(const t_color color1, const t_color color2, double ratio)
 {
 	t_color		result;
 	double		negative_ratio;

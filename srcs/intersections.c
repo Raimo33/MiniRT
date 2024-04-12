@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 17:09:47 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 20:38:13 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ double	intersect_ray_triangle(const t_ray ray, const t_shape *shape)
     return (-1);
 }
 
-bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min)
+inline bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min)
 {
     double tmin = -FLT_MAX;
     double tmax = FLT_MAX;

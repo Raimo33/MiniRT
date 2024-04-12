@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 20:31:32 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 20:48:01 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ static void	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closes
 	}
 }
 
-static void	check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
+static inline void	check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
 	static double (*const	intersect[])(const t_ray, const t_shape *) = {&intersect_ray_sphere, &intersect_ray_cylinder, &intersect_ray_triangle ,&intersect_ray_plane}; //stesso ordine di enum
 	t_list	*shapes;
@@ -186,7 +186,7 @@ static void	update_closest_hit(t_hit *closest_hit, const t_shape *shape, const d
 	}
 }
 
-static t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point)
+static inline t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point)
 {
 	const t_vector		vec_from_center_to_point = vec_sub(point, cylinder.center);
 	const double		projection_length = vec_dot(vec_from_center_to_point, cylinder.direction);
@@ -205,9 +205,9 @@ static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_hit *hit_info)
 	t_ray				reflected_ray;
 	t_vector			random_component;
 
-	random_component = get_rand_in_unit_sphere();
+	random_component = get_rand_in_unit_sphere(); //TODO utilizzare un rng custom meno costoso
 	reflected_ray.origin = vec_add(hit_info->point, vec_scale(EPSILON, hit_info->normal));
-	reflected_ray.direction = vec_normalize(vec_sub(vec_scale(2 * vec_dot(hit_info->normal, incoming_ray.direction), hit_info->normal), incoming_ray.direction));
+	reflected_ray.direction = vec_sub(vec_scale(2 * vec_dot(hit_info->normal, incoming_ray.direction), hit_info->normal), incoming_ray.direction);
 	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(hit_info->material->roughness, random_component)));
 	return (reflected_ray);
 }

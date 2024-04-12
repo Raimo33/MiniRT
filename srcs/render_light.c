@@ -6,15 +6,17 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 19:56:43 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 22:47:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hit_info, const double *light_ratios);
-static t_color	get_light_component(t_color color, const double brightness, double distance, const double angle_of_incidence_cosine, const t_vector view_dir, const t_vector light_dir, const t_vector surface_normal, const double shininess);
-static double	calculate_specular(const t_vector view_dir, const t_vector light_dir, const t_vector surface_normal, const double shininess);
+static t_color		compute_lights_contribution(const t_scene *scene, const t_hit *hit_info, const double *light_ratios);
+static t_color		get_light_component(t_color color, const double brightness, double distance, const double angle_of_incidence_cosine, const t_vector view_dir, const t_vector light_dir, const t_vector surface_normal, const double shininess);
+static double		calculate_specular(const t_vector view_dir, const t_vector light_dir, const t_vector surface_normal, const double shininess);
+static bool			check_shapes_in_node(const t_octree *node, const t_ray ray);
+static bool			ray_hits_object(const t_ray ray, const t_octree *octree);
 
 t_color	add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratios)
 {
@@ -41,7 +43,7 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 	t_light			*light;
 	t_vector		light_dir;
 	double			light_distance;
-	t_hit			*is_shadowed;
+	bool			is_object_blocking_light;
 	uint16_t		i;
 	double			angle_of_incidence_cosine;
 	t_vector		view_dir;
@@ -59,8 +61,8 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 	{
 		light = (t_light *)lights->content;
 		light_dir = vec_normalize(vec_sub(light->center, surface_point));
-		is_shadowed = trace_ray(scene, (t_ray){surface_point, light_dir});
-		if (!is_shadowed && vec_dot(surface_normal, light_dir) > 0)
+		is_object_blocking_light = ray_hits_object((t_ray){surface_point, light_dir}, scene->octree);
+		if (!is_object_blocking_light && vec_dot(surface_normal, light_dir) > 0)
 		{
 			light_distance = vec_length(vec_sub(light->center, surface_point));
 			angle_of_incidence_cosine = vec_dot(surface_normal, light_dir);
@@ -69,10 +71,48 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 		else
 			light_component = (t_color){0, 0, 0};
 		light_contribution = blend_colors(light_contribution, light_component, light_ratios[i++]);
-		free(is_shadowed);
 		lights = lights->next;
 	}
 	return (light_contribution);
+}
+
+static inline bool	ray_hits_object(const t_ray ray, const t_octree *octree)
+{
+	uint8_t	i;
+
+	if (!octree || !ray_intersects_aabb(ray, octree->box_top, octree->box_bottom))
+		return (false);
+	if (octree->n_shapes == 1 || octree->children == NULL)
+		return (check_shapes_in_node(octree, ray));
+	else
+	{
+		i = 0;
+		while (i < 8)
+		{
+			if (ray_hits_object(ray, octree->children[i++]))
+				return (true);	
+		}
+		return (false);
+	}
+}
+
+static inline bool	check_shapes_in_node(const t_octree *node, const t_ray ray)
+{
+	static double (*const	intersect[])(const t_ray, const t_shape *) = {&intersect_ray_sphere, &intersect_ray_cylinder, &intersect_ray_triangle ,&intersect_ray_plane}; //stesso ordine di enum
+	t_list	*shapes;
+	t_shape	*shape;
+	double	t;
+
+	shapes = node->shapes;
+	while (shapes)
+	{
+		shape = (t_shape *)shapes->content;
+		t = intersect[shape->type](ray, shape);
+		if (t > 0)
+			return (true);
+		shapes = shapes->next;
+	}
+	return (false);
 }
 
 static t_color get_light_component(t_color color, const double brightness, double distance, const double angle_of_incidence_cosine, const t_vector view_dir, const t_vector light_dir, const t_vector surface_normal, const double shininess)
