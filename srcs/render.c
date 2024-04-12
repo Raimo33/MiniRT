@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 20:48:01 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 23:17:19 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 //TODO implementare un blending tra i pixel vicini per velocizzare il rendering e aumentare la smoothness
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
-//TODO sampling / adaptive sampling
 
 static void		fill_image(t_thread_data **threads_data, pthread_attr_t *thread_attr);
 static void		*render_segment(void *data);
@@ -40,7 +39,6 @@ void render_scene(t_mlx_data *win_data, t_scene *scene)
 	light_ratios = precompute_ratios(ft_lstsize(scene->lights));
 	attenuation_factors = precoumpute_attenuation_factors();
 	threads_data = set_threads_data(scene, win_data, light_ratios, attenuation_factors, lines_per_thread, &thread_attr);
-	srand(time(NULL));
 	while (cameras)
 	{
 		scene->current_camera = cameras->content;
@@ -202,13 +200,10 @@ static inline t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point)
 
 static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_hit *hit_info)
 {
-	t_ray				reflected_ray;
-	t_vector			random_component;
+	t_ray	reflected_ray;
 
-	random_component = get_rand_in_unit_sphere(); //TODO utilizzare un rng custom meno costoso
 	reflected_ray.origin = vec_add(hit_info->point, vec_scale(EPSILON, hit_info->normal));
-	reflected_ray.direction = vec_sub(vec_scale(2 * vec_dot(hit_info->normal, incoming_ray.direction), hit_info->normal), incoming_ray.direction);
-	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(hit_info->material->roughness, random_component)));
+	reflected_ray.direction = vec_normalize(vec_sub(vec_scale(2 * vec_dot(hit_info->normal, incoming_ray.direction), hit_info->normal), incoming_ray.direction));
 	return (reflected_ray);
 }
 

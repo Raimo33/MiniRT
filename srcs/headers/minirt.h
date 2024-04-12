@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 20:31:21 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 23:19:13 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,8 @@
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 # define WORLD_SIZE 1000
-# define MAX_BOUNCE 3
 # define OCTREE_DEPTH 3
 # define N_THREADS 4
-# define ATTENUATION_FACTOR 0.8
-# define ROUGHNESS 0.5
 
 # ifndef N_THREADS
 #  define N_THREADS 4
@@ -55,6 +52,8 @@
 #  define N_THREADS 1
 # endif
 
+# define MAX_BOUNCE 1 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
+# define BOUNCE_ATTENUATION_FACTOR 0.8
 # define BACKGROUND_COLOR 0x000000
 # define KEY_ESC 65307
 # define KEY_SPACE 32

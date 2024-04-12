@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 22:47:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 22:58:43 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ t_color	add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info,
 	return (color);
 }
 
-//TODO probabilmente ottimizzabile
 static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hit_info, const double *light_ratios)
 {
 	t_color			light_component;
@@ -132,12 +131,11 @@ static t_color get_light_component(t_color color, const double brightness, doubl
 static double	calculate_specular(const t_vector view_dir, const t_vector light_dir, const t_vector surface_normal, const double shininess)
 {
 	t_vector		reflected_light_dir;
-	const double	dot_nl = fmax(vec_dot(surface_normal, light_dir), 0.0f);
-	const double	dot_nl2 = 2.0f * dot_nl;
+	const double	dot_nl_2 = 2.0f * fmax(vec_dot(surface_normal, light_dir), 0.0f);
 
-	reflected_light_dir.x = dot_nl2 * surface_normal.x - light_dir.x;
-	reflected_light_dir.y = dot_nl2 * surface_normal.y - light_dir.y;
-	reflected_light_dir.z = dot_nl2 * surface_normal.z - light_dir.z;
+	reflected_light_dir.x = dot_nl_2 * surface_normal.x - light_dir.x;
+	reflected_light_dir.y = dot_nl_2 * surface_normal.y - light_dir.y;
+	reflected_light_dir.z = dot_nl_2 * surface_normal.z - light_dir.z;
 
 	reflected_light_dir = vec_normalize(reflected_light_dir);
 	const double spec_angle = fmax(vec_dot(reflected_light_dir, view_dir), 0.0f);

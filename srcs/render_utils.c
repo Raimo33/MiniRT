@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 22:24:08 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 23:18:47 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ double	*precoumpute_attenuation_factors(void)
 	i = 1;
 	while (i <= MAX_BOUNCE)
 	{
-		attenuation_factors[i] = attenuation_factors[i - 1] * ATTENUATION_FACTOR;
+		attenuation_factors[i] = attenuation_factors[i - 1] * BOUNCE_ATTENUATION_FACTOR;
 		if (attenuation_factors[i] <= safety_limit) //safety measure to avoid division by zero and floating point issues
 		{
 			while (i <= MAX_BOUNCE)
