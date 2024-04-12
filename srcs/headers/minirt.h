@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 15:10:09 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:47:58 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 # define OCTREE_DEPTH 3
 # define N_THREADS 4
 # define ATTENUATION_FACTOR 0.8
+# define ROUGHNESS 0.5
 
 # ifndef N_THREADS
 #  define N_THREADS 4

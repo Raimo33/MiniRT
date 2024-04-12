@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 15:22:43 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:52:27 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void		traverse_octree(const t_octree *node, const t_ray ray, t_hit *close
 static void		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void		update_closest_hit(t_hit *closest_hit, const t_shape *shape, const double t, const t_ray ray);
 static t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point);
-static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, const t_point point);
+static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_hit *hit_info);
 static t_color	ray_bouncing(const t_scene *scene, t_ray ray, t_hit *hit_info, const uint16_t n_bounce, const double *attenuation_factors, const double *light_ratios);
 
 void render_scene(t_mlx_data *win_data, t_scene *scene)
@@ -203,16 +203,15 @@ static t_vector get_cylinder_normal(t_cylinder cylinder, t_point point)
 	return(vec_normalize(vec_sub(point, projection)));
 }
 
-static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_vector normal, const t_point point)
+static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_hit *hit_info)
 {
 	t_ray				reflected_ray;
 	t_vector			random_component;
-	static const double	roughness = 0.1f;
 
 	random_component = get_rand_in_unit_sphere();
-	reflected_ray.origin = vec_add(point, vec_scale(EPSILON, normal));
-	reflected_ray.direction = vec_normalize(vec_sub(vec_scale(2 * vec_dot(normal, incoming_ray.direction), normal), incoming_ray.direction));
-	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(roughness, random_component)));
+	reflected_ray.origin = vec_add(hit_info->point, vec_scale(EPSILON, hit_info->normal));
+	reflected_ray.direction = vec_normalize(vec_sub(vec_scale(2 * vec_dot(hit_info->normal, incoming_ray.direction), hit_info->normal), incoming_ray.direction));
+	reflected_ray.direction = vec_normalize(vec_add(reflected_ray.direction, vec_scale(hit_info->material->roughness, random_component)));
 	return (reflected_ray);
 }
 
@@ -226,7 +225,7 @@ static t_color	ray_bouncing(const t_scene *scene, t_ray ray, t_hit *hit_info, co
 	if (n_bounce > MAX_BOUNCE || !hit_info)
 		return (bg_color);
 	hit_color = hit_info->material->color;
-	ray = get_reflected_ray(ray, hit_info->normal, hit_info->point);
+	ray = get_reflected_ray(ray, hit_info);
 	new_hit = trace_ray(scene, ray);
 	ray_color = ray_bouncing(scene, ray, new_hit, n_bounce + 1, attenuation_factors, light_ratios);
 	ray_color.r *= attenuation_factors[n_bounce - 1];
