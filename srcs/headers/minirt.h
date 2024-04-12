@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 17:06:24 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 20:31:21 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,9 @@ typedef struct s_mlx_data
 	void			*mlx;
 	void			**images;
 	char			**addrresses;
+	double			*viewport_x;
+	double			*viewport_y;
+	double			aspect_ratio;
 	int32_t			endian;
 	int32_t			bits_per_pixel;
 	int32_t			line_length;
@@ -110,11 +113,12 @@ bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding
 t_point			ray_point_at_parameter(const t_ray ray, double t);
 double			*precompute_ratios(uint16_t n_elems);
 double			*precoumpute_attenuation_factors(void);
+void			precompute_viewports(double *viewport_x, double *viewport_y);
 t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, double *attenuation_factors, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
 void			set_thread_attr(pthread_attr_t *thread_attr);
 t_vector		get_rand_in_unit_sphere(void);
 t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
-void			setup_camera(t_camera *cam);
+void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
 void 			ft_quit(const uint8_t id, const char *msg);
 int 			close_win(t_hook_data *hook_data);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);

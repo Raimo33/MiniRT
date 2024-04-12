@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 15:10:37 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 19:50:20 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ inline t_vector	vec_cross(const t_vector a, t_vector b) //restituisce un vettore
 	});
 }
 
-t_vector	vec_normalize(const t_vector a) //rende un vettore lungo 1
+inline t_vector	vec_normalize(const t_vector a) //rende un vettore lungo 1
 {
 	double		len;
 

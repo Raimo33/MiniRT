@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 17:45:41 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 20:31:32 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 //TODO implementare un blending tra i pixel vicini per velocizzare il rendering e aumentare la smoothness
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
+//TODO sampling / adaptive sampling
 
 static void		fill_image(t_thread_data **threads_data, pthread_attr_t *thread_attr);
 static void		*render_segment(void *data);
-static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y);
+static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y, const t_mlx_data *win_data);
 static void		traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void		update_closest_hit(t_hit *closest_hit, const t_shape *shape, const double t, const t_ray ray);
@@ -43,7 +44,7 @@ void render_scene(t_mlx_data *win_data, t_scene *scene)
 	while (cameras)
 	{
 		scene->current_camera = cameras->content;
-		setup_camera(scene->current_camera);
+		setup_camera(scene->current_camera, win_data);
 		fill_image(threads_data, &thread_attr);
 		cameras = cameras->next;
 		win_data->current_img++;
@@ -88,7 +89,7 @@ static void	*render_segment(void *data)
 		x = 0;
 		while (x < WIN_WIDTH)
 		{
-			ray = get_ray(scene->current_camera, x, y);
+			ray = get_ray(scene->current_camera, x, y, thread_data->win_data);
 			first_hit = trace_ray(scene, ray);
 			color = ray_bouncing(scene, ray, first_hit, 1, thread_data->attenuation_factors, thread_data->light_ratios);
 			color = add_lighting(scene, color, first_hit, thread_data->light_ratios);
@@ -101,20 +102,13 @@ static void	*render_segment(void *data)
 	return (NULL);
 }
 
-static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y)
-{
-	const double		screen_viewport_x = x / (double)(WIN_WIDTH - 1);
-	const double		screen_viewport_y = y / (double)(WIN_HEIGHT - 1);
-	const double		real_viewport_x = screen_viewport_x * 2 - 1;
-	const double		real_viewport_y = 1 - screen_viewport_y * 2;
-	const double		half_viewport_width = cam->viewport_width / 2;
-	const double		half_viewport_height = cam->viewport_height / 2;
-	
+static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y, const t_mlx_data *win_data)
+{	
 	const t_vector direction =
 	{
-		.x = cam->forward.x + (real_viewport_x * cam->right.x * half_viewport_width) + (real_viewport_y * cam->up.x * half_viewport_height),
-		.y = cam->forward.y + (real_viewport_x * cam->right.y * half_viewport_width) + (real_viewport_y * cam->up.y * half_viewport_height),
-		.z = cam->forward.z + (real_viewport_x * cam->right.z * half_viewport_width) + (real_viewport_y * cam->up.z * half_viewport_height)
+		.x = cam->forward.x + (win_data->viewport_x[x] * cam->right_by_half_viewport_width.x) + (win_data->viewport_y[y] * cam->up_by_half_viewport_height.x),
+		.y = cam->forward.y + (win_data->viewport_x[x] * cam->right_by_half_viewport_width.y) + (win_data->viewport_y[y] * cam->up_by_half_viewport_height.y),
+		.z = cam->forward.z + (win_data->viewport_x[x] * cam->right_by_half_viewport_width.z) + (win_data->viewport_y[y] * cam->up_by_half_viewport_height.z)
 	};
 	return ((t_ray){cam->center, vec_normalize(direction)});
 }

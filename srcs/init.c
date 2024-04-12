@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 13:56:56 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 20:18:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,10 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 	}
 	win_data->current_img = 0;
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
+	win_data->aspect_ratio = (double)WIN_WIDTH / (double)WIN_HEIGHT;
+	win_data->viewport_x = (double *)malloc(sizeof(double) * WIN_WIDTH);
+	win_data->viewport_y = (double *)malloc(sizeof(double) * WIN_HEIGHT);
+	precompute_viewports(win_data->viewport_x, win_data->viewport_y);
 }
 
 void init_hooks(t_mlx_data *win_data, t_scene *scene)

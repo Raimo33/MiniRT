@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 15:10:31 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 20:31:13 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,25 @@ double	*precoumpute_attenuation_factors(void)
 	return (attenuation_factors);
 }
 
+void	precompute_viewports(double *viewport_x, double *viewport_y)
+{
+	uint16_t	x;
+	uint16_t	y;
+
+	y = 0;
+	while (y < WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < WIN_WIDTH)
+		{
+			viewport_x[x] = (x / (double)(WIN_WIDTH - 1)) * 2 - 1;
+			viewport_y[y] = 1 - (y / (double)(WIN_HEIGHT - 1)) * 2;
+			x++;
+		}
+		y++;
+	}
+}
+
 t_color	blend_colors(const t_color color1, const t_color color2, double ratio)
 {
 	t_color		result;
@@ -118,18 +137,19 @@ t_color	blend_colors(const t_color color1, const t_color color2, double ratio)
 	return (result);
 }
 
-void	setup_camera(t_camera *cam)
+void	setup_camera(t_camera *cam, const t_mlx_data *win_data)
 {
-	const t_vector		world_up = {0, 1, 0};
-	const double		aspect_ratio = (double)WIN_WIDTH / (double)WIN_HEIGHT;
-	const double		rad_fov = cam->fov * M_PI / 180;
+	static const t_vector	world_up = {0, 1, 0};
+	const double			rad_fov = cam->fov * M_PI / 180;
+	const double 			viewport_height = 2 * tan(rad_fov / 2);
+	const double			viewport_width = win_data->aspect_ratio * viewport_height;
 
-	cam->viewport_height = 2 * tan(rad_fov / 2);
-	cam->viewport_width = aspect_ratio * cam->viewport_height;
 	cam->forward = vec_normalize(cam->normal);
 	if (are_vectors_parallel(cam->forward, world_up))
 		cam->right = (t_vector){1, 0, 0};
 	else
 		cam->right = vec_normalize(vec_cross(world_up, cam->forward));
 	cam->up = vec_normalize(vec_cross(cam->forward, cam->right));
+	cam->right_by_half_viewport_width = vec_scale(viewport_width / 2, cam->right);
+	cam->up_by_half_viewport_height = vec_scale(viewport_height / 2, cam->up);
 }

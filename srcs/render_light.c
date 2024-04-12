@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 16:44:25 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 19:56:43 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 	t_light			*light;
 	t_vector		light_dir;
 	double			light_distance;
-	t_hit			*tmp;
+	t_hit			*is_shadowed;
 	uint16_t		i;
 	double			angle_of_incidence_cosine;
 	t_vector		view_dir;
@@ -59,8 +59,8 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 	{
 		light = (t_light *)lights->content;
 		light_dir = vec_normalize(vec_sub(light->center, surface_point));
-		tmp = trace_ray(scene, (t_ray){surface_point, light_dir});
-		if (vec_dot(surface_normal, light_dir) > 0 && !tmp)
+		is_shadowed = trace_ray(scene, (t_ray){surface_point, light_dir});
+		if (!is_shadowed && vec_dot(surface_normal, light_dir) > 0)
 		{
 			light_distance = vec_length(vec_sub(light->center, surface_point));
 			angle_of_incidence_cosine = vec_dot(surface_normal, light_dir);
@@ -69,7 +69,7 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 		else
 			light_component = (t_color){0, 0, 0};
 		light_contribution = blend_colors(light_contribution, light_component, light_ratios[i++]);
-		free(tmp);
+		free(is_shadowed);
 		lights = lights->next;
 	}
 	return (light_contribution);
