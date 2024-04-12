@@ -6,11 +6,11 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 19:22:59 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:10:37 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/minirt.h"
+#include "headers/minirt.h"
 
 inline t_vector	vec_add(const t_vector a, const t_vector b) //somma di vettori
 {

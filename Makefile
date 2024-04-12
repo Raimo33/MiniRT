@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/04/12 11:58:58 by craimond         ###   ########.fr        #
+#    Updated: 2024/04/12 15:11:04 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,8 @@ MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 LIBFT_DIR = libft
 LIBFT_REPO = https://github.com/Raimo33/Libft.git
 
-UTILS = $(addprefix utils/, vector_operations.c mlx_utils.c conditionals.c ft_strtok.c ft_atof.c ft_atoui.c get_next_line.c)
-SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c setup_scene.c render.c  intersections.c $(UTILS))
+UTILS = $(addprefix utils/, mlx_utils.c conditionals.c ft_strtok.c ft_atof.c ft_atoui.c ft_freematrix.c get_next_line.c math_utils.c)
+SRCS = $(addprefix srcs/, minirt.c init.c exit.c parse.c setup_scene.c render.c render_light.c render_utils.c intersections.c vector_operations.c $(UTILS))
 
 OBJS = $(SRCS:.c=.o)
 

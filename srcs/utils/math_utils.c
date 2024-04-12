@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   conditionals.c                                     :+:      :+:    :+:   */
+/*   math_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/23 21:32:50 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 14:41:50 by craimond         ###   ########.fr       */
+/*   Created: 2024/04/12 14:28:36 by craimond          #+#    #+#             */
+/*   Updated: 2024/04/12 15:10:46 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-inline bool is_comment(const char *line)
+inline double	fclamp(const double value, const double min, const double max)
 {
-	return (*line == '#');
-}
-
-inline bool	ft_isspace(const char c)
-{
-	return (ft_strchr(spaces, c) != NULL);
-}
-
-bool is_empty_line(const char *line)
-{
-	while (*line)
-	{
-		if (!ft_isspace(*line))
-			return (false);
-		line++;
-	}
-	return (true);
+	return (value < min ? min : (value > max ? max : value));
 }

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 19:13:57 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:10:09 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,29 +30,19 @@
 # include "../headers/get_next_line.h"
 # include "../headers/primitives.h"
 # include "scene.h"
+# include "utils.h"
 
 //valori ideali
-// # define WIN_WIDTH 1280
-// # define WIN_HEIGHT 720
-// # define WORLD_SIZE 100
-// # define RAYS_PER_PIXEL 300
-// # define MAX_BOUNCE 50
-// # define OCTREE_DEPTH 3
-// # define N_THREADS 8
-// # define BACKGROUND_COLOR 0x000000
-// # define ATTENUATION_FACTOR 0.8
-
-//valori di test
-# define WIN_WIDTH 1080
+# define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 # define WORLD_SIZE 1000
-# define BACKGROUND_COLOR 0x000000
 # define MAX_BOUNCE 3
 # define OCTREE_DEPTH 3
+# define N_THREADS 4
 # define ATTENUATION_FACTOR 0.8
 
 # ifndef N_THREADS
-#  define N_THREADS 2
+#  define N_THREADS 4
 # endif
 
 # if N_THREADS > WIN_HEIGHT / 2
@@ -64,6 +54,7 @@
 #  define N_THREADS 1
 # endif
 
+# define BACKGROUND_COLOR 0x000000
 # define KEY_ESC 65307
 # define KEY_SPACE 32
 
@@ -95,7 +86,6 @@ typedef struct s_thread_data
 	t_scene		*scene;
 	double		*light_ratios;
 	double		*attenuation_factors;
-	uint16_t	img_idx;
 	uint16_t	start_y;
 	uint16_t	end_y;
 }	t_thread_data;
@@ -103,27 +93,28 @@ typedef struct s_thread_data
 //TODO aggiustare i const
 void			check_args(const uint16_t argc, char **argv);
 void			init_scene(t_scene *scene);
+void			parse_scene(const int fd, t_scene *scene);
+void			setup_scene(t_scene *scene);
 void			init_window(t_mlx_data *win_data, t_scene *scene);
 void			init_hooks(t_mlx_data *win_data, t_scene *scene);
-void			parse_scene(int fd, t_scene *scene);
-void			set_bounding_box(t_shape *shape);
-void			setup_scene(t_scene *scene);
-void			render_scene(t_mlx_data *mlx_data, t_scene *scene);
-void 			ft_quit(uint8_t id, char *msg);
-int				close_win(t_hook_data *hook_data);
-bool			is_empty_line(const char *line);
-bool			is_comment(const char *line);
-bool			is_space(char c);
-double 			ft_atof(const char *str);
-uint8_t 		ft_atoui(const char *str);
-char 			*ft_strtok(char *const str, const char *const sep);
-bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
-double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
+void			render_scene(t_mlx_data *win_data, t_scene *scene);
+t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
+t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratios);
 double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
-void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t img_idx, const uint16_t x, const uint16_t y, const t_color color);
-void			my_mlx_stack_image(t_mlx_data *data);
-char			*my_mlx_get_data_addr(void *img_ptr, int32_t *bits_per_pixel, int32_t *size_line, int32_t *endian);
-double			fclamp(const double value, const double min, const double max);
+double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
+// double			intersect_ray_triangle(const t_ray ray, const t_shape *shape);
+bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
+t_point			ray_point_at_parameter(const t_ray ray, double t);
+double			*precompute_ratios(uint16_t n_elems);
+double			*precoumpute_attenuation_factors(void);
+t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, double *attenuation_factors, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
+void			set_thread_attr(pthread_attr_t *thread_attr);
+t_vector		get_rand_in_unit_sphere(void);
+t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
+void			setup_camera(t_camera *cam);
+void 			ft_quit(const uint8_t id, const char *msg);
+int 			close_win(t_hook_data *hook_data);
+void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
 
 #endif

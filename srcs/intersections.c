@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersections.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/10 17:53:13 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:07:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,26 +98,21 @@ static double	intersect_cylinder_cap(const t_ray ray, const t_cylinder *cylinder
 
 static double	intersect_cylinder_side(const t_ray ray, const t_cylinder *cylinder)
 {
-	const t_vector		oc = vec_sub(ray.origin, cylinder->center);
-
-	// Coefficients for the quadratic equation (Ax^2 + Bx + C = 0)
-    const double A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder->direction), 2);
-    const double B = 2 * (vec_dot(ray.direction, oc) - (vec_dot(ray.direction, cylinder->direction) * vec_dot(oc, cylinder->direction)));
-    const double C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder->direction), 2) - cylinder->sqr_radius;
-
-	const double discriminant = B * B - 4 * A * C;
+	const t_vector	oc = vec_sub(ray.origin, cylinder->center);
+    const double	A = vec_dot(ray.direction, ray.direction) - pow(vec_dot(ray.direction, cylinder->direction), 2);
+    const double	B = 2 * (vec_dot(ray.direction, oc) - (vec_dot(ray.direction, cylinder->direction) * vec_dot(oc, cylinder->direction)));
+    const double 	C = vec_dot(oc, oc) - pow(vec_dot(oc, cylinder->direction), 2) - cylinder->sqr_radius;
+	const double	discriminant = B * B - 4 * A * C;
 	if (discriminant < 0)
-		return (-1); // No intersection
-
-	const double sqrt_discriminant = sqrt(discriminant);
-	const double two_times_a = 2 * A;
-	const double t[2] = {
+		return (-1);
+	const double	sqrt_discriminant = sqrt(discriminant);
+	const double	two_times_a = 2 * A;
+	const double	t[2] = {
 		(-B - sqrt_discriminant) / two_times_a,
 		(-B + sqrt_discriminant) / two_times_a
 	};
 	double	valid_t = -1;
-
-	uint8_t i = 0;
+	uint8_t	i = 0;
 	while (i < 2)
 	{
 		if (t[i] > 0)
@@ -131,8 +126,6 @@ static double	intersect_cylinder_side(const t_ray ray, const t_cylinder *cylinde
 				valid_t = t[i];
 				break ;
 			}
-				//if (valid_t < 0 || t[i] < valid_t)
-					//valid_t = t[i]; // Update with the smaller positive t	
 		}
 		i++;
 	}
@@ -165,4 +158,14 @@ bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_b
             return (false);
     }
     return (true);
+}
+
+inline t_point ray_point_at_parameter(const t_ray ray, double t)
+{
+    return ((t_point)
+	{
+		.x = ray.origin.x + t * ray.direction.x,
+		.y = ray.origin.y + t * ray.direction.y,
+		.z = ray.origin.z + t * ray.direction.z
+	});
 }

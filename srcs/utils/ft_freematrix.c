@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   conditionals.c                                     :+:      :+:    :+:   */
+/*   ft_freematrix.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/23 21:32:50 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 14:41:50 by craimond         ###   ########.fr       */
+/*   Created: 2024/04/12 15:07:44 by craimond          #+#    #+#             */
+/*   Updated: 2024/04/12 15:08:11 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-inline bool is_comment(const char *line)
+void	ft_freematrix(void **matrix)
 {
-	return (*line == '#');
-}
+	void	**tmp;
 
-inline bool	ft_isspace(const char c)
-{
-	return (ft_strchr(spaces, c) != NULL);
-}
-
-bool is_empty_line(const char *line)
-{
-	while (*line)
+	tmp = matrix;
+	while (*tmp)
 	{
-		if (!ft_isspace(*line))
-			return (false);
-		line++;
+		free(*tmp);
+		tmp++;
 	}
-	return (true);
+	free(matrix);
 }

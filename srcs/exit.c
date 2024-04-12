@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 18:52:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 14:50:48 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void destroy_scene(t_scene *scene);
 static void octree_clear(t_octree *node);
 static void	free_shape(void *shape);
 
-void ft_quit(uint8_t id, char *msg)
+void ft_quit(const uint8_t id, const char *msg)
 {
 	if (errno != 0)
 		perror("miniRT");

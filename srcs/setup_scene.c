@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/11 18:55:46 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/12 14:53:44 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void		fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector box_top, t_vector box_bottom);
 static void		set_world_extremes(t_scene *scene);
+static void		set_bounding_box(t_shape *shape);
 static void		set_bb_sphere(t_shape *shape);
 static void		set_bb_cylinder(t_shape *shape);
 static void		set_bb_plane(t_shape *shape);
@@ -151,7 +152,7 @@ static void	set_world_extremes(t_scene *scene)
 	scene->world_max = world_max;
 }
 
-void	set_bounding_box(t_shape *shape)
+static void	set_bounding_box(t_shape *shape)
 {
 	void (*const	get_bb_funcs[])(t_shape *) = {&set_bb_sphere, &set_bb_cylinder, &set_bb_plane}; //deve essere lo stesso ordine dell enum type
 	const uint8_t	n_shapes = sizeof(get_bb_funcs) / sizeof(get_bb_funcs[0]);
