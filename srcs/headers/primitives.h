@@ -49,9 +49,8 @@ typedef struct s_ray
 
 typedef struct s_material
 {
-    t_color		color; //hex
-	double		shininess; // 0 (diffuse) to 1 (mirror)
-	double		roughness; // 0 (perfectly smooth) to 1 (rough)
+    t_color		color;
+	double		shininess;
 }   t_material;
 
 typedef struct s_hit
