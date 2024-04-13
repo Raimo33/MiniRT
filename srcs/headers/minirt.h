@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 23:19:13 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:09:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,13 @@
 # include "utils.h"
 
 //valori ideali
-# define WIN_WIDTH 1280
-# define WIN_HEIGHT 720
+# define WIN_SIZE 0.8
 # define WORLD_SIZE 1000
 # define OCTREE_DEPTH 3
 # define N_THREADS 4
 
 # ifndef N_THREADS
-#  define N_THREADS 4
-# endif
-
-# if N_THREADS > WIN_HEIGHT / 2
-#  undef N_THREADS
-#  define N_THREADS WIN_HEIGHT / 2
-# endif
-# if N_THREADS < 1
-#  undef N_THREADS
-#  define N_THREADS 1
+#  define N_THREADS 8
 # endif
 
 # define MAX_BOUNCE 1 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
@@ -69,10 +59,12 @@ typedef struct s_mlx_data
 	double			*viewport_x;
 	double			*viewport_y;
 	double			aspect_ratio;
+	int32_t			win_width;
+	int32_t			win_height;
 	int32_t			endian;
 	int32_t			bits_per_pixel;
 	int32_t			line_length;
-	uint16_t		current_img;
+	int16_t		current_img;
 	uint16_t		n_images;
 	uint8_t			bytes_per_pixel;
 }	t_mlx_data;
@@ -107,12 +99,11 @@ double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
 double			intersect_ray_triangle(const t_ray, const t_shape *shape);
-// double			intersect_ray_triangle(const t_ray ray, const t_shape *shape);
 bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
 t_point			ray_point_at_parameter(const t_ray ray, double t);
 double			*precompute_ratios(uint16_t n_elems);
 double			*precoumpute_attenuation_factors(void);
-void			precompute_viewports(double *viewport_x, double *viewport_y);
+void			precompute_viewports(t_mlx_data *win_data);
 t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, double *attenuation_factors, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
 void			set_thread_attr(pthread_attr_t *thread_attr);
 t_vector		get_rand_in_unit_sphere(void);

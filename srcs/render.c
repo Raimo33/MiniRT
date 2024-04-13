@@ -6,13 +6,12 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 23:24:16 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:08:04 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-//TODO implementare un blending tra i pixel vicini per velocizzare il rendering e aumentare la smoothness
 //TODO sperimentare con la keyword restrict
 //TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
 
@@ -33,7 +32,7 @@ void render_scene(t_mlx_data *win_data, t_scene *scene)
 	t_list			*cameras;
 	double			*light_ratios;
 	double			*attenuation_factors;
-	const uint16_t	lines_per_thread = roundf((float)WIN_HEIGHT / (float)N_THREADS);
+	const uint16_t	lines_per_thread = roundf((float)win_data->win_height / (float)N_THREADS);
 
 	cameras = scene->cameras;
 	light_ratios = precompute_ratios(ft_lstsize(scene->lights));
@@ -48,7 +47,8 @@ void render_scene(t_mlx_data *win_data, t_scene *scene)
 		cameras = cameras->next;
 		win_data->current_img++;
 	}
-	mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->images[win_data->current_img - 1], 0, 0);
+	win_data->current_img = win_data->n_images - 1;
+	mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->images[win_data->current_img], 0, 0);
 	pthread_attr_destroy(&thread_attr);
 	free(light_ratios);
 	free(attenuation_factors);
@@ -73,6 +73,7 @@ static void	fill_image(t_thread_data **threads_data, pthread_attr_t *thread_attr
 static void	*render_segment(void *data)
 {
 	t_thread_data	*thread_data;
+	t_mlx_data		*win_data;
 	uint16_t		y;
 	uint16_t		x;
 	t_ray			ray;
@@ -81,19 +82,21 @@ static void	*render_segment(void *data)
 	t_scene			*scene;
 
 	thread_data = (t_thread_data *)data;
+	win_data = thread_data->win_data;
 	scene = thread_data->scene;
 	y = thread_data->start_y;
 	while (y < thread_data->end_y)
 	{
+		printf("Rendering line %d\n", y);
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < win_data->win_width)
 		{
-			ray = get_ray(scene->current_camera, x, y, thread_data->win_data);
+			ray = get_ray(scene->current_camera, x, y, win_data);
 			first_hit = trace_ray(scene, ray);
 			color = ray_bouncing(scene, ray, first_hit, 1, thread_data->attenuation_factors, thread_data->light_ratios);
 			color = add_lighting(scene, color, first_hit, thread_data->light_ratios);
 			free(first_hit);
-			my_mlx_pixel_put(thread_data->win_data, x, y, color);
+			my_mlx_pixel_put(win_data, x, y, color);
 			x++;
 		}
 		y++;

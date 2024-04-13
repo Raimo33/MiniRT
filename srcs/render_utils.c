@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 23:18:47 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 12:56:09 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *l
 		threads_data[i]->attenuation_factors = attenuation_factors;
 		threads_data[i]->start_y = i * lines_per_thread;
 		if (i == N_THREADS - 1)
-			threads_data[i]->end_y = WIN_HEIGHT;
+			threads_data[i]->end_y = win_data->win_height;
 		else
 			threads_data[i]->end_y = (i + 1) * lines_per_thread;
 		i++;
@@ -105,19 +105,19 @@ double	*precoumpute_attenuation_factors(void)
 	return (attenuation_factors);
 }
 
-void	precompute_viewports(double *viewport_x, double *viewport_y)
+void	precompute_viewports(t_mlx_data *win_data)
 {
 	uint16_t	x;
 	uint16_t	y;
 
 	y = 0;
-	while (y < WIN_HEIGHT)
+	while (y < win_data->win_height)
 	{
 		x = 0;
-		while (x < WIN_WIDTH)
+		while (x < win_data->win_width)
 		{
-			viewport_x[x] = (x / (double)(WIN_WIDTH - 1)) * 2 - 1;
-			viewport_y[y] = 1 - (y / (double)(WIN_HEIGHT - 1)) * 2;
+			win_data->viewport_x[x] = (x / (double)(win_data->win_width - 1)) * 2 - 1;
+			win_data->viewport_y[y] = 1 - (y / (double)(win_data->win_height - 1)) * 2;
 			x++;
 		}
 		y++;
