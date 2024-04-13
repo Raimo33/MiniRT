@@ -51,6 +51,8 @@ typedef struct s_material
 {
     t_color		color;
 	double		shininess;
+	double		specular;
+	double		diffuse;
 }   t_material;
 
 typedef struct s_hit

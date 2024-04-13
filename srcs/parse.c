@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 11:53:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:00:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ static void	parse_shape(char *line, t_scene *scene)
 			parse_funcs[i](shape);
 			shape->material->color = parse_color(ft_strtok(NULL, spaces));
 			shape->material->shininess = ft_atof(ft_strtok(NULL, spaces));
+			shape->material->specular = ft_atof(ft_strtok(NULL, spaces));
+			shape->material->diffuse = ft_atof(ft_strtok(NULL, spaces));
 			ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 			return ;
 		}
