@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 23:41:12 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 18:53:23 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 	node->box_bottom = box_bottom;
 	node->box_top = box_top;
 	node->shapes = shapes;
+	node->n_shapes = 0;
 	//world.min a sx e world.max a dx
 	center = (t_vector){(box_top.x + box_bottom.x) / 2, (box_top.y + box_bottom.y) / 2, (box_top.z + box_bottom.z) / 2};
 	size = (t_vector){(box_top.x - box_bottom.x) / 2, (box_top.y - box_bottom.y) / 2, (box_top.z - box_bottom.z) / 2};
@@ -114,7 +115,7 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 			continue ;	
 		}
 		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
-		node->n_shapes = ft_lstsize(shapes_inside_box);
+		node->n_shapes += ft_lstsize(shapes_inside_box);
 		fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
 	}
 }

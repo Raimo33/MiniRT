@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 16:46:08 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 18:56:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 //valori ideali
 # define WIN_SIZE 0.8
 # define WORLD_SIZE 1000
-# define OCTREE_DEPTH 3
+# define OCTREE_DEPTH 2
 # define N_THREADS 8
 
 # define MAX_BOUNCE 1 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
