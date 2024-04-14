@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 10:41:19 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 14:25:42 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void		parse_triangle(t_shape *shape);
 static t_float3	parse_coord(char *str);
 static t_color	parse_color(char *str);
 static char 	*skip_commas(char *str);
+static bool		is_scene_valid(const t_scene *scene);
 
 void parse_scene(const int fd, t_scene *scene)
 {
@@ -39,6 +40,15 @@ void parse_scene(const int fd, t_scene *scene)
 		line = get_next_line(fd);
 	}
 	close(fd);
+	if (!is_scene_valid(scene))
+		ft_quit(6, "Incomplete scene");
+}
+
+static bool	is_scene_valid(const t_scene *scene)
+{
+	if (!scene->cameras || !scene->shapes || !scene->lights)
+		return (false);
+	return (true);
 }
 
 static void	parse_line(char *line, t_scene *scene)
