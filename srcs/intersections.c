@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 23:44:27 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 16:32:44 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,36 @@ double	intersect_ray_triangle(const t_ray ray, const t_shape *shape)
     if (t > EPSILON)
         return (t);
     return (-1);
+}
+
+double intersect_ray_cone(const t_ray ray, const t_shape *shape)
+{
+    t_vector	CO = vec_sub(ray.origin, shape->cone.intersection_point);
+    double		cos_alpha = cos(atan(shape->cone.radius / shape->cone.height));
+    double		cos_alpha_squared = cos_alpha * cos_alpha;
+    t_vector	V = vec_normalize(shape->cone.direction);
+    double		V_dot_d = vec_dot(V, ray.direction);
+    double		V_dot_CO = vec_dot(V, CO);
+    double 		a = V_dot_d * V_dot_d - cos_alpha_squared;
+    double		b = 2.0 * (V_dot_d * V_dot_CO - vec_dot(ray.direction, CO) * cos_alpha_squared);
+    double		c = V_dot_CO * V_dot_CO - vec_dot(CO, CO) * cos_alpha_squared;
+    double		discriminant = b * b - 4 * a * c;
+    
+	if (discriminant < 0)
+		return (-1.0);
+
+	double	sqrt_discriminant = sqrt(discriminant);
+	double	two_times_a = 2 * a;
+    double	t1 = (-b - sqrt_discriminant) / two_times_a;
+    double	t2 = (-b + sqrt_discriminant) / two_times_a;
+    
+    if (t1 > 0 && t2 > 0)
+        return (fmin(t1, t2));
+    else if (t1 > 0)
+        return (t1);
+    else if (t2 > 0)
+        return (t2);
+    return (-1.0);
 }
 
 inline bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min)

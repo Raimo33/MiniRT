@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 14:49:40 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 17:08:17 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static void		traverse_octree(const t_octree *node, const t_ray ray, t_hit *close
 static void		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit);
 static void		update_closest_hit(t_hit *closest_hit, const t_shape *shape, const double t, const t_ray ray);
 static t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point);
+static t_vector	get_cone_normal(t_cone cone, t_point point);
 static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_hit *hit_info);
 static t_color	ray_bouncing(const t_scene *scene, t_ray ray, t_hit *hit_info, const uint16_t n_bounce, const double *attenuation_factors, const double *light_ratios);
 
@@ -155,7 +156,7 @@ static void	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closes
 
 static inline void	check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
-	static double (*const	intersect[])(const t_ray, const t_shape *) = {&intersect_ray_sphere, &intersect_ray_cylinder, &intersect_ray_triangle ,&intersect_ray_plane}; //stesso ordine di enum
+	static double (*const	intersect[])(const t_ray, const t_shape *) = {&intersect_ray_sphere, &intersect_ray_cylinder, &intersect_ray_triangle, &intersect_ray_cone, &intersect_ray_plane}; //stesso ordine di enum
 	t_list	*shapes;
 	t_shape	*shape;
 	double	t;
@@ -190,6 +191,9 @@ static void	update_closest_hit(t_hit *closest_hit, const t_shape *shape, const d
 		case PLANE:
 			closest_hit->normal = shape->plane.normal;
 			break;
+		case CONE:
+			closest_hit->normal = get_cone_normal(shape->cone, closest_hit->point);
+			break;
 	}
 }
 
@@ -205,6 +209,26 @@ static inline t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point)
 		return (cylinder.direction);
 	projection = vec_add(cylinder.center, vec_scale(projection_length, cylinder.direction));
 	return(vec_normalize(vec_sub(point, projection)));
+}
+
+static inline t_vector	get_cone_normal(t_cone cone, t_point point)
+{
+	const t_vector		CO = vec_sub(point, cone.intersection_point);
+	const double		cos_alpha = cos(atan(cone.radius / cone.height));
+	const double		cos_alpha_squared = cos_alpha * cos_alpha;
+	const t_vector		V = vec_normalize(cone.direction);
+	const double		V_dot_d = vec_dot(V, CO);
+	const double		V_dot_CO = vec_dot(V, CO);
+	const double		a = V_dot_d * V_dot_d - cos_alpha_squared;
+	const double		b = 2.0 * (V_dot_d * V_dot_CO - vec_dot(CO, CO) * cos_alpha_squared);
+	const double		c = V_dot_CO * V_dot_CO - vec_dot(CO, CO) * cos_alpha_squared;
+	const double		discriminant = b * b - 4 * a * c;
+	t_vector			normal;
+
+	if (discriminant < 0)
+		return (vec_normalize(vec_sub(point, cone.intersection_point)));
+	normal = vec_normalize(vec_sub(point, vec_add(cone.intersection_point, vec_scale(-V_dot_d + sqrt(discriminant) / (2 * a), V))));
+	return (normal);
 }
 
 static t_ray	get_reflected_ray(const t_ray incoming_ray, const t_hit *hit_info)

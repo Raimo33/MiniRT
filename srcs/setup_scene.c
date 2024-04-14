@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 15:30:44 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 17:05:56 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static void		set_bb_sphere(t_shape *shape);
 static void		set_bb_cylinder(t_shape *shape);
 static void		set_bb_plane(t_shape *shape);
 static void		set_bb_triangle(t_shape *shape);
+static void		set_bb_cone(t_shape *shape);
 static t_list	*get_shapes_inside_box(t_list *shapes, t_vector box_top, t_vector box_bottom);
 static void 	set_shapes_data(t_scene *scene);
 
@@ -61,6 +62,10 @@ static void set_shapes_data(t_scene *scene)
 				cylinder->direction = vec_normalize(cylinder->direction);
 				cylinder->top_cap_center = vec_add(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
 				cylinder->bottom_cap_center = vec_sub(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
+				break ;
+			case CONE:
+				printf("Deb3\n");
+				shape->cone.direction = vec_normalize(shape->cone.direction);
 				break ;
 			default:
 				break ;
@@ -159,7 +164,7 @@ static void	set_world_extremes(t_scene *scene)
 
 static void	set_bounding_box(t_shape *shape)
 {
-	void (*const	get_bb_funcs[])(t_shape *) = {&set_bb_sphere, &set_bb_cylinder, &set_bb_triangle, &set_bb_plane}; //deve essere lo stesso ordine dell enum type
+	void (*const	get_bb_funcs[])(t_shape *) = {&set_bb_sphere, &set_bb_cylinder, &set_bb_triangle, &set_bb_cone, &set_bb_plane}; //deve essere lo stesso ordine dell enum type
 	const uint8_t	n_shapes = sizeof(get_bb_funcs) / sizeof(get_bb_funcs[0]);
 	uint8_t			i;
 
@@ -188,7 +193,7 @@ static void set_bb_plane(t_shape *shape)
 	t_vector 			u;
 	t_vector 			v;
 	t_vector 			r;
-	static const double	size = PLANE_SIZE / 2;
+	static const double	size = WORLD_SIZE / 2;
 	static const double  thickness = EPSILON;
 	
 	r = (t_vector){1, 0, 0};
@@ -296,6 +301,46 @@ static void set_bb_cylinder(t_shape *shape)
 		fmax(axis_min.z, axis_max.z) + radius_extents.z,
 	};
 
+	shape->bb_min = (t_point)bb_min;
+	shape->bb_max = (t_point)bb_max;
+}
+
+static void set_bb_cone(t_shape *shape)
+{
+	printf("Deb4\n");
+	const t_vector orientation = shape->cone.direction;
+	const t_vector base_center = shape->cone.intersection_point;
+	const double r = shape->cone.radius;
+	const double height = shape->cone.height;
+	t_vector perp1, perp2;
+
+	t_vector tip = {
+		base_center.x + orientation.x * height,
+		base_center.y + orientation.y * height,
+		base_center.z + orientation.z * height,
+	};
+
+	if (fabs(orientation.x) < fabs(orientation.y) || fabs(orientation.x) < fabs(orientation.z))
+		perp1 = (t_vector){0, -orientation.z, orientation.y};
+	else
+		perp1 = (t_vector){-orientation.y, orientation.x, 0};
+	perp1 = vec_normalize(perp1);
+	perp2 = vec_cross(orientation, perp1);
+	t_vector radius_extents = {
+		r * sqrt(perp1.x * perp1.x + perp2.x * perp2.x),
+		r * sqrt(perp1.y * perp1.y + perp2.y * perp2.y),
+		r * sqrt(perp1.z * perp1.z + perp2.z * perp2.z)
+	};
+	t_vector bb_min = {
+		fmin(fmin(base_center.x, tip.x) - radius_extents.x, base_center.x - r),
+		fmin(fmin(base_center.y, tip.y) - radius_extents.y, base_center.y - r),
+		fmin(fmin(base_center.z, tip.z) - radius_extents.z, base_center.z - r),
+	};
+	t_vector bb_max = {
+		fmax(fmax(base_center.x, tip.x) + radius_extents.x, base_center.x + r),
+		fmax(fmax(base_center.y, tip.y) + radius_extents.y, base_center.y + r),
+		fmax(fmax(base_center.z, tip.z) + radius_extents.z, base_center.z + r),
+	};
 	shape->bb_min = (t_point)bb_min;
 	shape->bb_max = (t_point)bb_max;
 }

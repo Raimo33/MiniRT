@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 14:41:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 16:57:48 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 
 //valori ideali
 # define WIN_SIZE 0.8
-# define PLANE_SIZE 1000
+# define WORLD_SIZE 1000
 # define OCTREE_DEPTH 2
 # define N_THREADS 8
 
@@ -95,6 +95,7 @@ double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
 double			intersect_ray_triangle(const t_ray, const t_shape *shape);
+double			intersect_ray_cone(const t_ray ray, const t_shape *shape);
 bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
 t_point			ray_point_at_parameter(const t_ray ray, double t);
 double			*precompute_ratios(uint16_t n_elems);
