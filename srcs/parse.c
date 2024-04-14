@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 16:00:24 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 10:41:19 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ static void		parse_amblight(t_scene *scene);
 static void		parse_light(t_scene *scene);
 static void		parse_camera(t_scene *scene);
 static void		parse_shape(char *line, t_scene *scene);
+static void		parse_material(t_material *material);
 static void		parse_sphere(t_shape *shape);
 static void		parse_plane(t_shape *shape);
 static void		parse_cylinder(t_shape *shape);
 static void		parse_triangle(t_shape *shape);
-static t_float3	parse_coord(const char *str);
-static t_color	parse_color(const char *str);
+static t_float3	parse_coord(char *str);
+static t_color	parse_color(char *str);
+static char 	*skip_commas(char *str);
 
 void parse_scene(const int fd, t_scene *scene)
 {
@@ -77,16 +79,21 @@ static void	parse_shape(char *line, t_scene *scene)
 			shape->material = (t_material *)malloc(sizeof(t_material));
 			ft_strtok(line, spaces); //per skippare la lettera
 			parse_funcs[i](shape);
-			shape->material->color = parse_color(ft_strtok(NULL, spaces));
-			shape->material->shininess = ft_atof(ft_strtok(NULL, spaces));
-			shape->material->specular = ft_atof(ft_strtok(NULL, spaces));
-			shape->material->diffuse = ft_atof(ft_strtok(NULL, spaces));
+			parse_material(shape->material);
 			ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
 			return ;
 		}
 		i++;
 	}
 	ft_quit(4, "invalid shape prefix");
+}
+
+static void	parse_material(t_material *material)
+{
+	material->color = parse_color(ft_strtok(NULL, spaces));
+	material->shininess = fmax(0, ft_atof(ft_strtok(NULL, spaces)));
+	material->specular = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
+	material->diffuse = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
 }
 
 static void	parse_amblight(t_scene *scene)
@@ -109,8 +116,8 @@ static void	parse_light(t_scene *scene)
 	light->center = parse_coord(ft_strtok(NULL, spaces));
 	light->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	light->color = parse_color(ft_strtok(NULL, spaces));
-	ft_lstadd_front(&scene->lights, ft_lstnew(light));
 	scene->n_lights++;
+	ft_lstadd_front(&scene->lights, ft_lstnew(light));
 }
 
 static void	parse_camera(t_scene *scene)
@@ -120,7 +127,7 @@ static void	parse_camera(t_scene *scene)
 	camera = (t_camera *)malloc(sizeof(t_camera));
 	camera->center = parse_coord(ft_strtok(NULL, spaces));
 	camera->normal = parse_coord(ft_strtok(NULL, spaces));
-	camera->fov = ft_atoui(ft_strtok(NULL, spaces));
+	camera->fov = clamp(ft_atoui(ft_strtok(NULL, spaces)), 0, 180);
 	ft_lstadd_front(&scene->cameras, ft_lstnew(camera));
 }
 
@@ -155,27 +162,39 @@ static void	parse_triangle(t_shape *shape)
 	shape->type = TRIANGLE;
 }
 
-static t_float3	parse_coord(const char *str)
+static t_float3	parse_coord(char *str)
 {
 	t_float3	coord;
 
-	//TODO abbellire, check syntax
+	if (!str)
+		ft_quit(5, "invalid coordinate syntax");
 	coord.x = ft_atof(str);
-	str = ft_strchr(str, ',') + 1;
+	str = skip_commas(str);
 	coord.y = ft_atof(str);
-	str = ft_strchr(str, ',') + 1;
+	str = skip_commas(str);
 	coord.z = ft_atof(str);
 	return (coord);
 }
 
-static t_color	parse_color(const char *str)
+static t_color	parse_color(char *str)
 {
 	t_color	color;
 
+	if (!str)
+		ft_quit(5, "invalid color syntax");
 	color.r = ft_atoui(str);
-	str = ft_strchr(str, ',') + 1;
+	str = skip_commas(str);
 	color.g = ft_atoui(str);
-	str = ft_strchr(str, ',') + 1;
+	str = skip_commas(str);
 	color.b = ft_atoui(str);
 	return (color);
+}
+
+static char *skip_commas(char *str)
+{
+	while (*str && *str != ',')
+		str++;
+	if (*str == '\0' || is_empty_line(str))
+		ft_quit(5, "invalid coordinate syntax");
+	return (str + 1);
 }

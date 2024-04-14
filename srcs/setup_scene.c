@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 18:53:23 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 21:52:32 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ static void set_bb_plane(t_shape *shape)
 	t_vector 			u;
 	t_vector 			v;
 	t_vector 			r;
-	static const double	size = WORLD_SIZE / 2;
+	static const double	size = PLANE_SIZE / 2;
 	static const double  thickness = EPSILON;
 	
 	r = (t_vector){1, 0, 0};

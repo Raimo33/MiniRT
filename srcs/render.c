@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 15:34:37 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 21:42:02 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static void	*render_segment(void *data)
 			if (first_hit)
 			{
 				perfect_reflection = get_reflected_ray(ray, first_hit).direction; //TODO ottimizzabile
-				color = add_lighting(scene, color, first_hit, thread_data->light_ratios, first_hit->material, perfect_reflection);
+				color = add_lighting(scene, color, first_hit, thread_data->light_ratios, perfect_reflection);
 				free(first_hit);
 			}
 			my_mlx_pixel_put(win_data, x, y, color);

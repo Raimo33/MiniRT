@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 18:56:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/13 21:52:22 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@
 
 //valori ideali
 # define WIN_SIZE 0.8
-# define WORLD_SIZE 1000
-# define OCTREE_DEPTH 2
+# define PLANE_SIZE 1000
+# define OCTREE_DEPTH 4
 # define N_THREADS 8
 
 # define MAX_BOUNCE 1 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
@@ -90,7 +90,7 @@ void			init_window(t_mlx_data *win_data, t_scene *scene);
 void			init_hooks(t_mlx_data *win_data, t_scene *scene);
 void			render_scene(t_mlx_data *win_data, t_scene *scene);
 t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
-t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratios, const t_material *material, const t_vector perfect_reflection);
+t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratio, const t_vector perfect_reflection);
 double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
