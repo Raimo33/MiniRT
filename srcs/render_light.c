@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 19:07:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 19:10:05 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static t_color get_light_component(t_color light_color, const double brightness,
 {
 	const double diffuse = material->diffuse * angle_of_incidence_cosine * brightness;
 	const double specular = material->specular * (pow(vec_dot(perfect_reflection, view_dir), material->shininess) * brightness);
-	const double total_light = fmin(diffuse + specular, 1.0f);
+	const double total_light = fclamp(diffuse + specular, 0.0f, 1.0f);
 
 	light_color.r *= total_light;
 	light_color.g *= total_light;
