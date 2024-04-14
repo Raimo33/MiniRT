@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 17:05:56 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 17:14:30 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ static void set_shapes_data(t_scene *scene)
 				cylinder->bottom_cap_center = vec_sub(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
 				break ;
 			case CONE:
-				printf("Deb3\n");
 				shape->cone.direction = vec_normalize(shape->cone.direction);
 				break ;
 			default:
@@ -307,7 +306,6 @@ static void set_bb_cylinder(t_shape *shape)
 
 static void set_bb_cone(t_shape *shape)
 {
-	printf("Deb4\n");
 	const t_vector orientation = shape->cone.direction;
 	const t_vector base_center = shape->cone.intersection_point;
 	const double r = shape->cone.radius;

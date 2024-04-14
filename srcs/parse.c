@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 17:05:09 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 17:14:26 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,6 @@ static void	parse_cylinder(t_shape *shape)
 
 static void	parse_cone(t_shape *shape)
 {
-	printf("Deb1\n");
 	shape->cone.intersection_point = parse_coord(ft_strtok(NULL, spaces));
 	shape->cone.direction = parse_coord(ft_strtok(NULL, spaces));
 	shape->cone.height = ft_atof(ft_strtok(NULL, spaces));
