@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 10:19:28 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 15:25:42 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ void	check_args(const uint16_t argc, char **argv)
 
 void	init_scene(t_scene *scene)
 {
-	scene->amblight.brightness = 0;
-	scene->amblight.color = (t_color){0, 0, 0};
+	scene->amblight = NULL;
 	scene->current_camera = NULL;
 	scene->cameras = NULL;
 	scene->lights = NULL;

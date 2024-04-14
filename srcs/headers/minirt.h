@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 14:25:24 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 14:41:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 //valori ideali
 # define WIN_SIZE 0.8
 # define PLANE_SIZE 1000
-# define OCTREE_DEPTH 4
+# define OCTREE_DEPTH 2
 # define N_THREADS 8
 
 # define MAX_BOUNCE 1 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
@@ -102,7 +102,7 @@ double			*precoumpute_attenuation_factors(void);
 void			precompute_viewports(t_mlx_data *win_data);
 t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, double *attenuation_factors, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
 void			set_thread_attr(pthread_attr_t *thread_attr);
-t_vector		get_rand_in_unit_sphere(void);
+// t_vector		get_rand_in_unit_sphere(void);
 t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
 void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
 void 			ft_quit(const uint8_t id, const char *msg);

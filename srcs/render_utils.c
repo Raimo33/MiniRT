@@ -6,31 +6,31 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 12:56:09 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 14:41:31 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-t_vector	get_rand_in_unit_sphere(void) //metodo di Marsaglia (meno leggibile ma piu' efficiente)
-{
-    double		u;
-	double		v;
-	double		s;
-    t_vector	p;
+// t_vector	get_rand_in_unit_sphere(void) //metodo di Marsaglia (meno leggibile ma piu' efficiente)
+// {
+//     double		u;
+// 	double		v;
+// 	double		s;
+//     t_vector	p;
 
-    do {
-        u = 2.0 * ((double)rand() / RAND_MAX) - 1.0;
-        v = 2.0 * ((double)rand() / RAND_MAX) - 1.0;
-        s = u*u + v*v;
-    } while (s >= 1 || s == 0);
+//     do {
+//         u = 2.0 * ((double)rand() / RAND_MAX) - 1.0;
+//         v = 2.0 * ((double)rand() / RAND_MAX) - 1.0;
+//         s = u*u + v*v;
+//     } while (s >= 1 || s == 0);
 
-    double multiplier = 2 * sqrt(1 - s);
-    p.x = u * multiplier;
-    p.y = v * multiplier;
-    p.z = 1 - 2 * s;
-    return (p);
-}
+//     double multiplier = 2 * sqrt(1 - s);
+//     p.x = u * multiplier;
+//     p.y = v * multiplier;
+//     p.z = 1 - 2 * s;
+//     return (p);
+// }
 
 void	set_thread_attr(pthread_attr_t *thread_attr)
 {

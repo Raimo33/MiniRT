@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 21:56:44 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 15:10:51 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ t_color	add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info,
 	static const double	reciproca1255 = 1.0f / 255.0f;
 
 	light_component = compute_lights_contribution(scene, hit_info, light_ratios, perfect_reflection);
-	light_component = blend_colors(light_component, scene->amblight.ambient, 0.3f); //ratio 80/20 tra luce e ambient
-	//TODO la divisione per 255 abbassa troppo la luminosita'
+	light_component = blend_colors(light_component, scene->amblight->ambient, 0.3f); //ratio 70/30 tra luce e ambient
 	color.r *= (double)light_component.r * reciproca1255;
 	color.g *= (double)light_component.g * reciproca1255;
 	color.b *= (double)light_component.b * reciproca1255;
@@ -75,7 +74,7 @@ static t_color get_light_component(t_color color, const double brightness, const
 {
 	const double diffuse = material->diffuse * angle_of_incidence_cosine * brightness; //brigthness sarebbe in realta' la intensita della diffuse della luce
 	const double specular = material->specular * pow(vec_dot(perfect_reflection, view_dir), material->shininess) * brightness;//brigthness sarebbe in realta' la intensita della specular della luce
-	const double total_light = fclamp(diffuse + specular, 0, 1);
+	const double total_light = fclamp(diffuse + specular, 0.0f, 1.0f);
 
 	color.r *= total_light;
 	color.g *= total_light;

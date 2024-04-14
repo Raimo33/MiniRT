@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 14:25:42 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 15:26:09 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void parse_scene(const int fd, t_scene *scene)
 {
 	char	*line;
 
+	
 	line = get_next_line(fd);
     while (line)
 	{
@@ -46,7 +47,7 @@ void parse_scene(const int fd, t_scene *scene)
 
 static bool	is_scene_valid(const t_scene *scene)
 {
-	if (!scene->cameras || !scene->shapes || !scene->lights)
+	if (!scene->cameras || !scene->shapes || !scene->lights || !scene->amblight)
 		return (false);
 	return (true);
 }
@@ -108,13 +109,14 @@ static void	parse_material(t_material *material)
 
 static void	parse_amblight(t_scene *scene)
 {
-	t_amblight	amblight;
+	t_amblight *amblight;
 
-	amblight.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
-	amblight.color = parse_color(ft_strtok(NULL, spaces));
-	amblight.ambient.r = amblight.color.r * amblight.brightness;
-	amblight.ambient.g = amblight.color.g * amblight.brightness;
-	amblight.ambient.b = amblight.color.b * amblight.brightness;
+	amblight = (t_amblight *)malloc(sizeof(t_amblight));
+	amblight->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
+	amblight->color = parse_color(ft_strtok(NULL, spaces));
+	amblight->ambient.r = amblight->color.r * amblight->brightness;
+	amblight->ambient.g = amblight->color.g * amblight->brightness;
+	amblight->ambient.b = amblight->color.b * amblight->brightness;
 	scene->amblight = amblight;
 }
 

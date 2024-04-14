@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 21:42:02 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 14:49:40 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static void	*render_segment(void *data)
 	y = thread_data->start_y;
 	while (y < thread_data->end_y)
 	{
-		printf("Rendering line %d\n", y);
+		// printf("Rendering line %d\n", y);
 		x = 0;
 		while (x < win_data->win_width)
 		{

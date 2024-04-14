@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/13 21:52:32 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 15:30:44 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,41 +247,57 @@ static void set_bb_plane(t_shape *shape)
 }
 
 //axis aligned bounding box for cylinder
-static void	set_bb_cylinder(t_shape *shape)
+static void set_bb_cylinder(t_shape *shape)
 {
 	const t_vector	orientation = shape->cylinder.direction;
 	const t_vector	center = shape->cylinder.center;
+	const double	r = shape->cylinder.radius;
+	const double	half_height = shape->cylinder.half_height;
+	t_vector 		perp1, perp2;
 
-	const double r = shape->cylinder.radius;
-	const double half_height = shape->cylinder.half_height;
+	if (fabs(orientation.x) < fabs(orientation.y) || fabs(orientation.x) < fabs(orientation.z))
+		perp1 = (t_vector){0, -orientation.z, orientation.y};
+	else
+		perp1 = (t_vector){-orientation.y, orientation.x, 0};
 
-	t_vector	orientation_by_height;
+	perp1 = vec_normalize(perp1);
+	perp2 = vec_cross(orientation, perp1);
 
-	orientation_by_height.x = orientation.x * half_height;
-	orientation_by_height.y = orientation.y * half_height;
-	orientation_by_height.z = orientation.z * half_height;
-
-	t_vector axis_max = (t_vector){
-        center.x + orientation_by_height.x,
-        center.y + orientation_by_height.y,
-        center.z + orientation_by_height.z,
-	};
-	t_vector axis_min = (t_vector){
-        center.x - orientation_by_height.x,
-        center.y - orientation_by_height.y,
-        center.z - orientation_by_height.z,
+	// Calculate extremes along the cylinder axis
+	t_vector axis_max = {
+		center.x + orientation.x * half_height,
+		center.y + orientation.y * half_height,
+		center.z + orientation.z * half_height,
 	};
 
-   	axis_min.x = fmin(axis_min.x, center.x) - r;
-	axis_min.y = fmin(axis_min.y, center.y) - r;
-	axis_min.z = fmin(axis_min.z, center.z) - r;
+	t_vector axis_min = {
+		center.x - orientation.x * half_height,
+		center.y - orientation.y * half_height,
+		center.z - orientation.z * half_height,
+	};
 
-	axis_max.x = fmax(axis_max.x, center.x) + r;
-	axis_max.y = fmax(axis_max.y, center.y) + r;
-	axis_max.z = fmax(axis_max.z, center.z) + r;
+	// Adjust for the radius along the perpendicular directions
+	// This considers the cylinder's rotation and its impact on the AABB
+	t_vector radius_extents = {
+		r * sqrt(perp1.x * perp1.x + perp2.x * perp2.x),
+		r * sqrt(perp1.y * perp1.y + perp2.y * perp2.y),
+		r * sqrt(perp1.z * perp1.z + perp2.z * perp2.z)
+	};
 
-	shape->bb_min = (t_point)axis_min;
-	shape->bb_max = (t_point)axis_max;
+	// Update min and max taking into account the radius in all directions
+	t_vector bb_min = {
+		fmin(axis_min.x, axis_max.x) - radius_extents.x,
+		fmin(axis_min.y, axis_max.y) - radius_extents.y,
+		fmin(axis_min.z, axis_max.z) - radius_extents.z,
+	};
+	t_vector bb_max = {
+		fmax(axis_min.x, axis_max.x) + radius_extents.x,
+		fmax(axis_min.y, axis_max.y) + radius_extents.y,
+		fmax(axis_min.z, axis_max.z) + radius_extents.z,
+	};
+
+	shape->bb_min = (t_point)bb_min;
+	shape->bb_max = (t_point)bb_max;
 }
 
 static void	set_bb_triangle(t_shape *shape)
