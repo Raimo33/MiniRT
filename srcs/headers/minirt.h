@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 19:03:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 20:03:15 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # define OCTREE_DEPTH 4
 # define N_THREADS 8
 
-# define MAX_BOUNCE 1 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
+# define MAX_BOUNCE 4 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
 # define BOUNCE_ATTENUATION_FACTOR 0.8
 # define BACKGROUND_COLOR 0x000000
 # define KEY_ESC 65307
@@ -60,7 +60,7 @@ typedef struct s_mlx_data
 	int32_t			endian;
 	int32_t			bits_per_pixel;
 	int32_t			line_length;
-	int16_t		current_img;
+	int16_t			current_img;
 	uint16_t		n_images;
 	uint8_t			bytes_per_pixel;
 }	t_mlx_data;
@@ -90,7 +90,7 @@ void			init_window(t_mlx_data *win_data, t_scene *scene);
 void			init_hooks(t_mlx_data *win_data, t_scene *scene);
 void			render_scene(t_mlx_data *win_data, t_scene *scene);
 t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
-t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratio, const t_vector perfect_reflection);
+t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratio);
 double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);

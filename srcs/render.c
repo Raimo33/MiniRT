@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 17:08:17 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 19:58:28 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ static void	*render_segment(void *data)
 	t_color			color;
 	t_hit			*first_hit;
 	t_scene			*scene;
-	t_vector		perfect_reflection;
 
 	thread_data = (t_thread_data *)data;
 	win_data = thread_data->win_data;
@@ -97,12 +96,9 @@ static void	*render_segment(void *data)
 			first_hit = trace_ray(scene, ray);
 			color = ray_bouncing(scene, ray, first_hit, 1, thread_data->attenuation_factors, thread_data->light_ratios);
 			if (first_hit)
-			{
-				perfect_reflection = get_reflected_ray(ray, first_hit).direction; //TODO ottimizzabile
-				color = add_lighting(scene, color, first_hit, thread_data->light_ratios, perfect_reflection);
-				free(first_hit);
-			}
+				color = add_lighting(scene, color, first_hit, thread_data->light_ratios);
 			my_mlx_pixel_put(win_data, x, y, color);
+			free(first_hit);
 			x++;
 		}
 		y++;
