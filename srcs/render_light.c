@@ -6,14 +6,14 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 17:55:03 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/14 19:07:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
 static t_color		compute_lights_contribution(const t_scene *scene, const t_hit *hit_info, const double *light_ratios, const t_vector perfect_reflection);
-static t_color 		get_light_component(t_color color, const double brightness, const double angle_of_incidence_cosine, const t_vector view_dir, const t_material *material, const t_vector perfect_reflection);
+static t_color 		get_light_component(t_color light_color, const double brightness, const double angle_of_incidence_cosine, const t_vector view_dir, const t_material *material, const t_vector perfect_reflection);
 
 t_color	add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratios, const t_vector perfect_reflection)
 {
@@ -25,6 +25,7 @@ t_color	add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info,
 	color.r *= (double)light_component.r * reciproca1255;
 	color.g *= (double)light_component.g * reciproca1255;
 	color.b *= (double)light_component.b * reciproca1255;
+
 	return (color);
 }
 
@@ -70,15 +71,15 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 }
 
 //full phong reflectin model
-static t_color get_light_component(t_color color, const double brightness, const double angle_of_incidence_cosine, const t_vector view_dir, const t_material *material, const t_vector perfect_reflection)
+static t_color get_light_component(t_color light_color, const double brightness, const double angle_of_incidence_cosine, const t_vector view_dir, const t_material *material, const t_vector perfect_reflection)
 {
-	const double diffuse = material->diffuse * angle_of_incidence_cosine * brightness; //brigthness sarebbe in realta' la intensita della diffuse della luce
-	const double specular = material->specular * pow(vec_dot(perfect_reflection, view_dir), material->shininess) * brightness;//brigthness sarebbe in realta' la intensita della specular della luce
-	const double total_light = fclamp(diffuse + specular, 0.0f, 1.0f);
+	const double diffuse = material->diffuse * angle_of_incidence_cosine * brightness;
+	const double specular = material->specular * (pow(vec_dot(perfect_reflection, view_dir), material->shininess) * brightness);
+	const double total_light = fmin(diffuse + specular, 1.0f);
 
-	color.r *= total_light;
-	color.g *= total_light;
-	color.b *= total_light;
-	return (color);
+	light_color.r *= total_light;
+	light_color.g *= total_light;
+	light_color.b *= total_light;
+	return (light_color);
 }
 
