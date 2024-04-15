@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 17:14:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 		node->n_shapes = ft_lstsize(shapes);
 		return ;
 	}
-	node->children = (t_octree **)malloc(sizeof(t_octree *) * 8);
+	node->children = (t_octree **)malloc_p(sizeof(t_octree *) * 8);
 	node->box_bottom = box_bottom;
 	node->box_top = box_top;
 	node->shapes = shapes;
@@ -118,7 +118,7 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 			node->children[i] = NULL;
 			continue ;	
 		}
-		node->children[i] = (t_octree *)malloc(sizeof(t_octree));
+		node->children[i] = (t_octree *)malloc_p(sizeof(t_octree));
 		node->n_shapes += ft_lstsize(shapes_inside_box);
 		fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
 	}
@@ -126,9 +126,10 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 
 static t_list *get_shapes_inside_box(t_list *shapes, t_point box_top, t_point box_bottom)
 {
-    t_list  *inside_shapes = NULL;
+    t_list  *inside_shapes;
 	t_shape *current_shape;
 
+	inside_shapes = NULL;
     while (shapes)
     {
         current_shape = (t_shape *)shapes->content;

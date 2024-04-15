@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 15:25:42 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	init_scene(t_scene *scene)
 	scene->lights = NULL;
 	scene->n_lights = 0;
 	scene->shapes = NULL;
-	scene->octree = (t_octree *)malloc(sizeof(t_octree));	
+	scene->octree = (t_octree *)malloc_p(sizeof(t_octree));	
 	scene->world_max.x = 0;
 	scene->world_max.y = 0;
 }
@@ -48,8 +48,8 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");
 	win_data->n_images = ft_lstsize(scene->cameras);
-	win_data->images = (void **)malloc(sizeof(void *) * win_data->n_images);
-	win_data->addrresses = (char **)malloc(sizeof(char *) * win_data->n_images);
+	win_data->images = (void **)malloc_p(sizeof(void *) * win_data->n_images);
+	win_data->addrresses = (char **)malloc_p(sizeof(char *) * win_data->n_images);
 	i = 0;
 	while (i < win_data->n_images)
 	{
@@ -63,8 +63,8 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 	win_data->current_img = 0;
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 	win_data->aspect_ratio = (double)win_data->win_width / (double)win_data->win_height;
-	win_data->viewport_x = (double *)malloc(sizeof(double) * win_data->win_width);
-	win_data->viewport_y = (double *)malloc(sizeof(double) * win_data->win_height);
+	win_data->viewport_x = (double *)malloc_p(sizeof(double) * win_data->win_width);
+	win_data->viewport_y = (double *)malloc_p(sizeof(double) * win_data->win_height);
 	precompute_viewports(win_data);
 }
 
@@ -72,7 +72,7 @@ void init_hooks(t_mlx_data *win_data, t_scene *scene)
 {
 	t_hook_data *hook_data;
 	
-	hook_data = malloc(sizeof(t_hook_data));
+	hook_data = malloc_p(sizeof(t_hook_data));
 	if (!hook_data)
 		ft_quit(3, "hook data initialization failed");
 	hook_data->win_data = win_data;

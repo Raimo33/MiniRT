@@ -6,11 +6,11 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:55:38 by egualand          #+#    #+#             */
-/*   Updated: 2024/03/23 22:06:30 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:44:12 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../headers/get_next_line.h"
+#include "../headers/minirt.h"
 
 void	free_null(char **ptr)
 {
@@ -84,7 +84,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > MAX_FD)
 		return (NULL);
-	read_return = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	read_return = (char *)malloc_p(sizeof(char) * BUFFER_SIZE + 1);
 	if (!read_return)
 		return (NULL);
 	if (!buffer[fd])

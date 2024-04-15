@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:55:38 by egualand          #+#    #+#             */
-/*   Updated: 2023/11/19 17:23:46 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > MAX_FD)
 		return (NULL);
-	read_return = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	read_return = (char *)malloc_p(sizeof(char) * BUFFER_SIZE + 1);
 	if (!read_return)
 		return (NULL);
 	if (!buffer[fd])

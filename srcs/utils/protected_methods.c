@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   protected_methods.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 14:53:23 by egualand          #+#    #+#             */
-/*   Updated: 2024/04/15 18:43:54 by craimond         ###   ########.fr       */
+/*   Created: 2024/04/15 18:38:50 by craimond          #+#    #+#             */
+/*   Updated: 2024/04/15 18:46:50 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "../headers/minirt.h"
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <stddef.h>
-# include "../../libft/libft.h"
+void	*malloc_p(size_t size)
+{
+	void	*ptr;
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1000
-# endif
-
-# define MAX_FD 4096
-
-char	*get_next_line(int fd);
-
-#endif
+	ptr = malloc(size);
+	if (!ptr)
+		ft_quit(1, "fatal: failed to allocate memory");
+	return (ptr);
+}

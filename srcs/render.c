@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 19:58:28 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static void	*render_segment(void *data)
 	y = thread_data->start_y;
 	while (y < thread_data->end_y)
 	{
-		// printf("Rendering line %d\n", y);
+		printf("Rendering line %d\n", y);
 		x = 0;
 		while (x < win_data->win_width)
 		{
@@ -119,7 +119,7 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y, co
 
 t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
 {
-    t_hit		*closest_hit = (t_hit *)malloc(sizeof(t_hit));
+    t_hit		*closest_hit = (t_hit *)malloc_p(sizeof(t_hit));
 
 	*closest_hit = (t_hit)
 	{

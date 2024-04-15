@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 19:58:11 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:02:06 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 		else
 			light_component = (t_color){0, 0, 0};
 		light_contribution = blend_colors(light_contribution, light_component, light_ratios[i++]);
+		free(tmp);
 		lights = lights->next;
 	}
 	return (light_contribution);

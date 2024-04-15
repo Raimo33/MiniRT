@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 14:50:48 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:37:11 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ int close_win(t_hook_data *hook_data)
 	i = 0;
 	while (i < win_data->n_images)
 		mlx_destroy_image(win_data->mlx, win_data->images[i++]);
+	free(win_data->images);
+	free(win_data->addrresses);
+	free(win_data->viewport_x);
+	free(win_data->viewport_y);
 	mlx_destroy_window(win_data->mlx, win_data->win);
 	mlx_destroy_display(win_data->mlx);
 	free(win_data->mlx);
@@ -44,27 +48,25 @@ int close_win(t_hook_data *hook_data)
 }
 
 static void	octree_clear(t_octree *node)
-{
+{	
 	if (!node)
 		return ;
 	if (node->children)
 	{
 		for (uint8_t i = 0; i < 8; i++)
-		{
 			octree_clear(node->children[i]);
-			node->children[i] = NULL;
-		}
 		free(node->children);
 	}
+	ft_lstclear(&node->shapes, &free_shape);
 	free(node);
 }
 
 static void destroy_scene(t_scene *scene)
 {
-	ft_lstclear(&scene->shapes, &free_shape);
+	octree_clear(scene->octree);
 	ft_lstclear(&scene->lights, &free);
 	ft_lstclear(&scene->cameras, &free);
-	octree_clear(scene->octree);
+	free(scene->amblight);
 }
 
 static void	free_shape(void *shape)
@@ -73,5 +75,5 @@ static void	free_shape(void *shape)
 	
 	s = (t_shape *)shape;
 	free(s->material);
-	free(s);
+	s->material = NULL;
 }

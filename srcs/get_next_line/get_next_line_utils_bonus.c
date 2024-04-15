@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 15:02:00 by egualand          #+#    #+#             */
-/*   Updated: 2023/11/05 13:46:23 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strdup(const char *s)
 	char	*dst;
 	int		i;
 
-	dst = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	dst = malloc_p(sizeof(char) * (ft_strlen(s) + 1));
 	if (!dst)
 		return (NULL);
 	i = 0;
@@ -50,7 +50,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
-	str = (char *)malloc(sizeof(char) * size);
+	str = (char *)malloc_p(sizeof(char) * size);
 	if (!str)
 		return (NULL);
 	i = -1;
@@ -78,9 +78,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (len > (s_len - start))
 		len = (s_len - start);
 	if (start == s_len)
-		sub = (char *)malloc(sizeof(char));
+		sub = (char *)malloc_p(sizeof(char));
 	else
-		sub = (char *)malloc((sizeof(char) * len) + 1);
+		sub = (char *)malloc_p((sizeof(char) * len) + 1);
 	if (sub == NULL)
 		return (NULL);
 	while (i < len && s[start] != '\0' && start < s_len)

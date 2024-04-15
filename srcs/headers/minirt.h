@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 20:03:15 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:47:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@
 # include "../../libft/libft.h"
 # include "../headers/get_next_line.h"
 # include "../headers/primitives.h"
-# include "scene.h"
 # include "utils.h"
+# include "scene.h"
 
 //valori ideali
-# define WIN_SIZE 0.8
+# define WIN_SIZE 0.6
 # define WORLD_SIZE 1000
 # define OCTREE_DEPTH 4
 # define N_THREADS 8

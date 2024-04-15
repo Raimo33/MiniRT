@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 14:41:31 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *l
 	uint16_t		i;
 	t_thread_data	**threads_data;
 
-	threads_data = (t_thread_data **)malloc((N_THREADS + 1) * sizeof(t_thread_data *));
+	threads_data = (t_thread_data **)malloc_p((N_THREADS + 1) * sizeof(t_thread_data *));
 	i = 0;
 	while (i < N_THREADS)
 	{
-		threads_data[i] = (t_thread_data *)malloc(sizeof(t_thread_data));
+		threads_data[i] = (t_thread_data *)malloc_p(sizeof(t_thread_data));
 		threads_data[i]->scene = scene;
 		threads_data[i]->win_data = win_data;
 		threads_data[i]->light_ratios = light_ratios;
@@ -71,7 +71,7 @@ double	*precompute_ratios(uint16_t n_elems)
 	uint16_t	i;
 	double 		*ratios;
 	
-	ratios = (double *)malloc(n_elems * sizeof(double));
+	ratios = (double *)malloc_p(n_elems * sizeof(double));
 	ratios[0] = 1.0f;
 	i = 1;
 	while (i < n_elems)
@@ -88,7 +88,7 @@ double	*precoumpute_attenuation_factors(void)
 	double		*attenuation_factors;
 	double		safety_limit = EPSILON * 5;
 
-	attenuation_factors = (double *)malloc((MAX_BOUNCE + 1) * sizeof(double));
+	attenuation_factors = (double *)malloc_p((MAX_BOUNCE + 1) * sizeof(double));
 	attenuation_factors[0] = 1.0f;
 	i = 1;
 	while (i <= MAX_BOUNCE)

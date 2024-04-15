@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 19:35:11 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ static void	parse_shape(char *line, t_scene *scene)
 	{
 		if (ft_strncmp(line, prefixes[i], 2) == 0)
 		{
-			shape = (t_shape *)malloc(sizeof(t_shape));
-			shape->material = (t_material *)malloc(sizeof(t_material));
+			shape = (t_shape *)malloc_p(sizeof(t_shape));
+			shape->material = (t_material *)malloc_p(sizeof(t_material));
 			ft_strtok(line, spaces); //per skippare la lettera
 			parse_funcs[i](shape);
 			parse_material(shape->material);
@@ -112,7 +112,7 @@ static void	parse_amblight(t_scene *scene)
 {
 	t_amblight *amblight;
 
-	amblight = (t_amblight *)malloc(sizeof(t_amblight));
+	amblight = (t_amblight *)malloc_p(sizeof(t_amblight));
 	amblight->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	amblight->color = parse_color(ft_strtok(NULL, spaces));
 	amblight->ambient.r = amblight->color.r * amblight->brightness;
@@ -125,7 +125,7 @@ static void	parse_light(t_scene *scene)
 {
 	t_light		*light;
 
-	light = (t_light *)malloc(sizeof(t_light));
+	light = (t_light *)malloc_p(sizeof(t_light));
 	light->center = parse_coord(ft_strtok(NULL, spaces));
 	light->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	light->color = parse_color(ft_strtok(NULL, spaces));
@@ -137,7 +137,7 @@ static void	parse_camera(t_scene *scene)
 {
 	t_camera	*camera;
 	
-	camera = (t_camera *)malloc(sizeof(t_camera));
+	camera = (t_camera *)malloc_p(sizeof(t_camera));
 	camera->center = parse_coord(ft_strtok(NULL, spaces));
 	camera->normal = parse_coord(ft_strtok(NULL, spaces));
 	camera->fov = clamp(ft_atoui(ft_strtok(NULL, spaces)), 0, 180);
