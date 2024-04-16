@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/16 14:44:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ static void	parse_material(t_material *material)
 	material->shininess = ft_atof(ft_strtok(NULL, spaces));
 	material->specular = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
 	material->diffuse = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
+	material->is_checkerboard = (ft_strncmp(ft_strtok(NULL, spaces), "true", 12) == 0);
 }
 
 static void	parse_amblight(t_scene *scene)

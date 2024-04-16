@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/15 18:02:06 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/16 16:00:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 		angle_of_incidence_cosine = vec_dot(surface_normal, light_dir);
 		perfect_light_reflection = vec_normalize(vec_sub(vec_scale(2 * angle_of_incidence_cosine, surface_normal), light_dir));
 		if ((!tmp || object_distance > light_distance ) && angle_of_incidence_cosine > 0)
-			light_component = get_light_component(light->color, light->brightness, angle_of_incidence_cosine, view_dir, hit_info->material, perfect_light_reflection);
+			light_component = get_light_component(light->color, light->brightness, angle_of_incidence_cosine, view_dir, hit_info->shape->material, perfect_light_reflection);
 		else
 			light_component = (t_color){0, 0, 0};
 		light_contribution = blend_colors(light_contribution, light_component, light_ratios[i++]);

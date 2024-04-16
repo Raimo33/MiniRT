@@ -53,15 +53,8 @@ typedef struct s_material
 	double		shininess;
 	double		specular;
 	double		diffuse;
+	bool		is_checkerboard;
 }   t_material;
-
-typedef struct s_hit
-{
-    t_point     point;
-    t_vector    normal;
-    double       distance;
-    t_material	*material;
-}   t_hit;
 
 t_vector	vec_add(const t_vector a, const t_vector b);
 t_vector	vec_add(const t_vector a, const t_vector b);

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 16:32:05 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/16 16:19:37 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,13 @@ typedef struct s_shape
 	t_point	bb_min;
 	t_point	bb_max;
 }	t_shape;
+
+typedef struct s_hit
+{
+    t_point     point;
+    t_vector    normal;
+    double      distance;
+    t_shape		*shape;
+}   t_hit;
 
 #endif

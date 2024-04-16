@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/15 18:47:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/16 17:49:49 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,15 @@
 # define OCTREE_DEPTH 4
 # define N_THREADS 8
 
-# define MAX_BOUNCE 4 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
+# define MAX_BOUNCE 0 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
 # define BOUNCE_ATTENUATION_FACTOR 0.8
 # define BACKGROUND_COLOR 0x000000
 # define KEY_ESC 65307
 # define KEY_SPACE 32
+
+# define CHECKERBOARD_WIDTH 10
+# define CHECKERBOARD_COLOR1 0x000000
+# define CHECKERBOARD_COLOR2 0xFFFFFF
 
 static const char		spaces[] = " \t\n\v\f\r";
 
