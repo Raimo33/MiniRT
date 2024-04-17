@@ -6,31 +6,11 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 10:56:13 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
-
-// t_vector	get_rand_in_unit_sphere(void) //metodo di Marsaglia (meno leggibile ma piu' efficiente)
-// {
-//     double		u;
-// 	double		v;
-// 	double		s;
-//     t_vector	p;
-
-//     do {
-//         u = 2.0 * ((double)rand() / RAND_MAX) - 1.0;
-//         v = 2.0 * ((double)rand() / RAND_MAX) - 1.0;
-//         s = u*u + v*v;
-//     } while (s >= 1 || s == 0);
-
-//     double multiplier = 2 * sqrt(1 - s);
-//     p.x = u * multiplier;
-//     p.y = v * multiplier;
-//     p.z = 1 - 2 * s;
-//     return (p);
-// }
 
 void	set_thread_attr(pthread_attr_t *thread_attr)
 {
@@ -40,7 +20,7 @@ void	set_thread_attr(pthread_attr_t *thread_attr)
 	pthread_attr_setdetachstate(thread_attr, PTHREAD_CREATE_JOINABLE);
 }
 
-t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, double *attenuation_factors, uint16_t lines_per_thread, pthread_attr_t *thread_attr)
+t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, uint16_t lines_per_thread, pthread_attr_t *thread_attr)
 {
 	uint16_t		i;
 	t_thread_data	**threads_data;
@@ -53,7 +33,6 @@ t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *l
 		threads_data[i]->scene = scene;
 		threads_data[i]->win_data = win_data;
 		threads_data[i]->light_ratios = light_ratios;
-		threads_data[i]->attenuation_factors = attenuation_factors;
 		threads_data[i]->start_y = i * lines_per_thread;
 		if (i == N_THREADS - 1)
 			threads_data[i]->end_y = win_data->win_height;
@@ -80,29 +59,6 @@ double	*precompute_ratios(uint16_t n_elems)
 		i++;
 	}
 	return (ratios);
-}
-
-double	*precoumpute_attenuation_factors(void)
-{
-	uint16_t	i;
-	double		*attenuation_factors;
-	double		safety_limit = EPSILON * 5;
-
-	attenuation_factors = (double *)malloc_p((MAX_BOUNCE + 1) * sizeof(double));
-	attenuation_factors[0] = 1.0f;
-	i = 1;
-	while (i <= MAX_BOUNCE)
-	{
-		attenuation_factors[i] = attenuation_factors[i - 1] * BOUNCE_ATTENUATION_FACTOR;
-		if (attenuation_factors[i] <= safety_limit) //safety measure to avoid division by zero and floating point issues
-		{
-			while (i <= MAX_BOUNCE)
-				attenuation_factors[i++] = safety_limit;
-			break ;
-		}
-		i++;
-	}
-	return (attenuation_factors);
 }
 
 void	precompute_viewports(t_mlx_data *win_data)

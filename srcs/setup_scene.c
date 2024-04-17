@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 11:55:22 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ static void set_shapes_data(t_scene *scene)
 				cylinder->direction = vec_normalize(cylinder->direction);
 				cylinder->top_cap_center = vec_add(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
 				cylinder->bottom_cap_center = vec_sub(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
+				cylinder->half_height = 2 * cylinder->half_height;
 				break ;
 			case CONE:
 				shape->cone.direction = vec_normalize(shape->cone.direction);

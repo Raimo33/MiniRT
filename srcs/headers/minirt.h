@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/16 17:49:49 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 11:42:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,12 @@
 # define OCTREE_DEPTH 4
 # define N_THREADS 8
 
-# define MAX_BOUNCE 0 //senza roughness / riflessioni ecc non ha senso aumentare MAX_BOUNCE
 # define BOUNCE_ATTENUATION_FACTOR 0.8
 # define BACKGROUND_COLOR 0x000000
 # define KEY_ESC 65307
 # define KEY_SPACE 32
 
-# define CHECKERBOARD_WIDTH 10
+# define CHECKERBOARD_TILE_DENSITY 10
 # define CHECKERBOARD_COLOR1 0x000000
 # define CHECKERBOARD_COLOR2 0xFFFFFF
 
@@ -80,7 +79,6 @@ typedef struct s_thread_data
 	t_mlx_data	*win_data;
 	t_scene		*scene;
 	double		*light_ratios;
-	double		*attenuation_factors;
 	uint16_t	start_y;
 	uint16_t	end_y;
 }	t_thread_data;
@@ -102,12 +100,11 @@ double			intersect_ray_triangle(const t_ray, const t_shape *shape);
 double			intersect_ray_cone(const t_ray ray, const t_shape *shape);
 bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
 t_point			ray_point_at_parameter(const t_ray ray, double t);
+void			get_uv(const t_hit *hit_info, double *u, double *v);
 double			*precompute_ratios(uint16_t n_elems);
-double			*precoumpute_attenuation_factors(void);
 void			precompute_viewports(t_mlx_data *win_data);
-t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, double *attenuation_factors, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
+t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
 void			set_thread_attr(pthread_attr_t *thread_attr);
-// t_vector		get_rand_in_unit_sphere(void);
 t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
 void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
 void 			ft_quit(const uint8_t id, const char *msg);

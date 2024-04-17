@@ -16,6 +16,8 @@
 # include <stdint.h>
 
 # define EPSILON 1e-5
+# define HALF_PI 1.570796327
+# define DOUBLE_PI 6.283185307
 
 typedef struct s_float3
 {
