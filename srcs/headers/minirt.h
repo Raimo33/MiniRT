@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 14:58:13 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:37:56 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # include "scene.h"
 
 //valori ideali
-# define WIN_SIZE 0.6
+# define WIN_SIZE 0.01
 # define WORLD_SIZE 1000
 # define OCTREE_DEPTH 4
 # define N_THREADS 8
