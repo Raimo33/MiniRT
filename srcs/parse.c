@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 15:18:48 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:27:22 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static bool 	is_scene_valid(const t_scene *scene);
 void parse_scene(const int fd, t_scene *scene)
 {
 	char	*line;
-
 	
 	line = get_next_line(fd);
     while (line)
@@ -131,7 +130,9 @@ static void	parse_amblight(t_scene *scene)
 	amblight = (t_amblight *)calloc_p(1, sizeof(t_amblight));
 	amblight->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	if (amblight->brightness == 0)
+	{
 		ft_putstr_fd("Warning: ambient light brightness set to 0\n", STDERR_FILENO);
+	}
 	amblight->color = parse_color(ft_strtok(NULL, spaces));
 	amblight->ambient.r = amblight->color.r * amblight->brightness;
 	amblight->ambient.g = amblight->color.g * amblight->brightness;
@@ -146,10 +147,10 @@ static void	parse_light(t_scene *scene)
 	light = (t_light *)calloc_p(1, sizeof(t_light));
 	light->center = parse_coord(ft_strtok(NULL, spaces));
 	light->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
-	light->color = parse_color(ft_strtok(NULL, spaces));
-	scene->n_lights++;
 	if (light->brightness == 0)
 		ft_putstr_fd("Warning: light brightness set to 0\n", STDERR_FILENO);
+	light->color = parse_color(ft_strtok(NULL, spaces));
+	scene->n_lights++;
 	ft_lstadd_front(&scene->lights, ft_lstnew(light));
 }
 
@@ -246,7 +247,7 @@ static char *skip_commas(char *str)
 {
 	while (*str && *str != ',')
 		str++;
-	if (*str == '\0' || is_empty_line(str))
+	if (*str == '\0')
 		ft_quit(5, "invalid syntax: missing comma");
 	return (str + 1);
 }

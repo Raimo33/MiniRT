@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:09:28 by egualand          #+#    #+#             */
-/*   Updated: 2024/04/14 10:35:33 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:33:39 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,11 @@ double	ft_atof(const char *str)
 	if (str[i] == '.')
 		i++;
 	divisor = 1;
-	if (ft_isalpha(str[i]))
-		ft_quit(4, "invalid number format");
 	while (ft_isdigit(str[i]))
 	{
 		dec = dec * 10 + (str[i++] - '0');
 		divisor *= 10;
 	}
-	if (ft_isalpha(str[i]))
-		ft_quit(4, "invalid number format");
 	result += dec / divisor;
 	return (result * sign);
 }

@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/04/17 10:43:56 by craimond         ###   ########.fr        #
+#    Updated: 2024/04/17 15:22:39 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,7 +57,7 @@ $(NAME): $(MLX_DIR) $(LIBFT_DIR) $(OBJS)
 		@echo "$(GREEN)compiled $(NAME)$(NC)"
 
 leaks: all
-		@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) scenes/face.rt 2> leaks.log
+		@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) scenes/italian_flag.rt 2> leaks.log
 
 %.o: %.c $(HEADERS)
 		@echo -n "compiling " && echo $< | rev | cut -d'/' -f1 | rev
