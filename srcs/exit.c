@@ -6,13 +6,12 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/15 18:37:11 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:58:05 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static void destroy_scene(t_scene *scene);
 static void octree_clear(t_octree *node);
 static void	free_shape(void *shape);
 
@@ -61,7 +60,7 @@ static void	octree_clear(t_octree *node)
 	free(node);
 }
 
-static void destroy_scene(t_scene *scene)
+void destroy_scene(t_scene *scene)
 {
 	octree_clear(scene->octree);
 	ft_lstclear(&scene->lights, &free);

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:38:44 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 12:25:50 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:37:04 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,40 @@ static void get_sphere_uv(const t_hit *hit_info, double *u, double *v)
 
 static void get_cylinder_uv(const t_hit *hit_info, double *u, double *v)
 {
-	//TODO get cylinder uv
-	(void)hit_info;
-	(void)u;
-	(void)v;
+    const t_cylinder	cylinder = hit_info->shape->cylinder;
+    t_vector			vec_to_intersection = vec_sub(hit_info->point, cylinder.center);
+    double height_projection = vec_dot(vec_to_intersection, cylinder.direction);
+    bool is_on_cap = fabs(height_projection) > cylinder.half_height;
+
+    if (is_on_cap)
+	{
+        t_point cap_center = (height_projection > 0) ? cylinder.top_cap_center : cylinder.bottom_cap_center;
+        t_vector from_cap_to_intersection = vec_sub(hit_info->point, cap_center);
+        t_vector ortho1, ortho2;
+        if (fabs(cylinder.direction.x) < fabs(cylinder.direction.y) || fabs(cylinder.direction.x) < fabs(cylinder.direction.z))
+            ortho1 = vec_normalize(vec_cross(cylinder.direction, (t_vector){1, 0, 0}));
+        else
+        	ortho1 = vec_normalize(vec_cross(cylinder.direction, (t_vector){0, 1, 0}));
+        ortho2 = vec_normalize(vec_cross(cylinder.direction, ortho1));
+        double x = vec_dot(from_cap_to_intersection, ortho1);
+        double y = vec_dot(from_cap_to_intersection, ortho2);
+        double theta = atan2(y, x);
+        *u = (theta + M_PI) / (2 * M_PI);
+        *v = sqrt(x * x + y * y) / cylinder.radius;
+	}
+    else
+	{
+        t_vector ortho_to_dir;
+        if (fabs(cylinder.direction.x) < fabs(cylinder.direction.y) || fabs(cylinder.direction.x) < fabs(cylinder.direction.z))
+            ortho_to_dir = vec_normalize(vec_cross(cylinder.direction, (t_vector){1, 0, 0}));
+        else
+            ortho_to_dir = vec_normalize(vec_cross(cylinder.direction, (t_vector){0, 1, 0}));
+        t_vector base_circle_normal = vec_normalize(vec_cross(cylinder.direction, ortho_to_dir));
+        t_vector on_base_circle_plane = vec_sub(vec_to_intersection, vec_scale(height_projection, cylinder.direction));
+        double angle = atan2(vec_dot(on_base_circle_plane, ortho_to_dir), vec_dot(on_base_circle_plane, base_circle_normal));
+        *u = (angle + M_PI) / (2 * M_PI);
+        *v = (height_projection + cylinder.half_height) / cylinder.height;
+    }
 }
 
 static void get_triangle_uv(const t_hit *hit_info, double *u, double *v)
@@ -79,12 +109,10 @@ static void get_triangle_uv(const t_hit *hit_info, double *u, double *v)
 
 static void get_cone_uv(const t_hit *hit_info, double *u, double *v)
 {
-    const t_vector			normal = hit_info->normal; // Assuming normalized
-    const double			phi = atan2(normal.z, normal.x);
-    const double			theta = asin(normal.y);
-	
-    *u = 1 - (phi + M_PI) / DOUBLE_PI;
-    *v = (theta + HALF_PI) / M_PI;
+    (void)hit_info;
+	(void)u;
+	(void)v;
+	//TODO get cone uv
 }
 
 static void get_plane_uv(const t_hit *hit_info, double *u, double *v)

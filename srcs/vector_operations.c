@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/12 19:50:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:11:49 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,13 @@ inline double	vec_dot(const t_vector a, const t_vector b) //prodotto scalare
 inline double	vec_length(const t_vector a) //lunghezza di un vettore
 {
 	return (sqrt(a.x * a.x + a.y * a.y + a.z * a.z));
+}
+
+inline t_vector	project_vector_onto_axis(t_vector vector, t_vector axis)
+{
+    t_vector normalized_axis = vec_normalize(axis);
+    double dot_product = vec_dot(vector, normalized_axis);
+    t_vector projected_vec = vec_scale(dot_product, normalized_axis);
+
+    return (projected_vec);
 }

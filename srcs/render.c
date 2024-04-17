@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 11:47:13 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:19:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ static t_color	add_color_disruption(const t_hit *hit_info)
 
 t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
 {
-    t_hit		*closest_hit = (t_hit *)malloc_p(sizeof(t_hit));
+    t_hit		*closest_hit = (t_hit *)calloc_p(1, sizeof(t_hit));
 
 	*closest_hit = (t_hit)
 	{
@@ -236,15 +236,17 @@ static inline t_vector	get_cone_normal(t_cone cone, t_point point)
 	const double		cos_alpha_squared = cos_alpha * cos_alpha;
 	const t_vector		V = vec_normalize(cone.direction);
 	const double		V_dot_d = vec_dot(V, CO);
-	const double		V_dot_CO = vec_dot(V, CO);
-	const double		a = V_dot_d * V_dot_d - cos_alpha_squared;
-	const double		b = 2.0 * (V_dot_d * V_dot_CO - vec_dot(CO, CO) * cos_alpha_squared);
-	const double		c = V_dot_CO * V_dot_CO - vec_dot(CO, CO) * cos_alpha_squared;
-	const double		discriminant = b * b - 4 * a * c;
+	const double		V_dot_d_squared = V_dot_d * V_dot_d;
+	const double		a = V_dot_d_squared - cos_alpha_squared;
+	const double 		co_dot_co = vec_dot(CO, CO);
+	const double		c = V_dot_d_squared - co_dot_co * cos_alpha_squared;
+	const double		b = 2.0 * c;
+	const double		two_a = 2.0 * a;
+	const double		discriminant = b * b - 2 * two_a * c;
 	t_vector			normal;
 
 	if (discriminant < 0)
 		return (vec_normalize(vec_sub(point, cone.intersection_point)));
-	normal = vec_normalize(vec_sub(point, vec_add(cone.intersection_point, vec_scale(-V_dot_d + sqrt(discriminant) / (2 * a), V))));
+	normal = vec_normalize(vec_sub(point, vec_add(cone.intersection_point, vec_scale(-V_dot_d + sqrt(discriminant) / two_a, V))));
 	return (normal);
 }

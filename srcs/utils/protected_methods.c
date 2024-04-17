@@ -6,13 +6,23 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 18:38:50 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/15 18:46:50 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:20:10 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-void	*malloc_p(size_t size)
+void	*calloc_p(const size_t n_memb, const size_t size)
+{
+	void	*ptr;
+
+	ptr = ft_calloc(n_memb, size);
+	if (!ptr)
+		ft_quit(1, "fatal: failed to allocate memory");
+	return (ptr);
+}
+
+void	*malloc_p(const size_t size)
 {
 	void	*ptr;
 

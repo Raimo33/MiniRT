@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 11:55:22 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:19:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void		set_bb_cone(t_shape *shape);
 static t_list	*get_shapes_inside_box(t_list *shapes, t_vector box_top, t_vector box_bottom);
 static void 	set_shapes_data(t_scene *scene);
 
-int  boxes_overlap(t_point box1_top, t_point box1_bottom, t_point box2_top, t_point box2_bottom)
+int  boxes_overlap(const t_point box1_top, const t_point box1_bottom, const t_point box2_top, const t_point box2_bottom)
 {
     return (box1_bottom.x <= box2_top.x && box1_top.x >= box2_bottom.x &&
             box1_bottom.y <= box2_top.y && box1_top.y >= box2_bottom.y &&
@@ -62,7 +62,7 @@ static void set_shapes_data(t_scene *scene)
 				cylinder->direction = vec_normalize(cylinder->direction);
 				cylinder->top_cap_center = vec_add(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
 				cylinder->bottom_cap_center = vec_sub(cylinder->center, vec_scale(cylinder->half_height, cylinder->direction));
-				cylinder->half_height = 2 * cylinder->half_height;
+				cylinder->half_height = cylinder->height / 2;
 				break ;
 			case CONE:
 				shape->cone.direction = vec_normalize(shape->cone.direction);
@@ -92,7 +92,7 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 		node->n_shapes = ft_lstsize(shapes);
 		return ;
 	}
-	node->children = (t_octree **)malloc_p(sizeof(t_octree *) * 8);
+	node->children = (t_octree **)calloc_p(8, sizeof(t_octree *));
 	node->box_bottom = box_bottom;
 	node->box_top = box_top;
 	node->shapes = shapes;
@@ -119,7 +119,7 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 			node->children[i] = NULL;
 			continue ;	
 		}
-		node->children[i] = (t_octree *)malloc_p(sizeof(t_octree));
+		node->children[i] = (t_octree *)calloc_p(1, sizeof(t_octree));
 		node->n_shapes += ft_lstsize(shapes_inside_box);
 		fill_octree(node->children[i], shapes_inside_box, depth - 1, new_box_top, new_box_bottom);
 	}

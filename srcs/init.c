@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/15 18:39:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:18:13 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@ void	init_scene(t_scene *scene)
 	scene->lights = NULL;
 	scene->n_lights = 0;
 	scene->shapes = NULL;
-	scene->octree = (t_octree *)malloc_p(sizeof(t_octree));	
+	scene->octree = (t_octree *)calloc_p(1, sizeof(t_octree));
+	scene->octree->children = NULL;
+	scene->octree->shapes = NULL;
+	scene->octree->box_bottom = (t_vector){0, 0, 0};
+	scene->octree->box_top = (t_vector){0, 0, 0};
 	scene->world_max.x = 0;
 	scene->world_max.y = 0;
 }
@@ -48,8 +52,8 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 	if (!win_data->win)
 		ft_quit(3, "window initialization failed");
 	win_data->n_images = ft_lstsize(scene->cameras);
-	win_data->images = (void **)malloc_p(sizeof(void *) * win_data->n_images);
-	win_data->addrresses = (char **)malloc_p(sizeof(char *) * win_data->n_images);
+	win_data->images = (void **)calloc_p(win_data->n_images, sizeof(void *));
+	win_data->addrresses = (char **)calloc_p(win_data->n_images, sizeof(char *));
 	i = 0;
 	while (i < win_data->n_images)
 	{
@@ -63,8 +67,8 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 	win_data->current_img = 0;
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 	win_data->aspect_ratio = (double)win_data->win_width / (double)win_data->win_height;
-	win_data->viewport_x = (double *)malloc_p(sizeof(double) * win_data->win_width);
-	win_data->viewport_y = (double *)malloc_p(sizeof(double) * win_data->win_height);
+	win_data->viewport_x = (double *)calloc_p(win_data->win_width, sizeof(double));
+	win_data->viewport_y = (double *)calloc_p(win_data->win_height, sizeof(double));
 	precompute_viewports(win_data);
 }
 
@@ -72,7 +76,7 @@ void init_hooks(t_mlx_data *win_data, t_scene *scene)
 {
 	t_hook_data *hook_data;
 	
-	hook_data = malloc_p(sizeof(t_hook_data));
+	hook_data = calloc_p(1, sizeof(t_hook_data));
 	if (!hook_data)
 		ft_quit(3, "hook data initialization failed");
 	hook_data->win_data = win_data;

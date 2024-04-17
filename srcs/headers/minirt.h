@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 11:42:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:58:13 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void			set_thread_attr(pthread_attr_t *thread_attr);
 t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
 void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
 void 			ft_quit(const uint8_t id, const char *msg);
+void 			destroy_scene(t_scene *scene);
 int 			close_win(t_hook_data *hook_data);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
 
