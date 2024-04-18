@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 17:37:47 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:25:54 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,6 @@ void 			ft_quit(const uint8_t id, char *msg);
 void 			destroy_scene(t_scene *scene);
 int 			close_win(t_hook_data *hook_data);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
-t_color 	my_mlx_pixel_get(const t_texture_data *data, const uint16_t x, const uint16_t y);
+t_color 		my_mlx_pixel_get(const t_texture_data *data, const uint32_t x, const uint32_t y);
 
 #endif

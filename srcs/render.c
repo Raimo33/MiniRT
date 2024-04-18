@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 17:41:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:23:45 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,9 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y, co
 
 static t_color	add_texture(const t_hit *hit_info)
 {
-	double		u;
-	double		v;
-	t_material	*material;
+	double			u;
+	double			v;
+	t_material		*material;
 	static const t_color	checkerboard_color1 = {CHECKERBOARD_COLOR1 >> 16 & 0xFF, CHECKERBOARD_COLOR1 >> 8 & 0xFF, CHECKERBOARD_COLOR1 & 0xFF};
 	static const t_color	checkerboard_color2 = {CHECKERBOARD_COLOR2 >> 16 & 0xFF, CHECKERBOARD_COLOR2 >> 8 & 0xFF, CHECKERBOARD_COLOR2 & 0xFF};
 
@@ -141,7 +141,12 @@ static t_color	add_texture(const t_hit *hit_info)
 	else if (material->texture)
 	{
 		get_uv(hit_info, &u, &v);
-		return (my_mlx_pixel_get(material->texture, u * material->texture->width, v * material->texture->height));
+		//TODO implementare il tiling
+		const double texture_u = fmod(u * material->texture->width, material->texture->width);
+		const double texture_v = fmod(v * material->texture->height, material->texture->height);
+		const t_color texture_color = my_mlx_pixel_get(material->texture, texture_u, texture_v);
+		const t_color final_color = blend_colors(texture_color, material->color, 0.5f);
+		return (final_color);
 	}
 	return (material->color);
 }

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:38:44 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 15:30:28 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:14:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,19 +92,25 @@ static void get_triangle_uv(const t_hit *hit_info, double *u, double *v)
     const t_vector h = vec_cross(hit_info->normal, edge2);
     const double a = vec_dot(edge1, h);
 
-    if (fabs(a) < 1e-8) { // Astatic void division by zero
+    if (fabs(a) < EPSILON)
+	{
         *u = 0;
         *v = 0;
         return;
     }
 
     const t_vector s = vec_sub(hit_info->point, triangle.vertices[0]);
-    const double b = vec_dot(s, h) / a;
+    const double inv_a = 1.0 / a;
+    const double b = vec_dot(s, h) * inv_a;
     const t_vector q = vec_cross(s, edge1);
-    const double c = vec_dot(hit_info->normal, q) / a;
+    const double c = vec_dot(hit_info->normal, q) * inv_a;
 
-    *u = b;
-    *v = c;
+    // Assuming the third barycentric coordinate is 1 - b - c
+    double d = 1.0 - b - c;
+
+    // Interpolating UV coordinates based on barycentric coordinates (b, c, d)
+    *u = b * triangle.u[1] + c * triangle.u[2] + d * triangle.u[0];
+    *v = b * triangle.v[1] + c * triangle.v[2] + d * triangle.v[0];
 }
 
 static void get_cone_uv(const t_hit *hit_info, double *u, double *v)
@@ -145,9 +151,8 @@ static void get_cone_uv(const t_hit *hit_info, double *u, double *v)
 
 static void get_plane_uv(const t_hit *hit_info, double *u, double *v)
 {
-    const t_vector	normal = hit_info->normal;
-    t_vector 		perp1;
-	t_vector 		perp2;
+    const t_vector normal = hit_info->normal;
+    t_vector perp1, perp2;
 
     if (fabs(normal.x) > fabs(normal.y))
         perp1 = (t_vector){normal.z, 0, -normal.x};
@@ -155,11 +160,13 @@ static void get_plane_uv(const t_hit *hit_info, double *u, double *v)
         perp1 = (t_vector){0, -normal.z, normal.y};
 
     perp1 = vec_normalize(perp1);
-    perp2 = vec_cross(normal, perp1);
-    perp2 = vec_normalize(perp2);
-	
-    const t_vector hit_point = hit_info->point;
+    perp2 = vec_normalize(vec_cross(normal, perp1));
+    
+    // Adjusting u and v calculation
+    double u_temp = vec_dot(hit_info->point, perp1) / (2.0 * WORLD_SIZE) + 0.5;
+    double v_temp = vec_dot(hit_info->point, perp2) / (2.0 * WORLD_SIZE) + 0.5;
 
-    *u = vec_dot(hit_point, perp1) * CHECKERBOARD_TILE_DENSITY / WORLD_SIZE;
-    *v = vec_dot(hit_point, perp2) * CHECKERBOARD_TILE_DENSITY / WORLD_SIZE;	
+    // Ensuring u and v are within the [0, 1] range
+    *u = fmax(0.0, fmin(u_temp, 1.0));
+    *v = fmax(0.0, fmin(v_temp, 1.0));
 }

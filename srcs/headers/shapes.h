@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 17:25:56 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:06:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ typedef struct s_cylinder
 typedef struct s_triangle
 {
 	t_point		vertices[3];
+	uint8_t		u[3];
+	uint8_t		v[3];
 	t_vector	normal;
 }	t_triangle;
 

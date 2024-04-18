@@ -1,19 +1,18 @@
 #ambient light
-A 					1						252,194,1
+A 					0.8						255,255,255
 
 #light
-L 0,20,10 			0.8						255,255,255
+L 0,20,10 			0.8						232,203,20
 
 #camera
-C 0,20,-30		0,-1,1		90
-C -30,20,-40		1,-1,1		90
+C -30,20,-40	1,-1,1		90
 C 0,20,30		0,-1,-1		90
 C 30,20,0		-1,-1,0		90
 
-#posizione		diametro					colore			shininess		specular	diffuse	
-sp -15,0,0			20						0,140,69		6				1			0.5			checkerboard
-sp 0,0,0			20						244,249,255		50				1			0.5			grass
-sp 15,0,0			20						205,33,42		150	 			1			0.5	
+#posizione		diametro					colore			shininess		specular	diffuse
+sp -15,0,0			20						0,140,69		6				0.3			0.5
+sp 0,0,0			20						244,249,255		50				0.6			0.5
+sp 15,0,0			20						205,33,42		150	 			1			0.5
 
 #piano
-pl 0,-30,0			0,1,0					255,255,255		6				0			1			grass
+pl 0,-30,0			0,1,0					255,255,255		6				0.3			0.7

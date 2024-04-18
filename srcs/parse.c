@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 17:38:06 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:36:39 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ static bool is_scene_valid(const t_scene *scene)
 	if (!scene->shapes)
 		ft_putstr_fd("Invalid scene: no shapes found", STDERR_FILENO);
 	if (!scene->lights)
-		ft_putstr_fd("Invalid scene: no lights found", STDERR_FILENO);
+		ft_putstr_fd("Warning: no directional lights found", STDERR_FILENO);
 	if (!scene->amblight)
 		ft_putstr_fd("Invalid scene: no ambient light found", STDERR_FILENO);
-	return (scene->cameras && scene->shapes && scene->lights && scene->amblight);
+	return (scene->cameras && scene->shapes && scene->amblight);
 }
 
 static void	parse_line(char *line, t_scene *scene)
@@ -233,6 +233,12 @@ static void	parse_triangle(t_shape *shape)
 	shape->triangle.vertices[0] = parse_coord(ft_strtok(NULL, spaces));
 	shape->triangle.vertices[1] = parse_coord(ft_strtok(NULL, spaces));
 	shape->triangle.vertices[2] = parse_coord(ft_strtok(NULL, spaces));
+	shape->triangle.u[0] = 0;
+	shape->triangle.v[0] = 0;
+	shape->triangle.u[1] = 1;
+	shape->triangle.v[1] = 0;
+	shape->triangle.u[2] = 0;
+	shape->triangle.v[2] = 1;
 	shape->type = TRIANGLE;
 }
 

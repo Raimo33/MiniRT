@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 17:46:37 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:17:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	init_textures(const t_scene *scene, t_mlx_data *mlx_data)
 	{
 		shape = shapes->content;
 		material = shape->material;
-		if (!material->is_checkerboard)
+		if (material->texture)
 		{
 			texture_img = mlx_xpm_file_to_image(mlx_data->mlx, material->texture->path, &material->texture->width, &material->texture->height);
 			if (!texture_img)
