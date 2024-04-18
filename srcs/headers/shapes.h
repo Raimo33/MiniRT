@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 11:54:39 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:25:56 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,27 @@ typedef struct s_cone
 	double		radius;
 	double		height;
 }	t_cone;
+
+typedef struct s_texture_data
+{
+	char		*addr;
+	char		*path;
+	int32_t		width;
+	int32_t		height;
+	int32_t		line_length;
+	int32_t		endian;
+	uint8_t		bytes_per_pixel;
+}	t_texture_data;
+
+typedef struct s_material
+{
+	t_texture_data	*texture;
+    t_color			color;
+	double			shininess;
+	double			specular;
+	double			diffuse;
+	bool			is_checkerboard : 1;
+}   t_material;
 
 typedef struct s_shape
 {

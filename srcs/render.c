@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 13:56:39 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:41:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void		check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *
 static void		update_closest_hit(t_hit *closest_hit, t_shape *shape, const double t, const t_ray ray);
 static t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point);
 static t_vector	get_cone_normal(t_cone cone, t_point point);
-static t_color	add_color_disruption(const t_hit *hit_info);
+static t_color	add_texture(const t_hit *hit_info);
 
 void render_scene(t_mlx_data *win_data, t_scene *scene)
 {
@@ -94,7 +94,7 @@ static void	*render_segment(void *data)
 			first_hit = trace_ray(scene, ray);
 			if (first_hit)
 			{
-				color = add_color_disruption(first_hit);
+				color = add_texture(first_hit);
 				color = add_lighting(scene, color, first_hit, thread_data->light_ratios);
 			}
 			else
@@ -119,14 +119,16 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y, co
 	return ((t_ray){cam->center, vec_normalize(direction)});
 }
 
-static t_color	add_color_disruption(const t_hit *hit_info)
+static t_color	add_texture(const t_hit *hit_info)
 {
 	double		u;
 	double		v;
+	t_material	*material;
 	static const t_color	checkerboard_color1 = {CHECKERBOARD_COLOR1 >> 16 & 0xFF, CHECKERBOARD_COLOR1 >> 8 & 0xFF, CHECKERBOARD_COLOR1 & 0xFF};
 	static const t_color	checkerboard_color2 = {CHECKERBOARD_COLOR2 >> 16 & 0xFF, CHECKERBOARD_COLOR2 >> 8 & 0xFF, CHECKERBOARD_COLOR2 & 0xFF};
 
-	if (hit_info->shape->material->is_checkerboard)
+	material = hit_info->shape->material;
+	if (material->is_checkerboard)
 	{
 		get_uv(hit_info, &u, &v);
 		int iu = floor(u * CHECKERBOARD_TILE_DENSITY);
@@ -136,7 +138,12 @@ static t_color	add_color_disruption(const t_hit *hit_info)
 		else
 			return (checkerboard_color2);
 	}
-	return (hit_info->shape->material->color);
+	else if (material->texture)
+	{
+		get_uv(hit_info, &u, &v);
+		return (my_mlx_pixel_get(material->texture, u * material->texture->width, v * material->texture->height));
+	}
+	return (material->color);
 }
 
 t_hit	*trace_ray(const t_scene *scene, const t_ray ray)

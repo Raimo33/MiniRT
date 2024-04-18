@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 15:39:16 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:38:06 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void		parse_light(t_scene *scene);
 static void		parse_camera(t_scene *scene);
 static void		parse_shape(char *line, t_scene *scene);
 static void		parse_material(t_material *material);
+static void		parse_texture(const char *str, t_material *material);
 static void		parse_sphere(t_shape *shape);
 static void		parse_plane(t_shape *shape);
 static void		parse_cylinder(t_shape *shape);
@@ -110,17 +111,39 @@ static void	parse_shape(char *line, t_scene *scene)
 
 static void	parse_material(t_material *material)
 {
+	char	*tmp;
+	
 	material->color = parse_color(ft_strtok(NULL, spaces));
 	material->shininess = fmax(ft_atof(ft_strtok(NULL, spaces)), 0);
 	material->specular = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
 	material->diffuse = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
-	material->is_checkerboard = (ft_strncmp(ft_strtok(NULL, spaces), "true", 12) == 0);
+	tmp = ft_strtok(NULL, spaces);
+	material->is_checkerboard = (ft_strncmp(tmp, "checkerboard", 12) == 0);
+	material->texture = NULL;
+	if (!material->is_checkerboard)
+		parse_texture(tmp, material);
 	if (material->shininess == 0)
 		ft_putstr_fd("Warning: material shininess set to 0\n", STDERR_FILENO);
 	if (material->specular == 0)
 		ft_putstr_fd("Warning: material specular set to 0\n", STDERR_FILENO);
 	if (material->diffuse == 0)
 		ft_putstr_fd("Warning: material diffuse set to 0\n", STDERR_FILENO);
+}
+
+static void	parse_texture(const char *str, t_material *material)
+{
+	char		*texture_path;
+	uint16_t	len;
+
+	if (!str)
+		return ;
+	material->texture = (t_texture_data *)calloc_p(1, sizeof(t_texture_data));
+	len = ft_strlen(TEXTURE_ROOT) + ft_strlen(str) + ft_strlen(".xpm") + 1;
+	texture_path = (char *)calloc_p(len, sizeof(char));
+	ft_strlcpy(texture_path, TEXTURE_ROOT, len);
+	ft_strlcat(texture_path, str, len);
+	ft_strlcat(texture_path, ".xpm", len);
+	material->texture->path = texture_path;
 }
 
 static void	parse_amblight(t_scene *scene)
@@ -130,9 +153,7 @@ static void	parse_amblight(t_scene *scene)
 	amblight = (t_amblight *)calloc_p(1, sizeof(t_amblight));
 	amblight->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	if (amblight->brightness == 0)
-	{
 		ft_putstr_fd("Warning: ambient light brightness set to 0\n", STDERR_FILENO);
-	}
 	amblight->color = parse_color(ft_strtok(NULL, spaces));
 	amblight->ambient.r = amblight->color.r * amblight->brightness;
 	amblight->ambient.g = amblight->color.g * amblight->brightness;

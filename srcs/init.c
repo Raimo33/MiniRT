@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 15:18:13 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:46:37 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,33 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 	win_data->viewport_x = (double *)calloc_p(win_data->win_width, sizeof(double));
 	win_data->viewport_y = (double *)calloc_p(win_data->win_height, sizeof(double));
 	precompute_viewports(win_data);
+}
+
+void	init_textures(const t_scene *scene, t_mlx_data *mlx_data)
+{
+	t_list			*shapes;
+	t_shape			*shape;
+	t_material		*material;
+	void			*texture_img;
+	int32_t			bits_per_pixel;
+
+	shapes = scene->shapes;
+	while (shapes)
+	{
+		shape = shapes->content;
+		material = shape->material;
+		if (!material->is_checkerboard)
+		{
+			texture_img = mlx_xpm_file_to_image(mlx_data->mlx, material->texture->path, &material->texture->width, &material->texture->height);
+			if (!texture_img)
+				ft_quit(41, "mlx: failed to load texture");
+			material->texture->addr = mlx_get_data_addr(texture_img, &bits_per_pixel, &material->texture->line_length, &material->texture->endian);
+			if (!material->texture->addr)
+				ft_quit(42, "mlx: failed to get texture address");
+			material->texture->bytes_per_pixel = bits_per_pixel / 8;
+		}
+		shapes = shapes->next;
+	}
 }
 
 void init_hooks(t_mlx_data *win_data, t_scene *scene)

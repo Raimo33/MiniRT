@@ -49,15 +49,6 @@ typedef struct s_ray
 	t_vector	direction;
 }	t_ray;
 
-typedef struct s_material
-{
-    t_color		color;
-	double		shininess;
-	double		specular;
-	double		diffuse;
-	bool		is_checkerboard;
-}   t_material;
-
 t_vector	vec_add(const t_vector a, const t_vector b);
 t_vector	vec_add(const t_vector a, const t_vector b);
 t_vector	vec_sub(const t_vector a, const t_vector b);

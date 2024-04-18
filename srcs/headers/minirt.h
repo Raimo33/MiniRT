@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 13:44:16 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:37:47 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@
 # define CHECKERBOARD_COLOR1 0x000000
 # define CHECKERBOARD_COLOR2 0xFFFFFF
 
+# define TEXTURE_ROOT "textures/"
+
 static const char		spaces[] = " \t\n\v\f\r";
 
 typedef struct s_mlx_data
@@ -86,10 +88,11 @@ typedef struct s_thread_data
 //TODO aggiustare i const
 void			check_args(const uint16_t argc, char **argv);
 void			init_scene(t_scene *scene);
-void			parse_scene(const int fd, t_scene *scene);
+void 			parse_scene(const int fd, t_scene *scene);
 void			setup_scene(t_scene *scene);
 void			init_window(t_mlx_data *win_data, t_scene *scene);
 void			init_hooks(t_mlx_data *win_data, t_scene *scene);
+void			init_textures(const t_scene *scene, t_mlx_data *mlx_data);
 void			render_scene(t_mlx_data *win_data, t_scene *scene);
 t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratio);
@@ -107,9 +110,10 @@ t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *l
 void			set_thread_attr(pthread_attr_t *thread_attr);
 t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
 void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
-void 			ft_quit(const uint8_t id, const char *msg);
+void 			ft_quit(const uint8_t id, char *msg);
 void 			destroy_scene(t_scene *scene);
 int 			close_win(t_hook_data *hook_data);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
+t_color 	my_mlx_pixel_get(const t_texture_data *data, const uint16_t x, const uint16_t y);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 15:51:10 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:36:17 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,16 @@
 static void	octree_clear(t_octree *node, const uint16_t depth);
 static void	free_shape(void *shape);
 
-void ft_quit(const uint8_t id, const char *msg)
+void ft_quit(const uint8_t id, char *msg)
 {
-	if (errno != 0)
+	if (!msg)
 		perror("miniRT");
 	else
-		printf("miniRT: %s\n", msg);
+	{
+		ft_putstr_fd("miniRT: ", 2);
+		ft_putstr_fd(msg, 2);
+		ft_putstr_fd("\n", 2);
+	}
 	exit(id);
 }
 

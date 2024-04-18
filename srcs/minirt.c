@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 10:57:40 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 17:34:32 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ int	main(int argc, char **argv)
 	check_args(argc, argv);
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
-		ft_quit(4, NULL);
+		ft_quit(4, "failed to open scene: no such file or directory\n");
 	init_scene(&scene);
 	ft_putstr_fd("Parsing scene...", 1);
 	parse_scene(fd, &scene);
 	setup_scene(&scene);
 	init_window(&mlx_data, &scene);
+	init_textures(&scene, &mlx_data);
 	init_hooks(&mlx_data, &scene);
 	gettimeofday(&start_time, NULL);
 	render_scene(&mlx_data, &scene);
