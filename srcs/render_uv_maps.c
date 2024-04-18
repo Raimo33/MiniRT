@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:38:44 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 14:37:04 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:11:38 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ static void get_cylinder_uv(const t_hit *hit_info, double *u, double *v)
 {
     const t_cylinder	cylinder = hit_info->shape->cylinder;
     t_vector			vec_to_intersection = vec_sub(hit_info->point, cylinder.center);
-    double height_projection = vec_dot(vec_to_intersection, cylinder.direction);
-    bool is_on_cap = fabs(height_projection) > cylinder.half_height;
+    double				height_projection = vec_dot(vec_to_intersection, cylinder.direction);
+    bool				is_on_cap = fabs(height_projection) >= (cylinder.half_height - EPSILON);
 
     if (is_on_cap)
 	{
@@ -66,7 +66,7 @@ static void get_cylinder_uv(const t_hit *hit_info, double *u, double *v)
         double x = vec_dot(from_cap_to_intersection, ortho1);
         double y = vec_dot(from_cap_to_intersection, ortho2);
         double theta = atan2(y, x);
-        *u = (theta + M_PI) / (2 * M_PI);
+        *u = (theta + M_PI) / DOUBLE_PI;
         *v = sqrt(x * x + y * y) / cylinder.radius;
 	}
     else
@@ -79,7 +79,7 @@ static void get_cylinder_uv(const t_hit *hit_info, double *u, double *v)
         t_vector base_circle_normal = vec_normalize(vec_cross(cylinder.direction, ortho_to_dir));
         t_vector on_base_circle_plane = vec_sub(vec_to_intersection, vec_scale(height_projection, cylinder.direction));
         double angle = atan2(vec_dot(on_base_circle_plane, ortho_to_dir), vec_dot(on_base_circle_plane, base_circle_normal));
-        *u = (angle + M_PI) / (2 * M_PI);
+        *u = (angle + M_PI) / DOUBLE_PI;
         *v = (height_projection + cylinder.half_height) / cylinder.height;
     }
 }
