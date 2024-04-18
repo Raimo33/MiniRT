@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 14:15:31 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:45:56 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ double	intersect_ray_cylinder(const t_ray ray, const t_shape *shape)
 
 static double	intersect_cylinder_caps(const t_ray ray, const t_cylinder *cylinder, const double dot_ray_cylinder)
 {
-    const double t1 = intersect_cylinder_cap(ray, cylinder, cylinder->top_cap_center, dot_ray_cylinder);
-    const double t2 = intersect_cylinder_cap(ray, cylinder, cylinder->bottom_cap_center, dot_ray_cylinder);
+    const double	t1 = intersect_cylinder_cap(ray, cylinder, cylinder->top_cap_center, dot_ray_cylinder);
+    const double	t2 = intersect_cylinder_cap(ray, cylinder, cylinder->bottom_cap_center, dot_ray_cylinder);
 	if (t1 > 0 && (t1 < t2 || t2 < 0))
 		return (t1);
 	return (t2);
@@ -84,8 +84,8 @@ static double	intersect_cylinder_caps(const t_ray ray, const t_cylinder *cylinde
 
 static double	intersect_cylinder_cap(const t_ray ray, const t_cylinder *cylinder, const t_vector extreme_center, const double dot_ray_cylinder)
 {
-    const double denom = dot_ray_cylinder;
-	double t = -1;
+    const double	denom = dot_ray_cylinder;
+	double 			t = -1;
 
     if (fabs(denom) > EPSILON)
 	{

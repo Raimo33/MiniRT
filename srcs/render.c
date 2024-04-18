@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 15:19:16 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:56:39 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,9 +221,9 @@ static inline t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point)
 	const double		projection_length = vec_dot(vec_from_center_to_point, cylinder.direction);
 	t_vector			projection;
 
-	if (fabs(projection_length  + cylinder.half_height) < EPSILON)
+	if (fabs(projection_length + cylinder.half_height) < EPSILON)
 		return (vec_negate(cylinder.direction));
-	if (fabs(projection_length - cylinder.half_height) < EPSILON)
+	else if (fabs(projection_length - cylinder.half_height) < EPSILON)
 		return (cylinder.direction);
 	projection = vec_add(cylinder.center, vec_scale(projection_length, cylinder.direction));
 	return(vec_normalize(vec_sub(point, projection)));
