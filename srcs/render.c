@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 19:23:45 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/20 19:44:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,12 +141,8 @@ static t_color	add_texture(const t_hit *hit_info)
 	else if (material->texture)
 	{
 		get_uv(hit_info, &u, &v);
-		//TODO implementare il tiling
-		const double texture_u = fmod(u * material->texture->width, material->texture->width);
-		const double texture_v = fmod(v * material->texture->height, material->texture->height);
-		const t_color texture_color = my_mlx_pixel_get(material->texture, texture_u, texture_v);
-		const t_color final_color = blend_colors(texture_color, material->color, 0.5f);
-		return (final_color);
+		const t_color texture_color = my_mlx_pixel_get(material->texture, u * material->texture->width, v * material->texture->height);
+		return (texture_color);
 	}
 	return (material->color);
 }
@@ -243,7 +239,7 @@ static inline t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point)
 
 static inline t_vector	get_cone_normal(t_cone cone, t_point point)
 {
-	const t_vector		CO = vec_sub(point, cone.intersection_point);
+	const t_vector		CO = vec_sub(point, cone.base_center);
 	const double		cos_alpha = cos(atan(cone.radius / cone.height));
 	const double		cos_alpha_squared = cos_alpha * cos_alpha;
 	const t_vector		V = vec_normalize(cone.direction);
@@ -258,7 +254,7 @@ static inline t_vector	get_cone_normal(t_cone cone, t_point point)
 	t_vector			normal;
 
 	if (discriminant < 0)
-		return (vec_normalize(vec_sub(point, cone.intersection_point)));
-	normal = vec_normalize(vec_sub(point, vec_add(cone.intersection_point, vec_scale(-V_dot_d + sqrt(discriminant) / two_a, V))));
+		return (vec_normalize(CO));
+	normal = vec_normalize(vec_sub(point, vec_add(cone.base_center, vec_scale(-V_dot_d + sqrt(discriminant) / two_a, V))));
 	return (normal);
 }

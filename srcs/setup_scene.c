@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 13:56:18 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/20 19:20:17 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static void set_shapes_data(t_scene *scene)
 	t_shape		*shape;
 	t_list		*node;
 	t_cylinder	*cylinder;
+	double 		cos_theta;
 	
 	node = scene->shapes;
 	while (node)
@@ -66,6 +67,8 @@ static void set_shapes_data(t_scene *scene)
 				cylinder->bottom_cap_center = vec_sub(cylinder->center, center_to_cap);
 				break ;
 			case CONE:
+				cos_theta = cos(atan2(shape->cone.radius, shape->cone.height));
+				shape->cone.costheta_squared = cos_theta * cos_theta;
 				shape->cone.direction = vec_normalize(shape->cone.direction);
 				break ;
 			default:
@@ -310,7 +313,7 @@ static void set_bb_cylinder(t_shape *shape)
 static void set_bb_cone(t_shape *shape)
 {
 	const t_vector orientation = shape->cone.direction;
-	const t_vector base_center = shape->cone.intersection_point;
+	const t_vector base_center = shape->cone.base_center;
 	const double r = shape->cone.radius;
 	const double height = shape->cone.height;
 	t_vector perp1, perp2;

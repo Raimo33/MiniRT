@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:38:44 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 19:14:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/20 19:27:09 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,38 +116,21 @@ static void get_triangle_uv(const t_hit *hit_info, double *u, double *v)
 static void get_cone_uv(const t_hit *hit_info, double *u, double *v)
 {
     const t_cone cone = hit_info->shape->cone;
-    t_vector vec_to_intersection = vec_sub(hit_info->point, cone.intersection_point);
+    t_vector vec_to_intersection = vec_sub(hit_info->point, cone.base_center);
     double height_projection = vec_dot(vec_to_intersection, cone.direction);
-
-    bool is_on_base = height_projection < EPSILON;
-    if (is_on_base)
-    {
-        t_vector ortho1, ortho2;
-        if (fabs(cone.direction.x) < fabs(cone.direction.y) || fabs(cone.direction.x) < fabs(cone.direction.z))
-            ortho1 = vec_normalize(vec_cross(cone.direction, (t_vector){1, 0, 0}));
-        else
-            ortho1 = vec_normalize(vec_cross(cone.direction, (t_vector){0, 1, 0}));
-
-        ortho2 = vec_normalize(vec_cross(cone.direction, ortho1));
-        double x = vec_dot(vec_to_intersection, ortho1);
-        double y = vec_dot(vec_to_intersection, ortho2);
-        double theta = atan2(y, x);
-        *u = (theta + M_PI) / (DOUBLE_PI);
-        *v = sqrt(x * x + y * y) / cone.radius;
-    }
-    else
-    {
-        t_vector rotated_dir = vec_cross(cone.direction, (t_vector){0, 1, 0});
-        if (vec_length(rotated_dir) < EPSILON)
-            rotated_dir = vec_cross(cone.direction, (t_vector){1, 0, 0});
-        rotated_dir = vec_normalize(rotated_dir);
-        t_vector ortho_to_dir = vec_normalize(vec_cross(cone.direction, rotated_dir));
-        double angle = atan2(vec_dot(vec_to_intersection, rotated_dir), vec_dot(vec_to_intersection, ortho_to_dir));
-        *u = (angle + M_PI) / (DOUBLE_PI);
-        double normalized_height = height_projection / cone.height;
-        *v = 1.0 - normalized_height;
-    }
+    height_projection = fmax(0, height_projection);
+    height_projection = fmin(cone.height, height_projection);
+    t_vector rotated_dir = vec_cross(cone.direction, (t_vector){0, 1, 0});
+    if (vec_length(rotated_dir) < EPSILON)
+        rotated_dir = vec_cross(cone.direction, (t_vector){1, 0, 0});
+    rotated_dir = vec_normalize(rotated_dir);
+    t_vector ortho_to_dir = vec_normalize(vec_cross(cone.direction, rotated_dir));
+    double angle = atan2(vec_dot(vec_to_intersection, ortho_to_dir), vec_dot(vec_to_intersection, rotated_dir));
+    *u = (angle + M_PI) / (2.0 * M_PI);
+    double normalized_height = height_projection / cone.height;
+    *v = 1.0 - normalized_height;
 }
+
 
 static void get_plane_uv(const t_hit *hit_info, double *u, double *v)
 {

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 19:06:55 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/20 19:17:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,11 @@ typedef struct s_triangle
 
 typedef struct s_cone
 {
-	t_point		intersection_point;
+	t_point		base_center;
 	t_vector	direction;
 	double		radius;
 	double		height;
+	double		costheta_squared;
 }	t_cone;
 
 typedef struct s_texture_data

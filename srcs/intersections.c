@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 13:16:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 13:45:56 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/20 19:21:03 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,33 +161,31 @@ double	intersect_ray_triangle(const t_ray ray, const t_shape *shape)
 
 double intersect_ray_cone(const t_ray ray, const t_shape *shape)
 {
-    t_vector	CO = vec_sub(ray.origin, shape->cone.intersection_point);
-    double		cos_alpha = cos(atan(shape->cone.radius / shape->cone.height));
-    double		cos_alpha_squared = cos_alpha * cos_alpha;
-    t_vector	V = vec_normalize(shape->cone.direction);
-    double		V_dot_d = vec_dot(V, ray.direction);
-    double		V_dot_CO = vec_dot(V, CO);
-    double 		a = V_dot_d * V_dot_d - cos_alpha_squared;
-    double		b = 2.0 * (V_dot_d * V_dot_CO - vec_dot(ray.direction, CO) * cos_alpha_squared);
-    double		c = V_dot_CO * V_dot_CO - vec_dot(CO, CO) * cos_alpha_squared;
-    double		discriminant = b * b - 4 * a * c;
+    const t_cone cone = shape->cone;
+    const t_vector center = cone.base_center;
+    const t_vector V = cone.direction;
+    const t_vector O = ray.origin;
+    const t_vector D = ray.direction;
+    const t_vector CO = vec_sub(O, center);
+    const double A = vec_dot(D, V) * vec_dot(D, V) - cone.costheta_squared;
+    const double B = 2.0 * (vec_dot(D, V) * vec_dot(CO, V) - vec_dot(D, CO) * cone.costheta_squared);
+    const double C = vec_dot(CO, V) * vec_dot(CO, V) - vec_dot(CO, CO) * cone.costheta_squared;
+    const double discriminant = B * B - 4 * A * C;
     
 	if (discriminant < 0)
-		return (-1.0);
-
-	double	sqrt_discriminant = sqrt(discriminant);
-	double	two_times_a = 2 * a;
-    double	t1 = (-b - sqrt_discriminant) / two_times_a;
-    double	t2 = (-b + sqrt_discriminant) / two_times_a;
-    
-    if (t1 > 0 && t2 > 0)
-        return (fmin(t1, t2));
+        return (-1.0);
+    const double t0 = (-B - sqrt(discriminant)) / (2 * A);
+    const double t1 = (-B + sqrt(discriminant)) / (2 * A);
+    if (t0 > 0 && t1 > 0)
+        return fmin(t0, t1);
+    else if (t0 > 0)
+        return (t0);
     else if (t1 > 0)
         return (t1);
-    else if (t2 > 0)
-        return (t2);
-    return (-1.0);
+    else
+        return (-1.0);
 }
+
 
 inline bool	ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min)
 {
