@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 19:37:21 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 15:09:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ int	main(int argc, char **argv)
 	struct timeval	start_time;
 	struct timeval	end_time;
 
+	init_scene(&scene);
 	check_args(argc, argv);
 	fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		ft_quit(4, "failed to open scene: no such file or directory\n");
-	init_scene(&scene);
 	ft_putstr_fd("Parsing scene...\n", 1);
 	parse_scene(fd, &scene);
 	setup_scene(&scene);

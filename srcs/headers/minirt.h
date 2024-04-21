@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 19:25:54 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 15:13:53 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@
 # include "scene.h"
 
 //valori ideali
-# define WIN_SIZE 0.5
+# define WIN_SIZE 2
 # define WORLD_SIZE 1000
 # define OCTREE_DEPTH 4
 # define N_THREADS 8
 
 # define BOUNCE_ATTENUATION_FACTOR 0.8
-# define BACKGROUND_COLOR 0x000000
+# define BACKGROUND_COLOR 0xadf9ff
 # define KEY_ESC 65307
 # define KEY_SPACE 32
 
@@ -115,5 +115,6 @@ void 			destroy_scene(t_scene *scene);
 int 			close_win(t_hook_data *hook_data);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
 t_color 		my_mlx_pixel_get(const t_texture_data *data, const uint32_t x, const uint32_t y);
+t_scene			*get_scene(t_scene *_scene);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/18 17:36:17 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 15:07:41 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void ft_quit(const uint8_t id, char *msg)
 		ft_putstr_fd(msg, 2);
 		ft_putstr_fd("\n", 2);
 	}
+	destroy_scene(get_scene(NULL));
 	exit(id);
 }
 
@@ -67,7 +68,9 @@ static void	octree_clear(t_octree *node, const uint16_t depth)
 
 void destroy_scene(t_scene *scene)
 {
-	if (scene->octree->children)
+	if (!scene)
+		return ;
+	if (scene->octree && scene->octree->children)
 		octree_clear(scene->octree, 0);
 	else //when parsing fails
 		free(scene->octree);	
@@ -82,6 +85,13 @@ static void	free_shape(void *shape)
 	t_shape *s;
 	
 	s = (t_shape *)shape;
+	if (s->material->texture)
+	{
+		free(s->material->texture->path);
+		s->material->texture->path = NULL;	
+		free(s->material->texture);
+		s->material->texture = NULL;
+	}
 	free(s->material);
 	s->material = NULL;
 	free(s);

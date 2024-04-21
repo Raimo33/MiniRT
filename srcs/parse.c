@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/20 18:57:19 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 15:00:41 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ void parse_scene(const int fd, t_scene *scene)
 static bool is_scene_valid(const t_scene *scene)
 {
 	if (!scene->cameras)
-		ft_putstr_fd("Invalid scene: no cameras found", STDERR_FILENO);
+		ft_putstr_fd("Invalid scene: no cameras found\n", STDERR_FILENO);
 	if (!scene->shapes)
-		ft_putstr_fd("Invalid scene: no shapes found", STDERR_FILENO);
+		ft_putstr_fd("Invalid scene: no shapes found\n", STDERR_FILENO);
 	if (!scene->lights)
-		ft_putstr_fd("Warning: no directional lights found", STDERR_FILENO);
+		ft_putstr_fd("Warning: no directional lights found\n", STDERR_FILENO);
 	if (!scene->amblight)
-		ft_putstr_fd("Invalid scene: no ambient light found", STDERR_FILENO);
+		ft_putstr_fd("Invalid scene: no ambient light found\n", STDERR_FILENO);
 	return (scene->cameras && scene->shapes && scene->amblight);
 }
 
@@ -106,6 +106,7 @@ static void	parse_shape(char *line, t_scene *scene)
 		}
 		i++;
 	}
+	free(line);
 	ft_quit(4, "invalid shape prefix");
 }
 
@@ -148,42 +149,46 @@ static void	parse_texture(const char *str, t_material *material)
 
 static void	parse_amblight(t_scene *scene)
 {
-	t_amblight *amblight;
+	t_amblight	amblight;
 
-	amblight = (t_amblight *)calloc_p(1, sizeof(t_amblight));
-	amblight->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
-	if (amblight->brightness == 0)
+	amblight.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
+	if (amblight.brightness == 0)
 		ft_putstr_fd("Warning: ambient light brightness set to 0\n", STDERR_FILENO);
-	amblight->color = parse_color(ft_strtok(NULL, spaces));
-	amblight->ambient.r = amblight->color.r * amblight->brightness;
-	amblight->ambient.g = amblight->color.g * amblight->brightness;
-	amblight->ambient.b = amblight->color.b * amblight->brightness;
-	scene->amblight = amblight;
+	amblight.color = parse_color(ft_strtok(NULL, spaces));
+	amblight.ambient.r = amblight.color.r * amblight.brightness;
+	amblight.ambient.g = amblight.color.g * amblight.brightness;
+	amblight.ambient.b = amblight.color.b * amblight.brightness;
+	scene->amblight = (t_amblight *)malloc_p(sizeof(t_amblight));
+	*scene->amblight = amblight;
 }
 
 static void	parse_light(t_scene *scene)
 {
-	t_light		*light;
-
-	light = (t_light *)calloc_p(1, sizeof(t_light));
-	light->center = parse_coord(ft_strtok(NULL, spaces));
-	light->brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
-	if (light->brightness == 0)
+	t_light		light;
+	t_light		*light_ptr;
+	
+	light.center = parse_coord(ft_strtok(NULL, spaces));
+	light.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
+	if (light.brightness == 0)
 		ft_putstr_fd("Warning: light brightness set to 0\n", STDERR_FILENO);
-	light->color = parse_color(ft_strtok(NULL, spaces));
+	light.color = parse_color(ft_strtok(NULL, spaces));
 	scene->n_lights++;
-	ft_lstadd_front(&scene->lights, ft_lstnew(light));
+	light_ptr = (t_light *)malloc_p(sizeof(t_light));
+	*light_ptr = light;
+	ft_lstadd_front(&scene->lights, ft_lstnew(light_ptr));
 }
 
 static void	parse_camera(t_scene *scene)
 {
-	t_camera	*camera;
-
-	camera = (t_camera *)calloc_p(1, sizeof(t_camera));
-	camera->center = parse_coord(ft_strtok(NULL, spaces));
-	camera->normal = parse_coord(ft_strtok(NULL, spaces));
-	camera->fov = clamp(ft_atoui(ft_strtok(NULL, spaces)), 0, 180);
-	ft_lstadd_front(&scene->cameras, ft_lstnew(camera));
+	t_camera	camera;
+	t_camera	*camera_ptr;
+	
+	camera.center = parse_coord(ft_strtok(NULL, spaces));
+	camera.normal = parse_coord(ft_strtok(NULL, spaces));
+	camera.fov = clamp(ft_atoui(ft_strtok(NULL, spaces)), 0, 180);
+	camera_ptr = (t_camera *)malloc_p(sizeof(t_camera));
+	*camera_ptr = camera;
+	ft_lstadd_front(&scene->cameras, ft_lstnew(camera_ptr));
 }
 
 static void	parse_sphere(t_shape *shape)
