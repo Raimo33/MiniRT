@@ -6,7 +6,7 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/04/21 15:10:02 by craimond         ###   ########.fr        #
+#    Updated: 2024/04/21 15:24:59 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,7 +65,7 @@ leaks: all
 
 clean:
 		@$(RM) $(OBJS)
-		@make clean -C $(LIBFT_DIR) > /dev/null
+		@make -s clean -C $(LIBFT_DIR) > /dev/null 2>&1 || true
 		@echo "$(RED)cleaned libft$(NC)"
 		@echo "$(RED)cleaned $(NAME)$(NC)"
 
