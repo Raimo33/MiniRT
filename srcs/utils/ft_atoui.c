@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:21:29 by egualand          #+#    #+#             */
-/*   Updated: 2024/04/17 15:33:46 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 16:24:17 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ uint8_t	ft_atoui(const char *str)
 
 	i = 0;
 	result = 0;
+	if (!str)
+		return (0);
 	while (ft_isdigit(str[i]))
 		result = result * 10 + (str[i++] - '0');
 	return (result);

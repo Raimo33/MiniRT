@@ -1,24 +1,32 @@
-A	1								255,255,255
+#   intensity                       		 color
+A	1										255,255,255
 
-L   40,1020			0.8				237,245,2
-L   -40,10,20		0.8				237,245,2
-L  	0,10,20			0.8				237,245,2
+#   position        intensity       		color                        
+L   40,10,20			0.8						237,245,2
+L   -40,10,20		0.8						237,245,2
+L  	0,10,20			0.8						237,245,2
 
-pl	0,0,0		0,1,0				63,130,5 		300		0.5		0.7 leaves
+#   position    normal              		color           shininess   specular	diffuse		texture
+pl	0,0,0		0,1,0						63,100,5 		300			0.5			0.7 		
 
-sp  0,10,0		20					221,166,201 	50		0.8		0.7 checkerboard
+#HEAD
+#   position    radius          			color           shininess   specular	diffuse		texture
+sp  0,10,0		20							221,166,201 	50			0.8			0.7			checkerboard
 
-#eyes
-sp  5,13,8		5					255,255,255 	150		0.8		0.7
-sp  -5,		5					255,255,255 	30		0.8		0.7
+#EYES
+#   position    radius          			color           shininess   specular	diffuse		texture
+sp  5,13,8		5							255,255,255 	150			0.8			0.7
+sp  -5,13,8		5							255,255,255 	30			0.8			0.7
 
-#pupils
-sp  5,13,10.5		2				61,196,237 		15		0.8		0.7
-sp  -5,13,10.5		2				61,196,237  	120		0.8		0.7
+#PUPILS
+#   position    	radius          		color           shininess   specular	diffuse		texture
+sp  5,13,10			2						61,196,237 		15			0.8			0.7
+sp  -5,13,10		2						61,196,237  	120			0.8			0.7
 
-#mouth
-cy 0,7.5,7.4 	-1,0,0  	5 10  	216,72,36  		35 		0.8 	0.7
+#MOUTH
+#   position    direction   radius height   color       	shininess   specular	diffuse		texture
+cy	0,7.5,7.4 	-1,0,0  	5 	   10  		216,72,36		35 			0.8 		0.7
 
-
-C  0,40,50		0,-1,-1		90
-C  0,40,50		0,-1,0		90
+#CAMERAS
+#position		look_at		fov
+C  0,25,30		0,-1,-1		90

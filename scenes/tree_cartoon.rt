@@ -1,0 +1,18 @@
+#ambient light
+A 					1								255,255,255
+
+#light
+L 0,0,-20			0.8								255,255,255	
+
+#camera
+C 0,10,-40			0,0,1					90
+
+#posizione		diametro							colore			shininess		specular	diffuse		texture
+sp 0,25,0		20									0,0,0			4	 			0.123456	0.7890		leaves								0,0,0			4	 			0.123456	0.7890		leaves
+
+#posizione		direzione		raggio	altezza 	colore			shininess		specular	diffuse		texture
+cy 0,15,0		0,1,0			3.8		30	 		0,0,0			0.123456		0.7890		0.2 		bark
+
+
+#piano
+pl	0,0,0		0,1,0								2,245,67 		50		0.3			1					grass

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/21 15:09:41 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 16:47:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ void init_hooks(t_mlx_data *win_data, t_scene *scene)
 static int key_hook(const int keycode, t_hook_data *hook_data)
 {
 	t_mlx_data *win_data;
-	int	idx;
 
 	win_data = hook_data->win_data;
 	if (keycode == KEY_ESC)
@@ -124,9 +123,10 @@ static int key_hook(const int keycode, t_hook_data *hook_data)
 	else if (keycode == KEY_SPACE && win_data->n_images > 1)
 	{
 		win_data->current_img--;
-		idx = abs(win_data->current_img) % win_data->n_images;
+		if (win_data->current_img < 0)
+			win_data->current_img = win_data->n_images - 1;
 		mlx_clear_window(hook_data->win_data->mlx, hook_data->win_data->win);
-		mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->images[idx], 0, 0);
+		mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->images[win_data->current_img], 0, 0);
 	}
 	return (0);
 }

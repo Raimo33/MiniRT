@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/21 15:13:53 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 17:55:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,17 @@
 # include "scene.h"
 
 //valori ideali
-# define WIN_SIZE 2
+# define WIN_SIZE 1
 # define WORLD_SIZE 1000
-# define OCTREE_DEPTH 4
+# define OCTREE_DEPTH 2
 # define N_THREADS 8
 
 # define BOUNCE_ATTENUATION_FACTOR 0.8
-# define BACKGROUND_COLOR 0xadf9ff
+# define BACKGROUND_COLOR 0xc0c6ed
 # define KEY_ESC 65307
 # define KEY_SPACE 32
 
-# define CHECKERBOARD_TILE_DENSITY 10
+# define CHECKERBOARD_TILE_DENSITY 15
 # define CHECKERBOARD_COLOR1 0x000000
 # define CHECKERBOARD_COLOR2 0xFFFFFF
 

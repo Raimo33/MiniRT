@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/21 15:00:41 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 16:24:43 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,11 +181,14 @@ static void	parse_light(t_scene *scene)
 static void	parse_camera(t_scene *scene)
 {
 	t_camera	camera;
+
 	t_camera	*camera_ptr;
 	
 	camera.center = parse_coord(ft_strtok(NULL, spaces));
 	camera.normal = parse_coord(ft_strtok(NULL, spaces));
-	camera.fov = clamp(ft_atoui(ft_strtok(NULL, spaces)), 0, 180);
+	camera.fov = clamp(ft_atoui(ft_strtok(NULL, spaces)), 1, 180);
+	if (camera.fov == 1 || camera.fov == 180)
+		ft_putstr_fd("Warning: camera FOV set to 1 or 180\n", STDERR_FILENO);
 	camera_ptr = (t_camera *)malloc_p(sizeof(t_camera));
 	*camera_ptr = camera;
 	ft_lstadd_front(&scene->cameras, ft_lstnew(camera_ptr));
