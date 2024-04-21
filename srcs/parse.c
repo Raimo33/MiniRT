@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/21 16:24:43 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/21 17:59:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,8 +227,8 @@ static void	parse_cone(t_shape *shape)
 {
 	shape->cone.base_center = parse_coord(ft_strtok(NULL, spaces));
 	shape->cone.direction = parse_coord(ft_strtok(NULL, spaces));
-	shape->cone.height = ft_atof(ft_strtok(NULL, spaces));
 	shape->cone.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
+	shape->cone.height = ft_atof(ft_strtok(NULL, spaces));
 	if (shape->cone.radius <= 0)
 		ft_quit(5, "invalid cone radius");
 	if (shape->cone.height <= 0)
