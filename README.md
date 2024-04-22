@@ -1,19 +1,7 @@
-
-![materials](https://github.com/Raimo33/MiniRT/assets/104778891/6c639a05-722b-4acf-83ff-09cdb54b1d7c "Materials Showcase")
-
-
-![italian_flag_front](https://github.com/Raimo33/MiniRT/assets/104778891/9e6e8ae0-d6c5-4e2d-bf4e-eab6267f7894 "Italian Flag")
-
-
-![italian flag side](https://github.com/Raimo33/MiniRT/assets/104778891/20af00b7-078d-4a71-81bd-d9c2005dfcf8 "Italian Flag")
-
-![Face](https://github.com/Raimo33/MiniRT/assets/104778891/39b1e3a3-602b-4d64-875f-c4736819936d "Face")
-
-
-![Wolf_on_brick](https://github.com/Raimo33/MiniRT/assets/104778891/546cb2b3-a436-4574-ad63-bfef88a89da5 "Wolf on Bricks")
-
-
-![Wolf_on_grass](https://github.com/Raimo33/MiniRT/assets/104778891/d5b81501-c4ef-4993-a3a7-5c2b1a1e6c1a "Wolf on Grass")
-
-
-![Zebrus](https://github.com/Raimo33/MiniRT/assets/104778891/ccf0927a-2ddb-4473-95ab-7d20fd9b7bfb "Zebrus")
+![materials_showcase](https://github.com/Raimo33/MiniRT/assets/104778891/73369270-0351-4a38-b822-f6541f7982b4)
+![italian_flag_front](https://github.com/Raimo33/MiniRT/assets/104778891/a88ab8f5-e615-4e68-aa7f-126c4280ef81)
+![italian_flag_side](https://github.com/Raimo33/MiniRT/assets/104778891/2c2f2ec0-4c0e-426d-98dc-c568c88fd749)
+![face](https://github.com/Raimo33/MiniRT/assets/104778891/0f8275d6-5d20-44c4-b745-e2e58bfeba55)
+![wolf_on_bricks](https://github.com/Raimo33/MiniRT/assets/104778891/c850aabd-97c4-4ef2-a721-9a5f5cbbff49)
+![wolf_on_grass](https://github.com/Raimo33/MiniRT/assets/104778891/380bfec5-acda-4162-b1f1-e452dbf34d9f)
+![Zebrus](https://github.com/Raimo33/MiniRT/assets/104778891/a7b3a3eb-275e-4a23-8553-05c907b62ed7)
