@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/21 17:59:08 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:19:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,18 @@ static void		parse_triangle(t_shape *shape);
 static void		parse_cone(t_shape *shape);
 static t_float3	parse_coord(char *str);
 static t_color	parse_color(char *str);
-static char 	*skip_commas(char *str);
-static bool 	is_scene_valid(const t_scene *scene);
+static char		*skip_commas(char *str);
+static bool		is_scene_valid(const t_scene *scene);
 
 void parse_scene(const int fd, t_scene *scene)
 {
 	char	*line;
-	
+
 	line = get_next_line(fd);
-    while (line)
+	while (line)
 	{
 		if (!is_empty_line(line) && !is_comment(line))
-			parse_line(line, scene);			
+			parse_line(line, scene);
 		free(line);
 		line = get_next_line(fd);
 	}
@@ -49,7 +49,7 @@ void parse_scene(const int fd, t_scene *scene)
 	}
 }
 
-static bool is_scene_valid(const t_scene *scene)
+static bool	is_scene_valid(const t_scene *scene)
 {
 	if (!scene->cameras)
 		ft_putstr_fd("Invalid scene: no cameras found\n", STDERR_FILENO);
@@ -68,7 +68,7 @@ static void	parse_line(char *line, t_scene *scene)
 	void (*const			parse_objects[])(t_scene *) = {&parse_amblight, &parse_light, &parse_camera};
 	static uint8_t			n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
 	uint8_t					i;
-	
+
 	i = 0;
 	while (i < n_prefixes)
 	{
@@ -88,8 +88,8 @@ static void	parse_shape(char *line, t_scene *scene)
 	static const char		*prefixes[] = {"sp", "cy", "tr", "co", "pl"};
 	void (*const			parse_funcs[])(t_shape *) = {&parse_sphere, &parse_cylinder, &parse_triangle, &parse_cone, &parse_plane};
 	static const uint8_t	n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
-	uint8_t		i;
-	t_shape		*shape;
+	uint8_t					i;
+	t_shape					*shape;
 
 	i = 0;
 	while (i < n_prefixes)
@@ -98,7 +98,7 @@ static void	parse_shape(char *line, t_scene *scene)
 		{
 			shape = (t_shape *)calloc_p(1, sizeof(t_shape));
 			shape->material = (t_material *)calloc_p(1, sizeof(t_material));
-			ft_strtok(line, spaces); //per skippare la lettera
+			ft_strtok(line, spaces);
 			parse_funcs[i](shape);
 			parse_material(shape->material);
 			ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
@@ -113,7 +113,7 @@ static void	parse_shape(char *line, t_scene *scene)
 static void	parse_material(t_material *material)
 {
 	char	*tmp;
-	
+
 	material->color = parse_color(ft_strtok(NULL, spaces));
 	material->shininess = fmax(ft_atof(ft_strtok(NULL, spaces)), 0);
 	material->specular = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
@@ -166,7 +166,7 @@ static void	parse_light(t_scene *scene)
 {
 	t_light		light;
 	t_light		*light_ptr;
-	
+
 	light.center = parse_coord(ft_strtok(NULL, spaces));
 	light.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
 	if (light.brightness == 0)
@@ -181,9 +181,8 @@ static void	parse_light(t_scene *scene)
 static void	parse_camera(t_scene *scene)
 {
 	t_camera	camera;
-
 	t_camera	*camera_ptr;
-	
+
 	camera.center = parse_coord(ft_strtok(NULL, spaces));
 	camera.normal = parse_coord(ft_strtok(NULL, spaces));
 	camera.fov = clamp(ft_atoui(ft_strtok(NULL, spaces)), 1, 180);

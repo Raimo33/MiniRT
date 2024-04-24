@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/21 17:55:25 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:58:28 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,36 +85,37 @@ typedef struct s_thread_data
 	uint16_t	end_y;
 }	t_thread_data;
 
-//TODO aggiustare i const
 void			check_args(const uint16_t argc, char **argv);
 void			init_scene(t_scene *scene);
-void 			parse_scene(const int fd, t_scene *scene);
-void			setup_scene(t_scene *scene);
 void			init_window(t_mlx_data *win_data, t_scene *scene);
-void			init_hooks(t_mlx_data *win_data, t_scene *scene);
 void			init_textures(const t_scene *scene, t_mlx_data *mlx_data);
+void			init_hooks(t_mlx_data *win_data, t_scene *scene);
+void			precompute_viewports(t_mlx_data *win_data);
+void			parse_scene(const int fd, t_scene *scene);
+void			setup_scene(t_scene *scene);
 void			render_scene(t_mlx_data *win_data, t_scene *scene);
+void			*render_thread(void *data);
+void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
+t_color			my_mlx_pixel_get(const t_texture_data *data, const uint32_t x, const uint32_t y);
+t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratios);
 t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
-t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratio);
+void			ft_quit(const uint8_t id, char *msg);
+void			destroy_scene(t_scene *scene);
+t_scene			*get_scene(t_scene *scene);
+int				close_win(t_hook_data *hook_data);
+double			*precompute_ratios(const uint16_t n_elems);
+t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
+void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
+void			get_uv(const t_hit *hit_info, double *u, double *v);
+bool			ray_intersects_aabb(const t_ray ray, const t_point bounding_box_max, const t_point bounding_box_min);
 double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
-double			intersect_ray_triangle(const t_ray, const t_shape *shape);
 double			intersect_ray_cone(const t_ray ray, const t_shape *shape);
-bool			ray_intersects_aabb(t_ray ray, t_point bounding_box_max, t_point bounding_box_min);
-t_point			ray_point_at_parameter(const t_ray ray, double t);
-void			get_uv(const t_hit *hit_info, double *u, double *v);
-double			*precompute_ratios(uint16_t n_elems);
-void			precompute_viewports(t_mlx_data *win_data);
-t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
-void			set_thread_attr(pthread_attr_t *thread_attr);
+double			intersect_ray_triangle(const t_ray ray, const t_shape *shape);
+t_point			ray_point_at_parameter(const t_ray ray, const double t);
 t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
-void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
-void 			ft_quit(const uint8_t id, char *msg);
-void 			destroy_scene(t_scene *scene);
-int 			close_win(t_hook_data *hook_data);
-void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
-t_color 		my_mlx_pixel_get(const t_texture_data *data, const uint32_t x, const uint32_t y);
-t_scene			*get_scene(t_scene *_scene);
+
+
 
 #endif

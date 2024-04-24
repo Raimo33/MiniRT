@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/20 19:17:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:09:56 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ typedef struct s_sphere
 {
 	t_point		center;
 	double		radius;
+	double		squared_radius;
 }	t_sphere;
 
 typedef struct s_plane
@@ -71,16 +72,16 @@ typedef struct s_texture_data
 typedef struct s_material
 {
 	t_texture_data	*texture;
-    t_color			color;
+	t_color			color;
 	double			shininess;
 	double			specular;
 	double			diffuse;
 	bool			is_checkerboard : 1;
-}   t_material;
+}	t_material;
 
 typedef struct s_shape
 {
-	enum {SPHERE, CYLINDER, TRIANGLE, CONE, PLANE}	type; //PLANE DEVE ESSERE L'ULTIMO DELLA SERIE
+	enum {SPHERE, CYLINDER, TRIANGLE, CONE, PLANE}	type;
 	union
 	{
 		t_sphere	sphere;
@@ -89,18 +90,17 @@ typedef struct s_shape
 		t_cone		cone;
 		t_plane		plane;
 	};
-	t_material	*material;
-	//bounding box
-	t_point	bb_min;
-	t_point	bb_max;
+	t_material		*material;
+	t_point			bb_min;
+	t_point			bb_max;
 }	t_shape;
 
 typedef struct s_hit
 {
-    t_point     point;
-    t_vector    normal;
-    double      distance;
-    t_shape		*shape;
-}   t_hit;
+	t_point		point;
+	t_vector	normal;
+	double		distance;
+	t_shape		*shape;
+}	t_hit;
 
 #endif

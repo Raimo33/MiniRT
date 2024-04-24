@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:30:16 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/16 16:00:08 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:20:06 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 			object_distance = vec_length(vec_sub(tmp->point, surface_point));
 		angle_of_incidence_cosine = vec_dot(surface_normal, light_dir);
 		perfect_light_reflection = vec_normalize(vec_sub(vec_scale(2 * angle_of_incidence_cosine, surface_normal), light_dir));
-		if ((!tmp || object_distance > light_distance ) && angle_of_incidence_cosine > 0)
+		if ((!tmp || object_distance > light_distance) && angle_of_incidence_cosine > 0)
 			light_component = get_light_component(light->color, light->brightness, angle_of_incidence_cosine, view_dir, hit_info->shape->material, perfect_light_reflection);
 		else
 			light_component = (t_color){0, 0, 0};
@@ -76,10 +76,10 @@ static t_color	compute_lights_contribution(const t_scene *scene, const t_hit *hi
 //full phong reflectin model
 static t_color get_light_component(t_color light_color, const double brightness, const double angle_of_incidence_cosine, const t_vector view_dir, const t_material *material, const t_vector perfect_light_reflection)
 {
-	const double dot_product = fmax(vec_dot(perfect_light_reflection, view_dir), 0.0f);
-	const double diffuse = material->diffuse * angle_of_incidence_cosine * brightness;
-	const double specular = material->specular * pow(dot_product, material->shininess) * brightness;
-	const double total_light = fclamp(diffuse + specular, 0.0f, 1.0f);
+	const double	dot_product = fmax(vec_dot(perfect_light_reflection, view_dir), 0.0f);
+	const double	diffuse = material->diffuse * angle_of_incidence_cosine * brightness;
+	const double	specular = material->specular * pow(dot_product, material->shininess) * brightness;
+	const double	total_light = fclamp(diffuse + specular, 0.0f, 1.0f);
 
 	light_color.r *= total_light;
 	light_color.g *= total_light;

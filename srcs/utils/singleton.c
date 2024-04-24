@@ -6,13 +6,13 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 14:47:54 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/21 14:53:28 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:11:38 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minirt.h"
 
-t_scene *get_scene(t_scene *_scene)
+t_scene	*get_scene(t_scene *_scene)
 {
 	static t_scene	*scene = NULL;
 

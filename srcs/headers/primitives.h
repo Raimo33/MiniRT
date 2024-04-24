@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   primitives.h                                         :+:      :+:    :+:   */
+/*   primitives.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:49:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/03/23 22:17:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:08:42 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef primitives_H
-# define primitives_H
+#ifndef PRIMITIVES_H
+# define PRIMITIVES_H
 
 # include <stdint.h>
 
@@ -40,8 +40,8 @@ typedef struct s_color
 	uint8_t		b;
 }	t_color;
 
-typedef t_float3 t_point;
-typedef t_float3 t_vector;
+typedef t_float3	t_point;
+typedef t_float3	t_vector;
 
 typedef struct s_ray
 {
@@ -60,6 +60,5 @@ double		vec_dot(const t_vector a, const t_vector b);
 double		vec_length(const t_vector a);
 t_vector	project_vector_onto_axis(t_vector vector, t_vector axis);
 bool		are_vectors_parallel(t_vector v1, t_vector v2);
-
 
 #endif

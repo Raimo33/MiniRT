@@ -6,13 +6,13 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/21 16:47:25 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:13:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "headers/minirt.h"
 
-static int key_hook(int keycode, t_hook_data *hook_data);
+static int	key_hook(int keycode, t_hook_data *hook_data);
 
 void	check_args(const uint16_t argc, char **argv)
 {
@@ -100,10 +100,10 @@ void	init_textures(const t_scene *scene, t_mlx_data *mlx_data)
 	}
 }
 
-void init_hooks(t_mlx_data *win_data, t_scene *scene)
+void	init_hooks(t_mlx_data *win_data, t_scene *scene)
 {
-	t_hook_data *hook_data;
-	
+	t_hook_data	*hook_data;
+
 	hook_data = calloc_p(1, sizeof(t_hook_data));
 	if (!hook_data)
 		ft_quit(3, "hook data initialization failed");
@@ -113,9 +113,9 @@ void init_hooks(t_mlx_data *win_data, t_scene *scene)
 	mlx_hook(win_data->win, 17, 1L << 17, close_win, hook_data);
 }
 
-static int key_hook(const int keycode, t_hook_data *hook_data)
+static int	key_hook(const int keycode, t_hook_data *hook_data)
 {
-	t_mlx_data *win_data;
+	t_mlx_data	*win_data;
 
 	win_data = hook_data->win_data;
 	if (keycode == KEY_ESC)

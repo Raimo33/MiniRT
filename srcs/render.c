@@ -5,15 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/24 14:18:00 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/20 19:44:55 by craimond         ###   ########.fr       */
+/*   Created: 2024/04/24 21:24:04 by craimond          #+#    #+#             */
+/*   Updated: 2024/04/24 21:24:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "headers/minirt.h"
 
-//TODO sperimentare con la keyword restrict
-//TODO utilizzare mlx_get_screen_size invece di dimensioni fixed
+#include "headers/minirt.h"
 
 static void		fill_image(t_thread_data **threads_data, pthread_attr_t *thread_attr);
 static void		*render_segment(void *data);
@@ -25,7 +23,7 @@ static t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point);
 static t_vector	get_cone_normal(t_cone cone, t_point point);
 static t_color	add_texture(const t_hit *hit_info);
 
-void render_scene(t_mlx_data *win_data, t_scene *scene)
+void	render_scene(t_mlx_data *win_data, t_scene *scene)
 {
 	t_thread_data	**threads_data;
 	pthread_attr_t	thread_attr;
@@ -54,7 +52,7 @@ void render_scene(t_mlx_data *win_data, t_scene *scene)
 
 static void	fill_image(t_thread_data **threads_data, pthread_attr_t *thread_attr)
 {
-	pthread_t 	thread_ids[N_THREADS];
+	pthread_t	thread_ids[N_THREADS];
 	uint16_t	i;
 
 	i = 0;
@@ -109,8 +107,8 @@ static void	*render_segment(void *data)
 }
 
 static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y, const t_mlx_data *win_data)
-{	
-	const t_vector direction =
+{
+	const t_vector	direction =
 	{
 		.x = cam->forward.x + (win_data->viewport_x[x] * cam->right_by_half_viewport_width.x) + (win_data->viewport_y[y] * cam->up_by_half_viewport_height.x),
 		.y = cam->forward.y + (win_data->viewport_x[x] * cam->right_by_half_viewport_width.y) + (win_data->viewport_y[y] * cam->up_by_half_viewport_height.y),
@@ -121,9 +119,9 @@ static t_ray	get_ray(const t_camera *cam, const uint16_t x, const uint16_t y, co
 
 static t_color	add_texture(const t_hit *hit_info)
 {
-	double			u;
-	double			v;
-	t_material		*material;
+	double					u;
+	double					v;
+	t_material				*material;
 	static const t_color	checkerboard_color1 = {CHECKERBOARD_COLOR1 >> 16 & 0xFF, CHECKERBOARD_COLOR1 >> 8 & 0xFF, CHECKERBOARD_COLOR1 & 0xFF};
 	static const t_color	checkerboard_color2 = {CHECKERBOARD_COLOR2 >> 16 & 0xFF, CHECKERBOARD_COLOR2 >> 8 & 0xFF, CHECKERBOARD_COLOR2 & 0xFF};
 
@@ -149,7 +147,7 @@ static t_color	add_texture(const t_hit *hit_info)
 
 t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
 {
-    t_hit		*closest_hit = (t_hit *)calloc_p(1, sizeof(t_hit));
+	t_hit	*closest_hit = (t_hit *)calloc_p(1, sizeof(t_hit));
 
 	*closest_hit = (t_hit)
 	{
@@ -158,10 +156,10 @@ t_hit	*trace_ray(const t_scene *scene, const t_ray ray)
 		.normal = {0, 0, 0},
 		.shape = NULL,
 	};
-    traverse_octree(scene->octree, ray, closest_hit);
+	traverse_octree(scene->octree, ray, closest_hit);
 	if (closest_hit->distance == FLT_MAX)
 		return (free(closest_hit), NULL);
-    return (closest_hit);
+	return (closest_hit);
 }
 
 static void	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closest_hit)
@@ -183,9 +181,9 @@ static void	traverse_octree(const t_octree *node, const t_ray ray, t_hit *closes
 static inline void	check_shapes_in_node(const t_octree *node, const t_ray ray, t_hit *closest_hit)
 {
 	static double (*const	intersect[])(const t_ray, const t_shape *) = {&intersect_ray_sphere, &intersect_ray_cylinder, &intersect_ray_triangle, &intersect_ray_cone, &intersect_ray_plane}; //stesso ordine di enum
-	t_list	*shapes;
-	t_shape	*shape;
-	double	t;
+	t_list					*shapes;
+	t_shape					*shape;
+	double					t;
 
 	shapes = node->shapes;
 	while (shapes)

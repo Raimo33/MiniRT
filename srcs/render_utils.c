@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/17 15:19:40 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:58:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *l
 	return (threads_data);
 }
 
-double	*precompute_ratios(uint16_t n_elems)
+double	*precompute_ratios(const uint16_t n_elems)
 {
 	uint16_t	i;
-	double 		*ratios;
-	
+	double		*ratios;
+
 	ratios = (double *)calloc_p(n_elems, sizeof(double));
 	ratios[0] = 1.0f;
 	i = 1;
@@ -85,7 +85,7 @@ inline t_color	blend_colors(const t_color color1, const t_color color2, double r
 	t_color		result;
 	double		negative_ratio;
 
-    ratio = fclamp(ratio, 0.0f, 1.0f);
+	ratio = fclamp(ratio, 0.0f, 1.0f);
 	negative_ratio = 1.0f - ratio;
 	result.r = (color1.r * negative_ratio + color2.r * ratio);
 	result.g = (color1.g * negative_ratio + color2.g * ratio);
@@ -97,7 +97,7 @@ void	setup_camera(t_camera *cam, const t_mlx_data *win_data)
 {
 	static const t_vector	world_up = {0, 1, 0};
 	const double			rad_fov = cam->fov * M_PI / 180;
-	const double 			viewport_height = 2 * tan(rad_fov / 2);
+	const double			viewport_height = 2 * tan(rad_fov / 2);
 	const double			viewport_width = win_data->aspect_ratio * viewport_height;
 
 	cam->forward = vec_normalize(cam->normal);

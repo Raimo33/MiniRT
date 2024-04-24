@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/25 15:35:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/20 19:20:17 by craimond         ###   ########.fr       */
+/*   Created: 2024/04/24 21:25:57 by craimond          #+#    #+#             */
+/*   Updated: 2024/04/24 21:26:10 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ static void set_shapes_data(t_scene *scene)
 	t_shape		*shape;
 	t_list		*node;
 	t_cylinder	*cylinder;
-	double 		cos_theta;
-	
+	double		cos_theta;
+
 	node = scene->shapes;
 	while (node)
 	{
@@ -51,6 +51,9 @@ static void set_shapes_data(t_scene *scene)
 		set_bounding_box(shape);
 		switch (shape->type)
 		{
+			case SPHERE:
+				shape->sphere.squared_radius = shape->sphere.radius * shape->sphere.radius;
+				break ;
 			case TRIANGLE:
 				shape->triangle.normal = vec_normalize(vec_cross(vec_sub(shape->triangle.vertices[1], shape->triangle.vertices[0]), vec_sub(shape->triangle.vertices[2], shape->triangle.vertices[0])));
 				break ;
@@ -87,9 +90,9 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 	t_list		*shapes_inside_box;
 	uint16_t	i;
 
-	if (depth == 0) //foglia
+	if (depth == 0)
 	{
-		node->children = NULL; //fondamentale, e' cio' che distingue un nodo foglia da uno interno
+		node->children = NULL;
 		node->shapes = shapes;
 		node->box_top = box_top;
 		node->box_bottom = box_bottom;
@@ -101,7 +104,6 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 	node->box_top = box_top;
 	node->shapes = shapes;
 	node->n_shapes = 0;
-	//world.min a sx e world.max a dx
 	center = (t_vector){(box_top.x + box_bottom.x) / 2, (box_top.y + box_bottom.y) / 2, (box_top.z + box_bottom.z) / 2};
 	size = (t_vector){(box_top.x - box_bottom.x) / 2, (box_top.y - box_bottom.y) / 2, (box_top.z - box_bottom.z) / 2};
 	i = -1;
@@ -109,19 +111,17 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 	{
 		new_box_top = center;
 		new_box_bottom = center;
-
 		new_box_top.x += (i & 1) ? size.x : 0;
 		new_box_bottom.x += (i & 1) ? 0 : -size.x;
 		new_box_top.y += (i & 2) ? size.y : 0;
 		new_box_bottom.y += (i & 2) ? 0 : -size.y;
 		new_box_top.z += (i & 4) ? size.z : 0;
 		new_box_bottom.z += (i & 4) ? 0 : -size.z;
-
 		shapes_inside_box = get_shapes_inside_box(shapes, new_box_top, new_box_bottom);
 		if (!shapes_inside_box)
 		{
 			node->children[i] = NULL;
-			continue ;	
+			continue ;
 		}
 		node->children[i] = (t_octree *)calloc_p(1, sizeof(t_octree));
 		node->n_shapes += ft_lstsize(shapes_inside_box);
@@ -131,18 +131,18 @@ static void fill_octree(t_octree *node, t_list *shapes, uint8_t depth, t_vector 
 
 static t_list *get_shapes_inside_box(t_list *shapes, t_point box_top, t_point box_bottom)
 {
-    t_list  *inside_shapes;
-	t_shape *current_shape;
+	t_list	*inside_shapes;
+	t_shape	*current_shape;
 
 	inside_shapes = NULL;
-    while (shapes)
-    {
-        current_shape = (t_shape *)shapes->content;
-        if (boxes_overlap(box_top, box_bottom, current_shape->bb_max, current_shape->bb_min))
+	while (shapes)
+	{
+		current_shape = (t_shape *)shapes->content;
+		if (boxes_overlap(box_top, box_bottom, current_shape->bb_max, current_shape->bb_min))
 			ft_lstadd_front(&inside_shapes, ft_lstnew(current_shape));
-        shapes = shapes->next;
-    }
-    return (inside_shapes);
+		shapes = shapes->next;
+	}
+	return (inside_shapes);
 }
 
 static void	set_world_extremes(t_scene *scene)
@@ -203,7 +203,7 @@ static void set_bb_plane(t_shape *shape)
 	
 	r = (t_vector){1, 0, 0};
 	if (fabs(vec_dot(r, shape->plane.normal)) > 0.99f)
-    	r = (t_vector){0, 1, 0};
+		r = (t_vector){0, 1, 0};
 	
 	u = vec_cross(r, shape->plane.normal);
 	v = vec_cross(u, shape->plane.normal);
@@ -225,8 +225,8 @@ static void set_bb_plane(t_shape *shape)
 	};
 
 	t_point bb_min = {
-    	-size_by_u.x - size_by_v.x,
-    	-size_by_u.y - size_by_v.y,
+		-size_by_u.x - size_by_v.x,
+		-size_by_u.y - size_by_v.y,
 		-size_by_u.z - size_by_v.z
 	};
 
@@ -352,29 +352,28 @@ static void set_bb_cone(t_shape *shape)
 static void	set_bb_triangle(t_shape *shape)
 {
 	const t_vector v0 = shape->triangle.vertices[0];
-    const t_vector v1 = shape->triangle.vertices[1];
-    const t_vector v2 = shape->triangle.vertices[2];
+	const t_vector v1 = shape->triangle.vertices[1];
+	const t_vector v2 = shape->triangle.vertices[2];
 
-    t_vector min = v0;
-    t_vector max = v0;
+	t_vector min = v0;
+	t_vector max = v0;
 
-    min.x = fmin(min.x, v1.x);
-    min.y = fmin(min.y, v1.y);
-    min.z = fmin(min.z, v1.z);
+	min.x = fmin(min.x, v1.x);
+	min.y = fmin(min.y, v1.y);
+	min.z = fmin(min.z, v1.z);
 
-    max.x = fmax(max.x, v1.x);
-    max.y = fmax(max.y, v1.y);
-    max.z = fmax(max.z, v1.z);
+	max.x = fmax(max.x, v1.x);
+	max.y = fmax(max.y, v1.y);
+	max.z = fmax(max.z, v1.z);
 
-    min.x = fmin(min.x, v2.x);
-    min.y = fmin(min.y, v2.y);
-    min.z = fmin(min.z, v2.z);
+	min.x = fmin(min.x, v2.x);
+	min.y = fmin(min.y, v2.y);
+	min.z = fmin(min.z, v2.z);
 
-    max.x = fmax(max.x, v2.x);
-    max.y = fmax(max.y, v2.y);
-    max.z = fmax(max.z, v2.z);
+	max.x = fmax(max.x, v2.x);
+	max.y = fmax(max.y, v2.y);
+	max.z = fmax(max.z, v2.z);
 
-    shape->bb_min = (t_point)min;
-    shape->bb_max = (t_point)max;
+	shape->bb_min = (t_point)min;
+	shape->bb_max = (t_point)max;
 }
-

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:45:05 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/14 15:09:31 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:08:58 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct s_amblight
 	t_color		ambient;
 }	t_amblight;
 
-typedef	struct s_octree
+typedef struct s_octree
 {
 	struct s_octree	**children;
 	t_list			*shapes;
@@ -51,7 +51,7 @@ typedef	struct s_octree
 	t_vector		box_bottom;
 }	t_octree;
 
-typedef struct	s_scene
+typedef struct s_scene
 {
 	t_octree	*octree;
 	t_list		*shapes;
