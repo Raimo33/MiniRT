@@ -20,7 +20,7 @@ static void	get_plane_uv(const t_hit *hit_info, double *u, double *v);
 
 void	get_uv(const t_hit *hit_info, double *u, double *v)
 {
-	void					(* get_uv_funcs[])(const t_hit *, double *, double *) = {&get_sphere_uv, &get_cylinder_uv, &get_triangle_uv, &get_cone_uv, &get_plane_uv}; //stesso ordine di enum
+	static void		(* get_uv_funcs[])(const t_hit *, double *, double *) = {&get_sphere_uv, &get_cylinder_uv, &get_triangle_uv, &get_cone_uv, &get_plane_uv}; //stesso ordine di enum
 	static const uint8_t	n_shapes = sizeof(get_uv_funcs) / sizeof(get_uv_funcs[0]);
 	uint8_t					i;
 
