@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 21:25:57 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:26:10 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:53:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void set_shapes_data(t_scene *scene)
 	{
 		shape = (t_shape *)node->content;
 		set_bounding_box(shape);
-		switch (shape->type)
+		switch (shape->e_type)
 		{
 			case SPHERE:
 				shape->sphere.squared_radius = shape->sphere.radius * shape->sphere.radius;
@@ -176,7 +176,7 @@ static void	set_bounding_box(t_shape *shape)
 	i = 0;
 	while (i < n_shapes)
 	{
-		if (shape->type == i)
+		if (shape->e_type == i)
 		{
 			get_bb_funcs[i](shape);
 			return ;

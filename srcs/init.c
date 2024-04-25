@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:13:24 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:57:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 	uint16_t	i;
 
 	win_data->mlx = mlx_init();
-	mlx_get_screen_size(win_data->mlx, &win_data->win_width, &win_data->win_height);
+	mlx_get_screen_size(win_data->mlx,
+		&win_data->win_width, &win_data->win_height);
 	win_data->win_width *= WIN_SIZE;
 	win_data->win_height *= WIN_SIZE;
 	win_data->win = mlx_new_window(win_data->mlx,
@@ -54,22 +55,28 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 		ft_quit(3, "window initialization failed");
 	win_data->n_images = ft_lstsize(scene->cameras);
 	win_data->images = (void **)calloc_p(win_data->n_images, sizeof(void *));
-	win_data->addrresses = (char **)calloc_p(win_data->n_images, sizeof(char *));
+	win_data->addrresses
+		= (char **)calloc_p(win_data->n_images, sizeof(char *));
 	i = 0;
 	while (i < win_data->n_images)
 	{
-		win_data->images[i] = mlx_new_image(win_data->mlx, win_data->win_width, win_data->win_height);
+		win_data->images[i] = mlx_new_image(win_data->mlx,
+				win_data->win_width, win_data->win_height);
 		if (!win_data->images[i])
 			ft_quit(3, "image initialization failed");
 		win_data->addrresses[i] = mlx_get_data_addr(win_data->images[i],
-				&win_data->bits_per_pixel, &win_data->line_length, &win_data->endian);
+				&win_data->bits_per_pixel,
+				&win_data->line_length, &win_data->endian);
 		i++;
 	}
 	win_data->current_img = 0;
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
-	win_data->aspect_ratio = (double)win_data->win_width / (double)win_data->win_height;
-	win_data->viewport_x = (double *)calloc_p(win_data->win_width, sizeof(double));
-	win_data->viewport_y = (double *)calloc_p(win_data->win_height, sizeof(double));
+	win_data->aspect_ratio = (double)win_data->win_width
+		/ (double)win_data->win_height;
+	win_data->viewport_x
+		= (double *)calloc_p(win_data->win_width, sizeof(double));
+	win_data->viewport_y
+		= (double *)calloc_p(win_data->win_height, sizeof(double));
 	precompute_viewports(win_data);
 }
 
@@ -88,10 +95,15 @@ void	init_textures(const t_scene *scene, t_mlx_data *mlx_data)
 		material = shape->material;
 		if (material->texture)
 		{
-			texture_img = mlx_xpm_file_to_image(mlx_data->mlx, material->texture->path, &material->texture->width, &material->texture->height);
+			texture_img = mlx_xpm_file_to_image(mlx_data->mlx,
+					material->texture->path,
+					&material->texture->width, &material->texture->height);
 			if (!texture_img)
 				ft_quit(41, "mlx: failed to load texture");
-			material->texture->addr = mlx_get_data_addr(texture_img, &bits_per_pixel, &material->texture->line_length, &material->texture->endian);
+			material->texture->addr
+				= mlx_get_data_addr(texture_img, &bits_per_pixel,
+					&material->texture->line_length,
+					&material->texture->endian);
 			if (!material->texture->addr)
 				ft_quit(42, "mlx: failed to get texture address");
 			material->texture->bytes_per_pixel = bits_per_pixel / 8;
@@ -126,7 +138,8 @@ static int	key_hook(const int keycode, t_hook_data *hook_data)
 		if (win_data->current_img < 0)
 			win_data->current_img = win_data->n_images - 1;
 		mlx_clear_window(hook_data->win_data->mlx, hook_data->win_data->win);
-		mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->images[win_data->current_img], 0, 0);
+		mlx_put_image_to_window(win_data->mlx, win_data->win,
+			win_data->images[win_data->current_img], 0, 0);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:19:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:53:14 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,14 +199,14 @@ static void	parse_sphere(t_shape *shape)
 	shape->sphere.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
 	if (shape->sphere.radius <= 0)
 		ft_quit(5, "invalid sphere radius");
-	shape->type = SPHERE;
+	shape->e_type = SPHERE;
 }
 
 static void	parse_plane(t_shape *shape)
 {
 	shape->plane.center = parse_coord(ft_strtok(NULL, spaces));
 	shape->plane.normal = parse_coord(ft_strtok(NULL, spaces));
-	shape->type = PLANE;
+	shape->e_type = PLANE;
 }
 
 static void	parse_cylinder(t_shape *shape)
@@ -219,7 +219,7 @@ static void	parse_cylinder(t_shape *shape)
 		ft_quit(5, "invalid cylinder radius");
 	if (shape->cylinder.height <= 0)
 		ft_quit(5, "invalid cylinder height");
-	shape->type = CYLINDER;
+	shape->e_type = CYLINDER;
 }
 
 static void	parse_cone(t_shape *shape)
@@ -232,7 +232,7 @@ static void	parse_cone(t_shape *shape)
 		ft_quit(5, "invalid cone radius");
 	if (shape->cone.height <= 0)
 		ft_quit(5, "invalid cone height");
-	shape->type = CONE;
+	shape->e_type = CONE;
 }
 
 static void	parse_triangle(t_shape *shape)
@@ -246,7 +246,7 @@ static void	parse_triangle(t_shape *shape)
 	shape->triangle.v[1] = 0;
 	shape->triangle.u[2] = 0;
 	shape->triangle.v[2] = 1;
-	shape->type = TRIANGLE;
+	shape->e_type = TRIANGLE;
 }
 
 static t_float3	parse_coord(char *str)

@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:47:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:09:56 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:53:00 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,14 @@ typedef struct s_material
 
 typedef struct s_shape
 {
-	enum {SPHERE, CYLINDER, TRIANGLE, CONE, PLANE}	type;
+	enum
+	{
+		SPHERE,
+		CYLINDER,
+		TRIANGLE,
+		CONE,
+		PLANE
+	} e_type;
 	union
 	{
 		t_sphere	sphere;

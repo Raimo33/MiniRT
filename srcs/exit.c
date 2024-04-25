@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:12:39 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:56:08 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,15 @@ int	close_win(t_hook_data *hook_data)
 
 static void	octree_clear(t_octree *node, const uint16_t depth)
 {
+	uint8_t	i;
+
 	if (!node)
 		return ;
 	if (node->children)
 	{
-		for (uint8_t i = 0; i < 8; i++)
-			octree_clear(node->children[i], depth + 1);
+		i = 0;
+		while (i < 8)
+			octree_clear(node->children[i++], depth + 1);
 		free(node->children);
 	}
 	if (depth != 0)
