@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 21:15:20 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 15:54:36 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 16:22:16 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,19 +96,20 @@ static double	intersect_cylinder_side(const t_ray ray,
 	const t_vector	oc = vec_sub(ray.origin, cylinder->center);
 	const double	dot_oc_cylinder = vec_dot(oc, cylinder->direction);
 	double			abc[3];
-	double			t[4];
+	double			t[3];
+	double			disc;
 
-	t[2] = abc[1] * abc[1] - 4 * abc[0] * abc[2];
 	abc[0] = 1 - pow(drc, 2);
 	abc[1] = 2 * (vec_dot(ray.direction, oc) - (drc * dot_oc_cylinder));
 	abc[2] = vec_dot(oc, oc) - pow(dot_oc_cylinder, 2)
 		- cylinder->squared_radius;
-	if (t[2] < 0)
+	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];
+	if (disc < 0)
 		return (-1);
-	t[0] = (-abc[1] - sqrt(t[2])) / (abc[0] * 2);
-	t[1] = (-abc[1] + sqrt(t[2])) / (abc[0] * 2);
-	t[3] = while_func(t[0], cylinder, ray);
-	if (t[3] > 0)
-		return (t[3]);
+	t[0] = (-abc[1] - sqrt(disc)) / (abc[0] * 2);
+	t[1] = (-abc[1] + sqrt(disc)) / (abc[0] * 2);
+	t[2] = while_func(t[0], cylinder, ray);
+	if (t[2] > 0)
+		return (t[2]);
 	return (while_func(t[1], cylinder, ray));
 }

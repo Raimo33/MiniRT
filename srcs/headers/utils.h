@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 14:41:24 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:10:38 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 16:49:36 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ int32_t		clamp(const int32_t value, const int32_t min, const int32_t max);
 void		ft_freematrix(void **matrix);
 void		*calloc_p(const size_t n_memb, const size_t size);
 void		*malloc_p(const size_t size);
+void		ft_swap(double *a, double *b);
 
 #endif
