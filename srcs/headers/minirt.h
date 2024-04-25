@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 17:07:38 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 17:16:05 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,23 @@ double			intersect_ray_cone(const t_ray ray, const t_shape *shape);
 double			intersect_ray_triangle(const t_ray ray, const t_shape *shape);
 t_point			ray_point_at_parameter(const t_ray ray, const double t);
 t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
+
+void			parse_line(char *line, t_scene *scene);
+void			parse_amblight(t_scene *scene);
+void			parse_light(t_scene *scene);
+void			parse_camera(t_scene *scene);
+void			parse_shape(char *line, t_scene *scene);
+void			parse_material(t_material *material);
+void			parse_texture(const char *str, t_material *material);
+void			parse_sphere(t_shape *shape);
+void			parse_plane(t_shape *shape);
+void			parse_cylinder(t_shape *shape);
+void			parse_triangle(t_shape *shape);
+void			parse_cone(t_shape *shape);
+t_float3		parse_coord(char *str);
+t_color			parse_color(char *str);
+char			*skip_commas(char *str);
+bool			is_scene_valid(const t_scene *scene);
 
 
 
