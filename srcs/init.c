@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:27:35 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 13:57:55 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:25:55 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,26 @@ void	init_scene(t_scene *scene)
 	scene->world_max.y = 0;
 }
 
+void	init_images(t_mlx_data *win_data)
+{
+	uint8_t	i;
+
+	i = 0;
+	while (i < win_data->n_images)
+	{
+		win_data->images[i] = mlx_new_image(win_data->mlx,
+				win_data->win_width, win_data->win_height);
+		if (!win_data->images[i])
+			ft_quit(3, "image initialization failed");
+		win_data->addrresses[i] = mlx_get_data_addr(win_data->images[i],
+				&win_data->bits_per_pixel,
+				&win_data->line_length, &win_data->endian);
+		i++;
+	}
+}
+
 void	init_window(t_mlx_data *win_data, t_scene *scene)
 {
-	uint16_t	i;
-
 	win_data->mlx = mlx_init();
 	mlx_get_screen_size(win_data->mlx,
 		&win_data->win_width, &win_data->win_height);
@@ -57,18 +73,7 @@ void	init_window(t_mlx_data *win_data, t_scene *scene)
 	win_data->images = (void **)calloc_p(win_data->n_images, sizeof(void *));
 	win_data->addrresses
 		= (char **)calloc_p(win_data->n_images, sizeof(char *));
-	i = 0;
-	while (i < win_data->n_images)
-	{
-		win_data->images[i] = mlx_new_image(win_data->mlx,
-				win_data->win_width, win_data->win_height);
-		if (!win_data->images[i])
-			ft_quit(3, "image initialization failed");
-		win_data->addrresses[i] = mlx_get_data_addr(win_data->images[i],
-				&win_data->bits_per_pixel,
-				&win_data->line_length, &win_data->endian);
-		i++;
-	}
+	init_images(win_data);
 	win_data->current_img = 0;
 	win_data->bytes_per_pixel = win_data->bits_per_pixel / 8;
 	win_data->aspect_ratio = (double)win_data->win_width
