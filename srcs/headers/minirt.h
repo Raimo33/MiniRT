@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 17:16:05 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 17:45:07 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,6 @@ t_float3		parse_coord(char *str);
 t_color			parse_color(char *str);
 char			*skip_commas(char *str);
 bool			is_scene_valid(const t_scene *scene);
-
-
+void			get_cylinder_uv(const t_hit *hit_info, double *u, double *v);
 
 #endif
