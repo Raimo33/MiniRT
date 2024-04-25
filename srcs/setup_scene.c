@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 21:25:57 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 15:19:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 18:28:34 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,48 +40,55 @@ void	setup_scene(t_scene *scene)
 		scene->world_max, scene->world_min);
 }
 
+static void	set_cylinder_data(t_shape *shape)
+{
+	t_cylinder	*cylinder;
+	t_vector	center_to_cap;
+
+	cylinder = &shape->cylinder;
+	cylinder->squared_radius = cylinder->radius * cylinder->radius;
+	cylinder->direction = vec_normalize(cylinder->direction);
+	cylinder->half_height = cylinder->height / 2;
+	center_to_cap = vec_scale(cylinder->half_height,
+			cylinder->direction);
+	cylinder->top_cap_center = vec_add(cylinder->center, center_to_cap);
+	cylinder->bottom_cap_center = vec_sub(cylinder->center,
+			center_to_cap);
+}
+
+static void	set_cone_data(t_shape *shape)
+{
+	double	cos_theta;
+
+	cos_theta = cos(atan2(shape->cone.radius, shape->cone.height));
+	shape->cone.costheta_squared = cos_theta * cos_theta;
+	shape->cone.direction = vec_normalize(shape->cone.direction);
+}
+
 static void	set_shapes_data(t_scene *scene)
 {
-	t_shape		*shape;
+	t_shape		*s;
 	t_list		*node;
-	t_cylinder	*cylinder;
-	double		cos_theta;
-	t_vector	center_to_cap;
 
 	node = scene->shapes;
 	while (node)
 	{
-		shape = (t_shape *)node->content;
-		set_bounding_box(shape);
-		if (shape->e_type == TRIANGLE)
-			shape->triangle.normal
-				= vec_normalize(vec_cross(vec_sub(shape->triangle.vertices[1],
-							shape->triangle.vertices[0]),
-						vec_sub(shape->triangle.vertices[2],
-							shape->triangle.vertices[0])));
-		else if (shape->e_type == SPHERE)
-			shape->sphere.squared_radius
-				= shape->sphere.radius * shape->sphere.radius;
-		else if (shape->e_type == PLANE)
-			shape->plane.normal = vec_normalize(shape->plane.normal);
-		else if (shape->e_type == CYLINDER)
-		{
-			cylinder = &shape->cylinder;
-			cylinder->squared_radius = cylinder->radius * cylinder->radius;
-			cylinder->direction = vec_normalize(cylinder->direction);
-			cylinder->half_height = cylinder->height / 2;
-			center_to_cap = vec_scale(cylinder->half_height,
-					cylinder->direction);
-			cylinder->top_cap_center = vec_add(cylinder->center, center_to_cap);
-			cylinder->bottom_cap_center = vec_sub(cylinder->center,
-					center_to_cap);
-		}
-		else if (shape->e_type == CONE)
-		{
-			cos_theta = cos(atan2(shape->cone.radius, shape->cone.height));
-			shape->cone.costheta_squared = cos_theta * cos_theta;
-			shape->cone.direction = vec_normalize(shape->cone.direction);
-		}
+		s = (t_shape *)node->content;
+		set_bounding_box(s);
+		if (s->e_type == TRIANGLE)
+			s->triangle.normal
+				= vec_normalize(vec_cross(vec_sub(s->triangle.vertices[1],
+							s->triangle.vertices[0]),
+						vec_sub(s->triangle.vertices[2],
+							s->triangle.vertices[0])));
+		else if (s->e_type == SPHERE)
+			s->sphere.squared_radius = s->sphere.radius * s->sphere.radius;
+		else if (s->e_type == PLANE)
+			s->plane.normal = vec_normalize(s->plane.normal);
+		else if (s->e_type == CYLINDER)
+			set_cylinder_data(s);
+		else if (s->e_type == CONE)
+			set_cone_data(s);
 		node = node->next;
 	}
 }
