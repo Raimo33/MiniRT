@@ -81,9 +81,9 @@ inline double	vec_length(const t_vector a)
 
 inline t_vector	project_vector_onto_axis(t_vector vector, t_vector axis)
 {
-	t_vector	normalized_axis = vec_normalize(axis);
-	double		dot_product = vec_dot(vector, normalized_axis);
-	t_vector	projected_vec = vec_scale(dot_product, normalized_axis);
+	const t_vector	normalized_axis = vec_normalize(axis);
+	const double	dot_product = vec_dot(vector, normalized_axis);
+	const t_vector	projected_vec = vec_scale(dot_product, normalized_axis);
 
 	return (projected_vec);
 }

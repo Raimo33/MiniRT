@@ -65,7 +65,7 @@ static bool	is_scene_valid(const t_scene *scene)
 static void	parse_line(char *line, t_scene *scene)
 {
 	static const char		*prefixes[] = {"A", "L", "C"};
-	void (*const			parse_objects[])(t_scene *) = {&parse_amblight, &parse_light, &parse_camera};
+	static void (*const		parse_objects[])(t_scene *) = {&parse_amblight, &parse_light, &parse_camera};
 	static uint8_t			n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
 	uint8_t					i;
 
@@ -86,10 +86,10 @@ static void	parse_line(char *line, t_scene *scene)
 static void	parse_shape(char *line, t_scene *scene)
 {
 	static const char		*prefixes[] = {"sp", "cy", "tr", "co", "pl"};
-	void (*const			parse_funcs[])(t_shape *) = {&parse_sphere, &parse_cylinder, &parse_triangle, &parse_cone, &parse_plane};
-	static const uint8_t	n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
-	uint8_t					i;
-	t_shape					*shape;
+	static void (*const		parse_funcs[])(t_shape *) = {&parse_sphere, &parse_cylinder, &parse_triangle, &parse_cone, &parse_plane};
+	static const uint8_t		n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
+	uint8_t				i;
+	t_shape				*shape;
 
 	i = 0;
 	while (i < n_prefixes)

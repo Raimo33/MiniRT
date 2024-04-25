@@ -20,7 +20,7 @@ static void	get_plane_uv(const t_hit *hit_info, double *u, double *v);
 
 void	get_uv(const t_hit *hit_info, double *u, double *v)
 {
-	void					(* get_uv_funcs[])(const t_hit *, double *, double *) = {&get_sphere_uv, &get_cylinder_uv, &get_triangle_uv, &get_cone_uv, &get_plane_uv}; //stesso ordine di enum
+	static void		(* get_uv_funcs[])(const t_hit *, double *, double *) = {&get_sphere_uv, &get_cylinder_uv, &get_triangle_uv, &get_cone_uv, &get_plane_uv}; //stesso ordine di enum
 	static const uint8_t	n_shapes = sizeof(get_uv_funcs) / sizeof(get_uv_funcs[0]);
 	uint8_t					i;
 
@@ -49,9 +49,9 @@ static void get_sphere_uv(const t_hit *hit_info, double *u, double *v)
 static void get_cylinder_uv(const t_hit *hit_info, double *u, double *v)
 {
 	const t_cylinder	cylinder = hit_info->shape->cylinder;
-	t_vector			vec_to_intersection = vec_sub(hit_info->point, cylinder.center);
-	double				height_projection = vec_dot(vec_to_intersection, cylinder.direction);
-	bool				is_on_cap = fabs(height_projection) >= (cylinder.half_height - EPSILON);
+	const t_vector		vec_to_intersection = vec_sub(hit_info->point, cylinder.center);
+	const double		height_projection = vec_dot(vec_to_intersection, cylinder.direction);
+	const bool		is_on_cap = fabs(height_projection) >= (cylinder.half_height - EPSILON);
 
 	if (is_on_cap)
 	{
@@ -111,7 +111,7 @@ static void get_triangle_uv(const t_hit *hit_info, double *u, double *v)
 static void get_cone_uv(const t_hit *hit_info, double *u, double *v)
 {
 	const t_cone	cone = hit_info->shape->cone;
-	t_vector		vec_to_intersection = vec_sub(hit_info->point, cone.base_center);
+	const t_vector	vec_to_intersection = vec_sub(hit_info->point, cone.base_center);
 	double			height_projection = vec_dot(vec_to_intersection, cone.direction);
 
 	height_projection = fmax(0, height_projection);

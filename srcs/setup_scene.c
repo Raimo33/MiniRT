@@ -169,8 +169,8 @@ static void	set_world_extremes(t_scene *scene)
 
 static void	set_bounding_box(t_shape *shape)
 {
-	void (*const	get_bb_funcs[])(t_shape *) = {&set_bb_sphere, &set_bb_cylinder, &set_bb_triangle, &set_bb_cone, &set_bb_plane}; //deve essere lo stesso ordine dell enum type
-	const uint8_t	n_shapes = sizeof(get_bb_funcs) / sizeof(get_bb_funcs[0]);
+	static void (*const	get_bb_funcs[])(t_shape *) = {&set_bb_sphere, &set_bb_cylinder, &set_bb_triangle, &set_bb_cone, &set_bb_plane}; //deve essere lo stesso ordine dell enum type
+	const uint8_t		n_shapes = sizeof(get_bb_funcs) / sizeof(get_bb_funcs[0]);
 	uint8_t			i;
 
 	i = 0;
