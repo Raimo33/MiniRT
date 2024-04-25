@@ -169,11 +169,11 @@ double intersect_ray_cone(const t_ray ray, const t_shape *shape)
 	const double	B = 2.0 * (vec_dot(D, V) * vec_dot(CO, V) - vec_dot(D, CO) * cone.costheta_squared);
 	const double	C = vec_dot(CO, V) * vec_dot(CO, V) - vec_dot(CO, CO) * cone.costheta_squared;
 	const double	discriminant = B * B - 4 * A * C;
-	const double	two_times_A = 2 * A;
-	const double	sqrt_discriminant = sqrt(discriminant);
 
 	if (discriminant < 0)
 		return (-1.0);
+	const double	sqrt_discriminant = sqrt(discriminant);
+	const double	two_times_A = 2 * A;
 	const double t0 = (-B - sqrt_discriminant) / two_times_A;
 	const double t1 = (-B + sqrt_discriminant) / two_times_A;
 	if (t0 > 0 && t1 > 0)
