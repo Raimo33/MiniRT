@@ -111,7 +111,7 @@ static void get_triangle_uv(const t_hit *hit_info, double *u, double *v)
 static void get_cone_uv(const t_hit *hit_info, double *u, double *v)
 {
 	const t_cone	cone = hit_info->shape->cone;
-	t_vector		vec_to_intersection = vec_sub(hit_info->point, cone.base_center);
+	const t_vector	vec_to_intersection = vec_sub(hit_info->point, cone.base_center);
 	double			height_projection = vec_dot(vec_to_intersection, cone.direction);
 
 	height_projection = fmax(0, height_projection);
