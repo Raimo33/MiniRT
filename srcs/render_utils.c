@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:58:24 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:40:05 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,15 @@ void	set_thread_attr(pthread_attr_t *thread_attr)
 	pthread_attr_setdetachstate(thread_attr, PTHREAD_CREATE_JOINABLE);
 }
 
-t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data, double *light_ratios, uint16_t lines_per_thread, pthread_attr_t *thread_attr)
+t_thread_data	**set_threads_data(t_scene *scene, t_mlx_data *win_data,
+	double *light_ratios, uint16_t lines_per_thread,
+	pthread_attr_t *thread_attr)
 {
 	uint16_t		i;
 	t_thread_data	**threads_data;
 
-	threads_data = (t_thread_data **)calloc_p((N_THREADS + 1), sizeof(t_thread_data *));
+	threads_data = (t_thread_data **)calloc_p((N_THREADS + 1),
+			sizeof(t_thread_data *));
 	i = 0;
 	while (i < N_THREADS)
 	{
@@ -72,15 +75,18 @@ void	precompute_viewports(t_mlx_data *win_data)
 		x = 0;
 		while (x < win_data->win_width)
 		{
-			win_data->viewport_x[x] = (x / (double)(win_data->win_width - 1)) * 2 - 1;
-			win_data->viewport_y[y] = 1 - (y / (double)(win_data->win_height - 1)) * 2;
+			win_data->viewport_x[x]
+				= (x / (double)(win_data->win_width - 1)) * 2 - 1;
+			win_data->viewport_y[y]
+				= 1 - (y / (double)(win_data->win_height - 1)) * 2;
 			x++;
 		}
 		y++;
 	}
 }
 
-inline t_color	blend_colors(const t_color color1, const t_color color2, double ratio)
+inline t_color	blend_colors(const t_color color1,
+	const t_color color2, double ratio)
 {
 	t_color		result;
 	double		negative_ratio;
@@ -98,7 +104,8 @@ void	setup_camera(t_camera *cam, const t_mlx_data *win_data)
 	static const t_vector	world_up = {0, 1, 0};
 	const double			rad_fov = cam->fov * M_PI / 180;
 	const double			viewport_height = 2 * tan(rad_fov / 2);
-	const double			viewport_width = win_data->aspect_ratio * viewport_height;
+	const double			viewport_width
+		= win_data->aspect_ratio * viewport_height;
 
 	cam->forward = vec_normalize(cam->normal);
 	if (are_vectors_parallel(cam->forward, world_up))
@@ -106,6 +113,7 @@ void	setup_camera(t_camera *cam, const t_mlx_data *win_data)
 	else
 		cam->right = vec_normalize(vec_cross(world_up, cam->forward));
 	cam->up = vec_normalize(vec_cross(cam->forward, cam->right));
-	cam->right_by_half_viewport_width = vec_scale(viewport_width / 2, cam->right);
+	cam->right_by_half_viewport_width
+		= vec_scale(viewport_width / 2, cam->right);
 	cam->up_by_half_viewport_height = vec_scale(viewport_height / 2, cam->up);
 }
