@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 10:38:44 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 17:45:59 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 17:57:25 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,33 +51,28 @@ static void	get_sphere_uv(const t_hit *hit_info, double *u, double *v)
 static void	get_triangle_uv(const t_hit *hit_info, double *u, double *v)
 {
 	const t_triangle	triangle = hit_info->shape->triangle;
-	const t_vector		edge1 = vec_sub(triangle.vertices[1],
-			triangle.vertices[0]);
-	const t_vector		edge2 = vec_sub(triangle.vertices[2],
-			triangle.vertices[0]);
-	const t_vector		h = vec_cross(hit_info->normal, edge2);
-	const double		a = vec_dot(edge1, h);
-	t_vector			s;
-	double				inv_a;
-	double				b;
-	t_vector			q;
-	double				c;
-	double				d;
+	t_vector			edges12[2];
+	t_vector			h;
+	double				abcd[4];
+	t_vector			sq[2];
 
-	if (fabs(a) < EPSILON)
-	{
-		*u = 0;
-		*v = 0;
+	*u = 0;
+	*v = 0;
+	edges12[0] = vec_sub(triangle.vertices[1], triangle.vertices[0]);
+	edges12[1] = vec_sub(triangle.vertices[2], triangle.vertices[0]);
+	h = vec_cross(hit_info->normal, edges12[1]);
+	abcd[0] = vec_dot(edges12[0], h);
+	if (fabs(abcd[0]) < EPSILON)
 		return ;
-	}
-	s = vec_sub(hit_info->point, triangle.vertices[0]);
-	inv_a = 1.0 / a;
-	b = vec_dot(s, h) * inv_a;
-	q = vec_cross(s, edge1);
-	c = vec_dot(hit_info->normal, q) * inv_a;
-	d = 1.0 - b - c;
-	*u = b * triangle.u[1] + c * triangle.u[2] + d * triangle.u[0];
-	*v = b * triangle.v[1] + c * triangle.v[2] + d * triangle.v[0];
+	sq[0] = vec_sub(hit_info->point, triangle.vertices[0]);
+	sq[1] = vec_cross(sq[0], edges12[0]);
+	abcd[1] = vec_dot(sq[0], h) * 1.0 / abcd[0];
+	abcd[2] = vec_dot(hit_info->normal, sq[1]) * 1.0 / abcd[0];
+	abcd[3] = 1.0 - abcd[1] - abcd[2];
+	*u = abcd[1] * triangle.u[1] + abcd[2] * triangle.u[2]
+		+ abcd[3] * triangle.u[0];
+	*v = abcd[1] * triangle.v[1] + abcd[2] * triangle.v[2]
+		+ abcd[3] * triangle.v[0];
 }
 
 static void	get_cone_uv(const t_hit *hit_info, double *u, double *v)
