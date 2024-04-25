@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 14:52:38 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:59:05 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:21:34 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ inline t_vector	vec_div(const t_vector a, const t_vector b)
 
 bool	are_vectors_parallel(t_vector v1, t_vector v2)
 {
-	double dot;
+	double	dot;
 
 	v1 = vec_normalize(v1);
 	v2 = vec_normalize(v2);
@@ -81,9 +81,9 @@ inline double	vec_length(const t_vector a)
 
 inline t_vector	project_vector_onto_axis(t_vector vector, t_vector axis)
 {
-	t_vector	normalized_axis = vec_normalize(axis);
-	double		dot_product = vec_dot(vector, normalized_axis);
-	t_vector	projected_vec = vec_scale(dot_product, normalized_axis);
+	const t_vector	normalized_axis = vec_normalize(axis);
+	const double	dot_product = vec_dot(vector, normalized_axis);
+	const t_vector	projected_vec = vec_scale(dot_product, normalized_axis);
 
 	return (projected_vec);
 }
