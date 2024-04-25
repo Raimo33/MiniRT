@@ -189,12 +189,12 @@ double intersect_ray_cone(const t_ray ray, const t_shape *shape)
 
 inline bool	ray_intersects_aabb(const t_ray ray, const t_point bounding_box_max, const t_point bounding_box_min)
 {
-	double	tmin = -FLT_MAX;
-	double	tmax = FLT_MAX;
-	double	ray_direction[3] = {ray.direction.x, ray.direction.y, ray.direction.z};
-	double	bb_max[3] = {bounding_box_max.x, bounding_box_max.y, bounding_box_max.z};
-	double	bb_min[3] = {bounding_box_min.x, bounding_box_min.y, bounding_box_min.z};
-	double	ray_origin[3] = {ray.origin.x, ray.origin.y, ray.origin.z};
+	double		tmin = -FLT_MAX;
+	double		tmax = FLT_MAX;
+	const double	ray_direction[3] = {ray.direction.x, ray.direction.y, ray.direction.z};
+	const double	bb_max[3] = {bounding_box_max.x, bounding_box_max.y, bounding_box_max.z};
+	const double	bb_min[3] = {bounding_box_min.x, bounding_box_min.y, bounding_box_min.z};
+	const double	ray_origin[3] = {ray.origin.x, ray.origin.y, ray.origin.z};
 
 	for (int i = 0; i < 3; i++)
 	{
