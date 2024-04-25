@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 13:53:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:28:27 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static t_color	parse_color(char *str);
 static char		*skip_commas(char *str);
 static bool		is_scene_valid(const t_scene *scene);
 
-void parse_scene(const int fd, t_scene *scene)
+void	parse_scene(const int fd, t_scene *scene)
 {
 	char	*line;
 
@@ -65,7 +65,8 @@ static bool	is_scene_valid(const t_scene *scene)
 static void	parse_line(char *line, t_scene *scene)
 {
 	static const char		*prefixes[] = {"A", "L", "C"};
-	void (*const			parse_objects[])(t_scene *) = {&parse_amblight, &parse_light, &parse_camera};
+	static void (*const		parse_objects[])(t_scene *)
+		= {&parse_amblight, &parse_light, &parse_camera};
 	static uint8_t			n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
 	uint8_t					i;
 
@@ -86,7 +87,9 @@ static void	parse_line(char *line, t_scene *scene)
 static void	parse_shape(char *line, t_scene *scene)
 {
 	static const char		*prefixes[] = {"sp", "cy", "tr", "co", "pl"};
-	void (*const			parse_funcs[])(t_shape *) = {&parse_sphere, &parse_cylinder, &parse_triangle, &parse_cone, &parse_plane};
+	static void (*const		parse_funcs[])(t_shape *)
+		= {&parse_sphere, &parse_cylinder,
+		&parse_triangle, &parse_cone, &parse_plane};
 	static const uint8_t	n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
 	uint8_t					i;
 	t_shape					*shape;

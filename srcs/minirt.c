@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:18 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/24 21:18:28 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:13:51 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,6 @@ int	main(int argc, char **argv)
 	t_mlx_data		mlx_data;
 	t_scene			scene;
 	int				fd;
-	double			rendering_time;
-	struct timeval	start_time;
-	struct timeval	end_time;
 
 	init_scene(&scene);
 	check_args(argc, argv);
@@ -32,12 +29,7 @@ int	main(int argc, char **argv)
 	init_window(&mlx_data, &scene);
 	init_textures(&scene, &mlx_data);
 	init_hooks(&mlx_data, &scene);
-	gettimeofday(&start_time, NULL);
 	render_scene(&mlx_data, &scene);
-	gettimeofday(&end_time, NULL);
-	rendering_time = (end_time.tv_sec - start_time.tv_sec) * 1000.0;
-	rendering_time += (end_time.tv_usec - start_time.tv_usec) / 1000.0;
-	printf("\nRendered scene in %.2f s\n", rendering_time / 1000.0);
 	mlx_loop(mlx_data.mlx);
 	ft_quit(0, "Minilibx loop ended abruptly\n");
 }
