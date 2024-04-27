@@ -3,19 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:53:23 by egualand          #+#    #+#             */
-/*   Updated: 2024/04/15 18:43:54 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/27 16:25:41 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include <stdlib.h>
-# include <unistd.h>
-# include <stddef.h>
 # include "../../libft/libft.h"
 
 # ifndef BUFFER_SIZE

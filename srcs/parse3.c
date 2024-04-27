@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 17:19:16 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/27 16:20:40 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 void	parse_plane(t_shape *shape)
 {
-	shape->plane.center = parse_coord(ft_strtok(NULL, spaces));
-	shape->plane.normal = parse_coord(ft_strtok(NULL, spaces));
+	shape->plane.center = parse_coord(ft_strtok(NULL, g_spaces));
+	shape->plane.normal = parse_coord(ft_strtok(NULL, g_spaces));
 	shape->e_type = PLANE;
 }
 
 void	parse_cylinder(t_shape *shape)
 {
-	shape->cylinder.center = parse_coord(ft_strtok(NULL, spaces));
-	shape->cylinder.direction = parse_coord(ft_strtok(NULL, spaces));
-	shape->cylinder.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
-	shape->cylinder.height = ft_atof(ft_strtok(NULL, spaces));
+	shape->cylinder.center = parse_coord(ft_strtok(NULL, g_spaces));
+	shape->cylinder.direction = parse_coord(ft_strtok(NULL, g_spaces));
+	shape->cylinder.radius = ft_atof(ft_strtok(NULL, g_spaces)) / 2.0f;
+	shape->cylinder.height = ft_atof(ft_strtok(NULL, g_spaces));
 	if (shape->cylinder.radius <= 0)
 		ft_quit(5, "invalid cylinder radius");
 	if (shape->cylinder.height <= 0)
@@ -34,10 +34,10 @@ void	parse_cylinder(t_shape *shape)
 
 void	parse_cone(t_shape *shape)
 {
-	shape->cone.base_center = parse_coord(ft_strtok(NULL, spaces));
-	shape->cone.direction = parse_coord(ft_strtok(NULL, spaces));
-	shape->cone.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
-	shape->cone.height = ft_atof(ft_strtok(NULL, spaces));
+	shape->cone.base_center = parse_coord(ft_strtok(NULL, g_spaces));
+	shape->cone.direction = parse_coord(ft_strtok(NULL, g_spaces));
+	shape->cone.radius = ft_atof(ft_strtok(NULL, g_spaces)) / 2.0f;
+	shape->cone.height = ft_atof(ft_strtok(NULL, g_spaces));
 	if (shape->cone.radius <= 0)
 		ft_quit(5, "invalid cone radius");
 	if (shape->cone.height <= 0)
@@ -47,9 +47,9 @@ void	parse_cone(t_shape *shape)
 
 void	parse_triangle(t_shape *shape)
 {
-	shape->triangle.vertices[0] = parse_coord(ft_strtok(NULL, spaces));
-	shape->triangle.vertices[1] = parse_coord(ft_strtok(NULL, spaces));
-	shape->triangle.vertices[2] = parse_coord(ft_strtok(NULL, spaces));
+	shape->triangle.vertices[0] = parse_coord(ft_strtok(NULL, g_spaces));
+	shape->triangle.vertices[1] = parse_coord(ft_strtok(NULL, g_spaces));
+	shape->triangle.vertices[2] = parse_coord(ft_strtok(NULL, g_spaces));
 	shape->triangle.u[0] = 0;
 	shape->triangle.v[0] = 0;
 	shape->triangle.u[1] = 1;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 17:18:58 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/27 16:20:40 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	parse_line(char *line, t_scene *scene)
 	{
 		if (line[0] == prefixes[i][0])
 		{
-			ft_strtok(line, spaces);
+			ft_strtok(line, g_spaces);
 			parse_objects[i](scene);
 			return ;
 		}
@@ -84,7 +84,7 @@ void	parse_shape(char *line, t_scene *scene)
 		{
 			shape = (t_shape *)calloc_p(1, sizeof(t_shape));
 			shape->material = (t_material *)calloc_p(1, sizeof(t_material));
-			ft_strtok(line, spaces);
+			ft_strtok(line, g_spaces);
 			parse_funcs[i](shape);
 			parse_material(shape->material);
 			ft_lstadd_front(&scene->shapes, ft_lstnew(shape));
@@ -100,11 +100,11 @@ void	parse_material(t_material *material)
 {
 	char	*tmp;
 
-	material->color = parse_color(ft_strtok(NULL, spaces));
-	material->shininess = fmax(ft_atof(ft_strtok(NULL, spaces)), 0);
-	material->specular = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
-	material->diffuse = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1.0f);
-	tmp = ft_strtok(NULL, spaces);
+	material->color = parse_color(ft_strtok(NULL, g_spaces));
+	material->shininess = fmax(ft_atof(ft_strtok(NULL, g_spaces)), 0);
+	material->specular = fclamp(ft_atof(ft_strtok(NULL, g_spaces)), 0, 1.0f);
+	material->diffuse = fclamp(ft_atof(ft_strtok(NULL, g_spaces)), 0, 1.0f);
+	tmp = ft_strtok(NULL, g_spaces);
 	material->is_checkerboard = (ft_strncmp(tmp, "checkerboard", 12) == 0);
 	material->texture = NULL;
 	if (!material->is_checkerboard)

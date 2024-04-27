@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 17:19:07 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/27 16:20:40 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void	parse_amblight(t_scene *scene)
 {
 	t_amblight	amblight;
 
-	amblight.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
+	amblight.brightness = fclamp(ft_atof(ft_strtok(NULL, g_spaces)), 0, 1);
 	if (amblight.brightness == 0)
 		ft_putstr_fd("Warning: ambient light brightness set to 0\n",
 			STDERR_FILENO);
-	amblight.color = parse_color(ft_strtok(NULL, spaces));
+	amblight.color = parse_color(ft_strtok(NULL, g_spaces));
 	amblight.ambient.r = amblight.color.r * amblight.brightness;
 	amblight.ambient.g = amblight.color.g * amblight.brightness;
 	amblight.ambient.b = amblight.color.b * amblight.brightness;
@@ -49,11 +49,11 @@ void	parse_light(t_scene *scene)
 	t_light		light;
 	t_light		*light_ptr;
 
-	light.center = parse_coord(ft_strtok(NULL, spaces));
-	light.brightness = fclamp(ft_atof(ft_strtok(NULL, spaces)), 0, 1);
+	light.center = parse_coord(ft_strtok(NULL, g_spaces));
+	light.brightness = fclamp(ft_atof(ft_strtok(NULL, g_spaces)), 0, 1);
 	if (light.brightness == 0)
 		ft_putstr_fd("Warning: light brightness set to 0\n", STDERR_FILENO);
-	light.color = parse_color(ft_strtok(NULL, spaces));
+	light.color = parse_color(ft_strtok(NULL, g_spaces));
 	scene->n_lights++;
 	light_ptr = (t_light *)malloc_p(sizeof(t_light));
 	*light_ptr = light;
@@ -65,9 +65,9 @@ void	parse_camera(t_scene *scene)
 	t_camera	camera;
 	t_camera	*camera_ptr;
 
-	camera.center = parse_coord(ft_strtok(NULL, spaces));
-	camera.normal = parse_coord(ft_strtok(NULL, spaces));
-	camera.fov = clamp(ft_atoui(ft_strtok(NULL, spaces)), 1, 180);
+	camera.center = parse_coord(ft_strtok(NULL, g_spaces));
+	camera.normal = parse_coord(ft_strtok(NULL, g_spaces));
+	camera.fov = clamp(ft_atoui(ft_strtok(NULL, g_spaces)), 1, 180);
 	if (camera.fov == 1 || camera.fov == 180)
 		ft_putstr_fd("Warning: camera FOV set to 1 or 180\n", STDERR_FILENO);
 	camera_ptr = (t_camera *)malloc_p(sizeof(t_camera));
@@ -77,8 +77,8 @@ void	parse_camera(t_scene *scene)
 
 void	parse_sphere(t_shape *shape)
 {
-	shape->sphere.center = parse_coord(ft_strtok(NULL, spaces));
-	shape->sphere.radius = ft_atof(ft_strtok(NULL, spaces)) / 2.0f;
+	shape->sphere.center = parse_coord(ft_strtok(NULL, g_spaces));
+	shape->sphere.radius = ft_atof(ft_strtok(NULL, g_spaces)) / 2.0f;
 	if (shape->sphere.radius <= 0)
 		ft_quit(5, "invalid sphere radius");
 	shape->e_type = SPHERE;

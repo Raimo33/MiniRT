@@ -6,39 +6,35 @@
 /*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/27 16:09:52 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/27 16:35:27 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
 
-# include <stdint.h>
-# include <float.h>
 # include <stdbool.h>
 # include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
 # include <errno.h>
 # include <math.h>
-# include <stdint.h>
 # include <fcntl.h>
 # include <pthread.h>
 # include <sys/time.h>
-# include "../../minilibx-linux/mlx.h"
-# include "../../libft/libft.h"
-# include "../headers/get_next_line.h"
-# include "../headers/primitives.h"
-# include "utils.h"
+# include "get_next_line.h"
 # include "scene.h"
+# include "../../minilibx-linux/mlx.h"
+# include "utils.h"
+
+# define FLT_MAX 3.402823466e+38F
+# define FLT_MIN 1.175494351e-38F
 
 //valori ideali
 # define WIN_SIZE 0.7
 # define WORLD_SIZE 1000
+# define HWS 500
 # define OCTREE_DEPTH 2
 # define N_THREADS 8
 
-# define BOUNCE_ATTENUATION_FACTOR 0.8
 # define BG_C 0xc0c6ed
 # define KEY_ESC 65307
 # define KEY_SPACE 32
@@ -48,9 +44,8 @@
 # define CC2 0xFFFFFF
 
 # define TEXTURE_ROOT "textures/"
-# define HWS WORLD_SIZE / 2
 
-static const char		spaces[] = " \t\n\v\f\r";
+static const char		g_spaces[] = " \t\n\v\f\r";
 
 typedef struct s_mlx_data
 {
@@ -94,10 +89,10 @@ typedef struct scene_windata
 
 typedef struct s_glc
 {
-	t_color light_color;
-	double brightness;
-	double cosine;
-} t_glc;
+	t_color	light_color;
+	double	brightness;
+	double	cosine;
+}	t_glc;
 
 typedef struct s_center_size
 {
@@ -121,26 +116,34 @@ void			parse_scene(const int fd, t_scene *scene);
 void			setup_scene(t_scene *scene);
 void			render_scene(t_mlx_data *win_data, t_scene *scene);
 void			*render_thread(void *data);
-void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
-t_color			my_mlx_pixel_get(const t_texture_data *data, const uint32_t x, const uint32_t y);
-t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, double *light_ratios);
+void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x,
+					const uint16_t y, const t_color color);
+t_color			my_mlx_pixel_get(const t_texture_data *data, const uint32_t x,
+					const uint32_t y);
+t_color			add_lighting(const t_scene *scene, t_color color,
+					const t_hit *hit_info, double *light_ratios);
 t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 void			ft_quit(const uint8_t id, char *msg);
 void			destroy_scene(t_scene *scene);
 t_scene			*get_scene(t_scene *scene);
 int				close_win(t_hook_data *hook_data);
 double			*precompute_ratios(const uint16_t n_elems);
-t_thread_data	**set_threads_data(t_scene_windata scene_windata, double *light_ratios, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
+t_thread_data	**set_threads_data(t_scene_windata scene_windata,
+					double *light_ratios, uint16_t lines_per_thread,
+					pthread_attr_t *thread_attr);
 void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
 void			get_uv(const t_hit *hit_info, double *u, double *v);
-bool			ray_intersects_aabb(const t_ray ray, const t_point bounding_box_max, const t_point bounding_box_min);
+bool			ray_intersects_aabb(const t_ray ray,
+					const t_point bounding_box_max,
+					const t_point bounding_box_min);
 double			intersect_ray_sphere(const t_ray ray, const t_shape *shape);
 double			intersect_ray_plane(const t_ray ray, const t_shape *shape);
 double			intersect_ray_cylinder(const t_ray ray, const t_shape *shape);
 double			intersect_ray_cone(const t_ray ray, const t_shape *shape);
 double			intersect_ray_triangle(const t_ray ray, const t_shape *shape);
 t_point			ray_point_at_parameter(const t_ray ray, const double t);
-t_color			blend_colors(const t_color color1, const t_color color2, double ratio);
+t_color			blend_colors(const t_color color1, const t_color color2,
+					double ratio);
 
 void			parse_line(char *line, t_scene *scene);
 void			parse_amblight(t_scene *scene);
@@ -172,7 +175,8 @@ void			set_bb_cone(t_shape *shape);
 t_list			*get_shapes_inside_box(t_list *shapes,
 					t_vector box_top, t_vector box_bottom);
 void			set_shapes_data(t_scene *scene);
-int				boxes_overlap(const t_point box1_top, const t_point box1_bottom,
+int				boxes_overlap(const t_point box1_top,
+					const t_point box1_bottom,
 					const t_point box2_top, const t_point box2_bottom);
 
 void			fill_image(t_thread_data **threads_data,
