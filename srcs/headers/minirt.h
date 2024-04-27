@@ -6,7 +6,7 @@
 /*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/27 13:43:50 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/27 13:45:36 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void			destroy_scene(t_scene *scene);
 t_scene			*get_scene(t_scene *scene);
 int				close_win(t_hook_data *hook_data);
 double			*precompute_ratios(const uint16_t n_elems);
-t_thread_data	**set_threads_data(t_scene_windata *scene_windata, double *light_ratios, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
+t_thread_data	**set_threads_data(t_scene_windata scene_windata, double *light_ratios, uint16_t lines_per_thread, pthread_attr_t *thread_attr);
 void			setup_camera(t_camera *cam, const t_mlx_data *win_data);
 void			get_uv(const t_hit *hit_info, double *u, double *v);
 bool			ray_intersects_aabb(const t_ray ray, const t_point bounding_box_max, const t_point bounding_box_min);

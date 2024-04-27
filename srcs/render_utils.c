@@ -6,7 +6,7 @@
 /*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 13:58:08 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/27 13:42:06 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/27 13:45:52 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	set_thread_attr(pthread_attr_t *thread_attr)
 	pthread_attr_setdetachstate(thread_attr, PTHREAD_CREATE_JOINABLE);
 }
 
-t_thread_data	**set_threads_data(t_scene_windata *scene_windata,
+t_thread_data	**set_threads_data(t_scene_windata scene_windata,
 	double *light_ratios, uint16_t lines_per_thread,
 	pthread_attr_t *thread_attr)
 {
@@ -33,12 +33,12 @@ t_thread_data	**set_threads_data(t_scene_windata *scene_windata,
 	while (i < N_THREADS)
 	{
 		threads_data[i] = (t_thread_data *)calloc_p(1, sizeof(t_thread_data));
-		threads_data[i]->scene = scene_windata->scene;
-		threads_data[i]->win_data = scene_windata->win_data;
+		threads_data[i]->scene = scene_windata.scene;
+		threads_data[i]->win_data = scene_windata.win_data;
 		threads_data[i]->light_ratios = light_ratios;
 		threads_data[i]->start_y = i * lines_per_thread;
 		if (i == N_THREADS - 1)
-			threads_data[i]->end_y = scene_windata->win_data->win_height;
+			threads_data[i]->end_y = scene_windata.win_data->win_height;
 		else
 			threads_data[i]->end_y = (i + 1) * lines_per_thread;
 		i++;

@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
+/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 21:24:04 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 13:53:14 by craimond         ###   ########.fr       */
+/*   Updated: 2024/04/27 13:46:54 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "headers/minirt.h"
 
@@ -23,28 +22,30 @@ static t_vector	get_cylinder_normal(t_cylinder cylinder, t_point point);
 static t_vector	get_cone_normal(t_cone cone, t_point point);
 static t_color	add_texture(const t_hit *hit_info);
 
-void	render_scene(t_mlx_data *win_data, t_scene *scene)
+void	render_scene(t_mlx_data *w, t_scene *scene)
 {
 	t_thread_data	**threads_data;
 	pthread_attr_t	thread_attr;
 	t_list			*cameras;
 	double			*light_ratios;
-	const uint16_t	lines_per_thread = roundf((float)win_data->win_height / (float)N_THREADS);
+	const uint16_t	lines_per_thread
+		= roundf((float)w->win_height / (float)N_THREADS);
 
 	cameras = scene->cameras;
 	light_ratios = precompute_ratios(ft_lstsize(scene->lights));
-	threads_data = set_threads_data(scene, win_data, light_ratios, lines_per_thread, &thread_attr);
+	threads_data = set_threads_data((t_scene_windata){scene, w},
+			light_ratios, lines_per_thread, &thread_attr);
 	while (cameras)
 	{
-		printf("\nRendering camera %d\n", win_data->current_img);
+		printf("\nRendering camera %d\n", w->current_img);
 		scene->current_camera = cameras->content;
-		setup_camera(scene->current_camera, win_data);
+		setup_camera(scene->current_camera, w);
 		fill_image(threads_data, &thread_attr);
 		cameras = cameras->next;
-		win_data->current_img++;
+		w->current_img++;
 	}
-	win_data->current_img = win_data->n_images - 1;
-	mlx_put_image_to_window(win_data->mlx, win_data->win, win_data->images[win_data->current_img], 0, 0);
+	w->current_img = w->n_images - 1;
+	mlx_put_image_to_window(w->mlx, w->win, w->images[w->current_img], 0, 0);
 	pthread_attr_destroy(&thread_attr);
 	free(light_ratios);
 	ft_freematrix((void **)threads_data);
