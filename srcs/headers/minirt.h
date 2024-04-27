@@ -6,7 +6,7 @@
 /*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/27 13:45:36 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/27 14:46:40 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,13 @@ typedef struct scene_windata
 	t_mlx_data	*win_data;
 }	t_scene_windata;
 
+typedef struct s_glc
+{
+	t_color light_color;
+	double brightness;
+	double cosine;
+} t_glc;
+
 void			check_args(const uint16_t argc, char **argv);
 void			init_scene(t_scene *scene);
 void			init_window(t_mlx_data *win_data, t_scene *scene);
@@ -103,7 +110,7 @@ void			render_scene(t_mlx_data *win_data, t_scene *scene);
 void			*render_thread(void *data);
 void			my_mlx_pixel_put(const t_mlx_data *data, const uint16_t x, const uint16_t y, const t_color color);
 t_color			my_mlx_pixel_get(const t_texture_data *data, const uint32_t x, const uint32_t y);
-t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, const double *light_ratios);
+t_color			add_lighting(const t_scene *scene, t_color color, const t_hit *hit_info, double *light_ratios);
 t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
 void			ft_quit(const uint8_t id, char *msg);
 void			destroy_scene(t_scene *scene);
