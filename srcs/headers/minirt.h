@@ -6,7 +6,7 @@
 /*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/27 15:31:25 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/27 16:09:52 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@
 # define N_THREADS 8
 
 # define BOUNCE_ATTENUATION_FACTOR 0.8
-# define BACKGROUND_COLOR 0xc0c6ed
+# define BG_C 0xc0c6ed
 # define KEY_ESC 65307
 # define KEY_SPACE 32
 
 # define CHECKERBOARD_TILE_DENSITY 15
-# define CHECKERBOARD_COLOR1 0x000000
-# define CHECKERBOARD_COLOR2 0xFFFFFF
+# define CC1 0x000000
+# define CC2 0xFFFFFF
 
 # define TEXTURE_ROOT "textures/"
 # define HWS WORLD_SIZE / 2
@@ -174,5 +174,20 @@ t_list			*get_shapes_inside_box(t_list *shapes,
 void			set_shapes_data(t_scene *scene);
 int				boxes_overlap(const t_point box1_top, const t_point box1_bottom,
 					const t_point box2_top, const t_point box2_bottom);
+
+void			fill_image(t_thread_data **threads_data,
+					pthread_attr_t *thread_attr);
+void			*render_segment(void *data);
+t_ray			get_ray(const t_camera *cam, const uint16_t x,
+					const uint16_t y, const t_mlx_data *win_data);
+void			traverse_octree(const t_octree *node,
+					const t_ray ray, t_hit *closest_hit);
+void			check_shapes_in_node(const t_octree *node,
+					const t_ray ray, t_hit *closest_hit);
+void			update_closest_hit(t_hit *closest_hit, t_shape *shape,
+					const double t, const t_ray ray);
+t_vector		get_cylinder_normal(t_cylinder cylinder, t_point point);
+t_vector		get_cone_normal(t_cone cone, t_point point);
+t_color			add_texture(const t_hit *hit_info);
 
 #endif
