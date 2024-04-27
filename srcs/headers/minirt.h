@@ -6,7 +6,7 @@
 /*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/27 14:46:40 by egualand         ###   ########.fr       */
+/*   Updated: 2024/04/27 15:31:25 by egualand         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@
 # define CHECKERBOARD_COLOR2 0xFFFFFF
 
 # define TEXTURE_ROOT "textures/"
+# define HWS WORLD_SIZE / 2
 
 static const char		spaces[] = " \t\n\v\f\r";
 
@@ -98,6 +99,18 @@ typedef struct s_glc
 	double cosine;
 } t_glc;
 
+typedef struct s_center_size
+{
+	t_point		center;
+	t_vector	size;
+}	t_center_size;
+
+typedef struct s_boxes
+{
+	t_point	box_top;
+	t_point	box_bottom;
+}	t_boxes;
+
 void			check_args(const uint16_t argc, char **argv);
 void			init_scene(t_scene *scene);
 void			init_window(t_mlx_data *win_data, t_scene *scene);
@@ -146,5 +159,20 @@ t_color			parse_color(char *str);
 char			*skip_commas(char *str);
 bool			is_scene_valid(const t_scene *scene);
 void			get_cylinder_uv(const t_hit *hit_info, double *u, double *v);
+
+void			fill_octree(t_octree *node, t_list *shapes,
+					uint8_t depth, t_boxes b);
+void			set_world_extremes(t_scene *scene);
+void			set_bounding_box(t_shape *shape);
+void			set_bb_sphere(t_shape *shape);
+void			set_bb_cylinder(t_shape *shape);
+void			set_bb_plane(t_shape *shape);
+void			set_bb_triangle(t_shape *shape);
+void			set_bb_cone(t_shape *shape);
+t_list			*get_shapes_inside_box(t_list *shapes,
+					t_vector box_top, t_vector box_bottom);
+void			set_shapes_data(t_scene *scene);
+int				boxes_overlap(const t_point box1_top, const t_point box1_bottom,
+					const t_point box2_top, const t_point box2_bottom);
 
 #endif
