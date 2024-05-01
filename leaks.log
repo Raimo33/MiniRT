@@ -1,14 +1,15 @@
-==174714== Memcheck, a memory error detector
-==174714== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==174714== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==174714== Command: ./minirt scenes/italian_flag.rt
-==174714== 
-==174714== 
-==174714== HEAP SUMMARY:
-==174714==     in use at exit: 0 bytes in 0 blocks
-==174714==   total heap usage: 1,355 allocs, 1,355 frees, 196,977 bytes allocated
-==174714== 
-==174714== All heap blocks were freed -- no leaks are possible
-==174714== 
-==174714== For lists of detected and suppressed errors, rerun with: -s
-==174714== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 1 from 1)
+==103167== Memcheck, a memory error detector
+==103167== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==103167== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==103167== Command: ./minirt scenes/italian_flag.rt
+==103167== 
+miniRT: mlx: failed to load texture
+==103167== 
+==103167== HEAP SUMMARY:
+==103167==     in use at exit: 0 bytes in 0 blocks
+==103167==   total heap usage: 1,241 allocs, 1,241 frees, 187,252 bytes allocated
+==103167== 
+==103167== All heap blocks were freed -- no leaks are possible
+==103167== 
+==103167== For lists of detected and suppressed errors, rerun with: -s
+==103167== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 1 from 1)

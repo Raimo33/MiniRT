@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: egualand <egualand@student.42.fr>          +#+  +:+       +#+         #
+#    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/04/27 16:11:40 by egualand         ###   ########.fr        #
+#    Updated: 2024/05/01 15:18:59 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ LIBFT_DIR = libft
 LIBFT_REPO = https://github.com/Raimo33/Libft.git
 
 UTILS = $(addprefix utils/, mlx_utils.c protected_methods.c singleton.c conditionals.c ft_strtok.c ft_atof.c ft_atoui.c ft_freematrix.c get_next_line.c math_utils.c)
-SRCS = $(addprefix srcs/, minirt.c init.c init2.c exit.c parse.c parse2.c parse3.c parse4.c setup_scene.c setup_scene2.c setup_scene3.c setup_scene4.c render.c render2.c render3.c render_light.c render_uv_maps.c render_uv_maps2.c render_utils.c render_utils2.c intersections.c intersections2.c intersections3.c vector_operations.c vector_operations2.c vector_operations3.c $(UTILS))
+SRCS = $(addprefix srcs/, minirt.c init.c init2.c exit.c exit2.c parse.c parse2.c parse3.c parse4.c setup_scene.c setup_scene2.c setup_scene3.c setup_scene4.c render.c render2.c render3.c render_light.c render_uv_maps.c render_uv_maps2.c render_utils.c render_utils2.c intersections.c intersections2.c intersections3.c vector_operations.c vector_operations2.c vector_operations3.c $(UTILS))
 
 OBJS = $(SRCS:.c=.o)
 

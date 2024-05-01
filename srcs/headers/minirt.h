@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 17:33:27 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/27 16:35:27 by egualand         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:23:24 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void			init_textures(const t_scene *scene, t_mlx_data *mlx_data);
 void			init_hooks(t_mlx_data *win_data, t_scene *scene);
 void			precompute_viewports(t_mlx_data *win_data);
 void			parse_scene(const int fd, t_scene *scene);
+char			*get_word(char *line);
 void			setup_scene(t_scene *scene);
 void			render_scene(t_mlx_data *win_data, t_scene *scene);
 void			*render_thread(void *data);
@@ -123,7 +124,8 @@ t_color			my_mlx_pixel_get(const t_texture_data *data, const uint32_t x,
 t_color			add_lighting(const t_scene *scene, t_color color,
 					const t_hit *hit_info, double *light_ratios);
 t_hit			*trace_ray(const t_scene *scene, const t_ray ray);
-void			ft_quit(const uint8_t id, char *msg);
+int				ft_quit(const uint8_t id, char *msg);
+int				destroy_mlx_data(t_mlx_data *win_data);
 void			destroy_scene(t_scene *scene);
 t_scene			*get_scene(t_scene *scene);
 int				close_win(t_hook_data *hook_data);

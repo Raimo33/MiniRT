@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:30:12 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 13:56:08 by craimond         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:18:49 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	octree_clear(t_octree *node, const uint16_t depth);
 static void	free_shape(void *shape);
 
-void	ft_quit(const uint8_t id, char *msg)
+int	ft_quit(const uint8_t id, char *msg)
 {
 	if (!msg)
 		perror("miniRT");
@@ -29,13 +29,12 @@ void	ft_quit(const uint8_t id, char *msg)
 	exit(id);
 }
 
-int	close_win(t_hook_data *hook_data)
+int	destroy_mlx_data(t_mlx_data *win_data)
 {
 	uint16_t	i;
-	t_mlx_data	*win_data;
 
-	win_data = hook_data->win_data;
-	destroy_scene(hook_data->scene);
+	if (!win_data)
+		return (0);
 	i = 0;
 	while (i < win_data->n_images)
 		mlx_destroy_image(win_data->mlx, win_data->images[i++]);
@@ -46,8 +45,6 @@ int	close_win(t_hook_data *hook_data)
 	mlx_destroy_window(win_data->mlx, win_data->win);
 	mlx_destroy_display(win_data->mlx);
 	free(win_data->mlx);
-	free(hook_data);
-	exit(0);
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egualand <egualand@student.42.fr>          +#+  +:+       +#+        */
+/*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/27 16:20:40 by egualand         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:23:03 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,21 @@ void	parse_line(char *line, t_scene *scene)
 		= {&parse_amblight, &parse_light, &parse_camera};
 	static uint8_t			n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
 	uint8_t					i;
+	char					*prefix;
 
 	i = 0;
 	while (i < n_prefixes)
 	{
-		if (line[0] == prefixes[i][0])
+		prefix = ft_strdup(line);
+		prefix = get_word(prefix);
+		if (ft_strncmp(prefix, prefixes[i], 2) == 0)
 		{
+			free(prefix);
 			ft_strtok(line, g_spaces);
 			parse_objects[i](scene);
 			return ;
 		}
+		free(prefix);
 		i++;
 	}
 	parse_shape(line, scene);
@@ -99,13 +104,15 @@ void	parse_shape(char *line, t_scene *scene)
 void	parse_material(t_material *material)
 {
 	char	*tmp;
+	char	*word;
 
 	material->color = parse_color(ft_strtok(NULL, g_spaces));
 	material->shininess = fmax(ft_atof(ft_strtok(NULL, g_spaces)), 0);
 	material->specular = fclamp(ft_atof(ft_strtok(NULL, g_spaces)), 0, 1.0f);
 	material->diffuse = fclamp(ft_atof(ft_strtok(NULL, g_spaces)), 0, 1.0f);
 	tmp = ft_strtok(NULL, g_spaces);
-	material->is_checkerboard = (ft_strncmp(tmp, "checkerboard", 12) == 0);
+	word = get_word(tmp);
+	material->is_checkerboard = (ft_strncmp(word, "checkerboard", 13) == 0);
 	material->texture = NULL;
 	if (!material->is_checkerboard)
 		parse_texture(tmp, material);

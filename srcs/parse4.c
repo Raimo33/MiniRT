@@ -6,7 +6,7 @@
 /*   By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 21:33:22 by craimond          #+#    #+#             */
-/*   Updated: 2024/04/25 17:19:20 by craimond         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:23:15 by craimond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,17 @@ char	*skip_commas(char *str)
 	if (*str == '\0')
 		ft_quit(5, "invalid syntax: missing comma");
 	return (str + 1);
+}
+
+char	*get_word(char *line)
+{
+	char	*end;
+
+	if (!line)
+		return (NULL);
+	end = line;
+	while (*end != '\0' && ft_isspace(*end) == false)
+		end++;
+	*end = '\0';
+	return (line);
 }
