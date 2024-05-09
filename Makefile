@@ -6,11 +6,11 @@
 #    By: craimond <bomboclat@bidol.juis>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/19 14:52:58 by egualand          #+#    #+#              #
-#    Updated: 2024/05/01 15:18:59 by craimond         ###   ########.fr        #
+#    Updated: 2024/05/09 13:38:17 by craimond         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#TODO fixare errori quando si fa fclean 2 volte di fila
+NAME = miniRT
 
 MLX_DIR = minilibx-linux
 MLX_REPO = https://github.com/42Paris/minilibx-linux.git
@@ -33,8 +33,6 @@ NC = \033[0m
 CC = cc
 CFLAGS = -g -Wall -Wextra -Werror
 RM = rm -rf
-
-NAME = minirt
 
 all: $(MLX_DIR) $(LIBFT_DIR) $(NAME)
 
